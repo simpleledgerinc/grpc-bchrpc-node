@@ -1,4 +1,5 @@
-pb
+pb/*.js
+pb/*.ts
 src/*.js
 node_modules
 index.js
