@@ -25,6 +25,9 @@ console.log(Buffer.from(res.getTransaction_asU8()).toString('hex'));
 
 ## Change Log
 
+### 0.5.1 / 0.5.2
+- Fix issues with package.json deps
+
 ### 0.5.0
 - Fix default remote bchd url (removed "https://" in front)
 - Add example usage in readme
