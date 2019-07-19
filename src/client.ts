@@ -3,10 +3,10 @@ import * as grpc from 'grpc';
 import * as bchrpc from '../pb/bchrpc_pb'
 import * as bchrpc_grpc from '../pb/bchrpc_grpc_pb'
 
-export class Client {
+export class GrpcClient {
     client: bchrpc_grpc.bchrpcClient;
 
-    constructor(url="https://bchd.greyh.at:8335", rootCertPath:string|null=null) {
+    constructor(url="bchd.greyh.at:8335", rootCertPath:string|null=null) {
         let creds = grpc.credentials.createSsl();
         if(rootCertPath) {
             const rootCert = fs.readFileSync(rootCertPath);
@@ -25,7 +25,7 @@ export class Client {
         });
     }
 
-    getRawTransaction(hash: string, reverseOrder?: boolean): Promise<bchrpc.GetRawTransactionResponse> {
+    getRawTransaction({ hash, reverseOrder }: { hash: string; reverseOrder?: boolean; }): Promise<bchrpc.GetRawTransactionResponse> {
         let req = new bchrpc.GetRawTransactionRequest();
         if(reverseOrder)
             req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
@@ -39,7 +39,7 @@ export class Client {
         });
     }
 
-    getTransaction(hash: string, reverseOrder?: boolean): Promise<bchrpc.GetTransactionResponse> {
+    getTransaction({ hash, reverseOrder }: { hash: string; reverseOrder?: boolean; }): Promise<bchrpc.GetTransactionResponse> {
         let req = new bchrpc.GetTransactionRequest();
         if(reverseOrder)
             req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
@@ -53,7 +53,18 @@ export class Client {
         })
     }
 
-    getRawBlock(hash: string, reverseOrder?: boolean): Promise<bchrpc.GetRawBlockResponse> {
+    getAddressUtxos(address: string): Promise<bchrpc.GetAddressUnspentOutputsResponse> {
+        let req = new bchrpc.GetAddressUnspentOutputsRequest()
+        req.setAddress(address);
+        return new Promise((resolve, reject) => {
+            this.client.getAddressUnspentOutputs(req, (err, data) => {
+                if(err!==null) reject(err);
+                else resolve(data!);
+            })
+        })
+    }
+
+    getRawBlock({ hash, reverseOrder }: { hash: string; reverseOrder?: boolean; }): Promise<bchrpc.GetRawBlockResponse> {
         let req = new bchrpc.GetRawBlockRequest();
         if(reverseOrder)
             req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
