@@ -1,16 +1,15 @@
 # BCHD gRPC Interface for Node.js Clients
 
+
 ## Install
 `npm install grpc-bchrpc-node --save` (see [web](https://github.com/jcramer/grpc-bchrpc-web) version)
 
-## Build from source (from `./bchrpc.proto`)
+
+### Build from source (from `./bchrpc.proto`)
 1. Install Protocol Compiler from: https://github.com/protocolbuffers/protobuf
 2. `npm install`
 3. `npm run build && tsc`
 
-## Public Full gRPC Servers
-* https://bchd.greyh.at:8335
-* https://bchd-testnet.greyh.at:18335
 
 ## Example usage
 
@@ -23,7 +22,16 @@ let res = await grpc.getRawTransaction({ hash: txid, reverseOrder: true });
 console.log(Buffer.from(res.getTransaction_asU8()).toString('hex'));
 ```
 
+## Known Public Full gRPC Servers
+* https://bchd.greyh.at:8335
+* https://bchd-testnet.greyh.at:18335
+
+
 ## Change Log
+
+## 0.5.3
+- Add testnet flag to Client constructor
+- Use destructured params in Client constructor
 
 ### 0.5.1 / 0.5.2
 - Fix issues with package.json deps

@@ -1,6 +1,6 @@
 {
   "name": "grpc-bchrpc-node",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Bitcoin Cash gRPC interface for node.js clients.",
   "main": "index.js",
   "files": [

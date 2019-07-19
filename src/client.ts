@@ -6,13 +6,17 @@ import * as bchrpc_grpc from '../pb/bchrpc_grpc_pb'
 export class GrpcClient {
     client: bchrpc_grpc.bchrpcClient;
 
-    constructor(url="bchd.greyh.at:8335", rootCertPath:string|null=null) {
+    constructor({ url = undefined, rootCertPath = undefined, testnet = false }: { url?: string; rootCertPath?: string; testnet?: boolean } = {}) {
         let creds = grpc.credentials.createSsl();
         if(rootCertPath) {
             const rootCert = fs.readFileSync(rootCertPath);
             creds = grpc.credentials.createSsl(rootCert)
         }
-        
+        if(!url && !testnet) {
+            url = "bchd.greyh.at:8335";
+        } else if(!url) {
+            url = "bchd-testnet.greyh.at:18335";
+        }
         this.client = new bchrpc_grpc.bchrpcClient(url, creds)
     }
 
