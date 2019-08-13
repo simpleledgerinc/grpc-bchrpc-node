@@ -10,6 +10,10 @@ service bchrpc {
     // Get info about the mempool.
     rpc GetMempoolInfo(GetMempoolInfoRequest) returns (GetMempoolInfoResponse) {}
 
+    // Returns information about all of the transactions currently in the memory pool.
+    // Offers an option to return full transactions or just transactions hashes.
+    rpc GetMempool(GetMempoolRequest) returns (GetMempoolResponse) {}
+
     // GetBlockchainInfo info about the blockchain including the most recent
     // block hash and height.
     rpc GetBlockchainInfo(GetBlockchainInfoRequest) returns (GetBlockchainInfoResponse) {}
@@ -23,8 +27,9 @@ service bchrpc {
     // Get a serialized block.
     rpc GetRawBlock(GetRawBlockRequest) returns (GetRawBlockResponse) {}
 
-    // **Requires CfIndex**
     // Get a block filter.
+    //
+    // **Requires CfIndex**
     rpc GetBlockFilter(GetBlockFilterRequest) returns (GetBlockFilterResponse) {}
 
     // This RPC sends a block locator object to the server and the server responds with
@@ -56,11 +61,13 @@ service bchrpc {
     // **Requires AddressIndex**
     rpc GetRawAddressTransactions(GetRawAddressTransactionsRequest) returns (GetRawAddressTransactionsResponse) {}
 
-    // Returns all the unspent transaction outpoints for the given address.
-    // Offers offset, limit, and from block options.
+    // Returns all the unspent transaction outputs for the given address.
     //
     // **Requires AddressIndex**
     rpc GetAddressUnspentOutputs(GetAddressUnspentOutputsRequest) returns (GetAddressUnspentOutputsResponse) {}
+
+    // Looks up the unspent output in the utxo set and returns the utxo metadata or not found.
+    rpc GetUnspentOutput(GetUnspentOutputRequest) returns (GetUnspentOutputResponse) {}
 
     // Returns a merkle (SPV) proof that the given transaction is in the provided block.
     //
@@ -71,8 +78,6 @@ service bchrpc {
     rpc SubmitTransaction(SubmitTransactionRequest) returns (SubmitTransactionResponse) {}
 
     // Subscribe to relevant transactions based on the subscription requests.
-    // The parameters to filter transactions on can be updated by sending new
-    // SubscribeTransactionsRequest objects on the stream.
     //
     // This RPC does not use bi-directional streams and therefore can be used
     // with grpc-web. You will need to close and re-open the stream whenever
@@ -95,7 +100,6 @@ service bchrpc {
     // Subscribe to notifications of new blocks being connected to the blockchain
     // or blocks being disconnected.
     rpc SubscribeBlocks(SubscribeBlocksRequest) returns (stream BlockNotification) {}
-
 }
 
 
@@ -105,6 +109,22 @@ message GetMempoolInfoRequest {}
 message GetMempoolInfoResponse {
     uint32 size = 1;
     uint32 bytes = 2;
+}
+
+message GetMempoolRequest {
+    // Provide full transaction info instead of only the hashes.
+    bool full_transactions = 1;
+}
+message GetMempoolResponse {
+    message TransactionData {
+        // Either one of the two following is provided, depending on the request.
+        oneof txids_or_txs {
+            bytes transaction_hash = 1;
+            Transaction transaction = 2;
+        }
+    }
+
+    repeated TransactionData transaction_data = 1;
 }
 
 message GetBlockchainInfoRequest {}
@@ -233,9 +253,24 @@ message GetRawAddressTransactionsResponse {
 
 message GetAddressUnspentOutputsRequest {
     string address = 1;
+    bool include_mempool = 2;
 }
 message GetAddressUnspentOutputsResponse {
     repeated UnspentOutput outputs = 1;
+}
+
+message GetUnspentOutputRequest {
+    bytes hash = 1;
+    uint32 index = 2;
+    bool include_mempool = 3;
+}
+message GetUnspentOutputResponse {
+    Transaction.Input.Outpoint outpoint = 1;
+    bytes pubkey_script = 2;
+    int64 value = 3;
+
+    bool is_coinbase = 4;
+    int32 block_height = 5;
 }
 
 message GetMerkleProofRequest {
@@ -316,6 +351,7 @@ message BlockInfo {
     double difficulty = 10;
     bytes next_block_hash = 11;
     int32 size = 12;
+    int64 median_time = 13;
 }
 
 message Block {

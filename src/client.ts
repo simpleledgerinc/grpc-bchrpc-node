@@ -101,4 +101,15 @@ export class GrpcClient {
             })
         })
     }
+
+    getBlockHeaders(stopHash: string): Promise<bchrpc.GetHeadersResponse> {
+        return new Promise((resolve, reject) => {
+            let req = new bchrpc.GetHeadersRequest();
+            req.setStopHash(new Uint8Array(stopHash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse())
+            this.client.getHeaders(req, (err, data) => {
+                if(err!==null) reject(err);
+                else resolve(data!);
+            });
+        })
+    }
 }

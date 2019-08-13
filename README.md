@@ -22,14 +22,20 @@ let res = await grpc.getRawTransaction({ hash: txid, reverseOrder: true });
 console.log(Buffer.from(res.getTransaction_asU8()).toString('hex'));
 ```
 
-## Known Public Full gRPC Servers
+## BCHD Servers
 * https://bchd.greyh.at:8335
+* https://bchd.imaginary.cash:8335
 * https://bchd-testnet.greyh.at:18335
 
 
 ## Change Log
 
-## 0.5.3
+### 0.5.4
+- Update `bchrpc.proto` per BCHD commit [6f19bfe](https://github.com/gcash/bchd/blob/master/bchrpc/bchrpc.proto)
+- Moved tsc to the end of `npm run build` script
+- Added get block header method to client.ts
+
+### 0.5.3
 - Add testnet flag to Client constructor
 - Use destructured params in Client constructor
 

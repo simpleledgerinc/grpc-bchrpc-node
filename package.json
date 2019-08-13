@@ -1,7 +1,7 @@
 {
   "name": "grpc-bchrpc-node",
-  "version": "0.5.3",
-  "description": "Bitcoin Cash gRPC interface for node.js clients.",
+  "version": "0.5.4",
+  "description": "BCHD gRPC interface for node.js clients.",
   "main": "index.js",
   "files": [
     "index.ts",
@@ -10,16 +10,19 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc && grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./ --grpc_out=./ --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` -I ./ ./pb/*.proto && protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=./ -I ./ ./pb/*.proto"
+    "build": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./ --grpc_out=./ --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` -I ./ ./pb/*.proto && protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=./ -I ./ ./pb/*.proto && tsc"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jcramer/grpc-bchrpc-node.git"
   },
   "keywords": [
-    "bch"
+    "bch",
+    "BCHD",
+    "rpc",
+    "bitcoin"
   ],
-  "author": "",
+  "author": "James Cramer",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jcramer/grpc-bchrpc-node/issues"
