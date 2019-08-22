@@ -30,6 +30,9 @@ console.log(Buffer.from(res.getTransaction_asU8()).toString('hex'));
 
 ## Change Log
 
+### 0.5.5
+- Update `bchrpc.proto` per BCHD commit [31e5e87](https://github.com/gcash/bchd/blob/master/bchrpc/bchrpc.proto)
+
 ### 0.5.4
 - Update `bchrpc.proto` per BCHD commit [6f19bfe](https://github.com/gcash/bchd/blob/master/bchrpc/bchrpc.proto)
 - Moved tsc to the end of `npm run build` script
