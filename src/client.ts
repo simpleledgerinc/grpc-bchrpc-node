@@ -29,6 +29,17 @@ export class GrpcClient {
         });
     }
 
+    getRawMempool(): Promise<bchrpc.GetMempoolResponse> {
+        let req = new bchrpc.GetMempoolRequest();
+        req.setFullTransactions(false);
+        return new Promise((resolve, reject) => {
+            this.client.getMempool(req, (err, data) => {
+                if(err !== null) reject(err);
+                else resolve(data!);
+            });
+        });
+    }
+
     getRawTransaction({ hash, reverseOrder }: { hash: string; reverseOrder?: boolean; }): Promise<bchrpc.GetRawTransactionResponse> {
         let req = new bchrpc.GetRawTransactionRequest();
         if(reverseOrder)
@@ -57,6 +68,23 @@ export class GrpcClient {
         })
     }
 
+    getUnspentTransaction({ hash, vout, reverseOrder, includeMempool }: { hash: string, vout: number, reverseOrder?: boolean, includeMempool?: boolean }): Promise<bchrpc.GetUnspentOutputResponse> {
+        let req = new bchrpc.GetUnspentOutputRequest();
+        if(includeMempool)
+            req.setIncludeMempool(true);
+        if(reverseOrder)
+            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
+        else
+            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))));
+        req.setIndex(vout);
+        return new Promise((resolve, reject) => {
+            this.client.getUnspentOutput(req, (err, data) => {
+                if(err!==null) reject(err);
+                else resolve(data!);
+            });
+        })
+    }
+
     getAddressUtxos(address: string): Promise<bchrpc.GetAddressUnspentOutputsResponse> {
         let req = new bchrpc.GetAddressUnspentOutputsRequest()
         req.setAddress(address);
@@ -68,12 +96,18 @@ export class GrpcClient {
         })
     }
 
-    getRawBlock({ hash, reverseOrder }: { hash: string; reverseOrder?: boolean; }): Promise<bchrpc.GetRawBlockResponse> {
+    getRawBlock({ index, hash, reverseOrder }: { index?: number, hash?: string; reverseOrder?: boolean; }): Promise<bchrpc.GetRawBlockResponse> {
         let req = new bchrpc.GetRawBlockRequest();
-        if(reverseOrder)
-            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
-        else
-            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))));
+        if(index)
+            req.setHeight(index);
+        else if(hash) {
+            if(reverseOrder)
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
+            else
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))));
+        } else {
+            throw Error("No index or hash provided for block");
+        } 
         return new Promise((resolve, reject) => {
             this.client.getRawBlock(req, (err, data) => {
                 if(err!==null) reject(err);
@@ -82,9 +116,39 @@ export class GrpcClient {
         })
     }
 
-    getBlockInfo(index: number): Promise<bchrpc.GetBlockInfoResponse> {
+    getBlock({ index, hash, reverseOrder, fullTransactions }: { index?: number, hash?: string, reverseOrder?: boolean, fullTransactions?: boolean }): Promise<bchrpc.GetBlockResponse> {
+        let req = new bchrpc.GetBlockRequest();
+        if(index)
+            req.setHeight(index);
+        else if(hash) {
+            if(reverseOrder)
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
+            else
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))));
+        } else {
+            throw Error("No index or hash provided for block");
+        }
+        if(fullTransactions)
+            req.setFullTransactions(true);
+        return new Promise((resolve, reject) => {
+            this.client.getBlock(req, (err, data) => {
+                if(err!==null) reject(err);
+                else resolve(data!);
+            })
+        })
+    }
+
+    getBlockInfo({ index, hash, reverseOrder }:{ index?: number, hash?: string, reverseOrder?: boolean }): Promise<bchrpc.GetBlockInfoResponse> {
         let req = new bchrpc.GetBlockInfoRequest()
-        req.setHeight(index);
+        if(index)
+            req.setHeight(index);
+        else if(hash)
+            if(reverseOrder)
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
+            else
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))));
+        else
+            throw Error("No index or hash provided for block")
         return new Promise((resolve, reject) => {
             this.client.getBlockInfo(req, (err, data) => {
                 if(err!==null) reject(err);
@@ -112,4 +176,6 @@ export class GrpcClient {
             });
         })
     }
+
+    
 }

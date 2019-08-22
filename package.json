@@ -1,6 +1,6 @@
 {
   "name": "grpc-bchrpc-node",
-  "version": "0.5.8",
+  "version": "0.6.0",
   "description": "BCHD gRPC interface for node.js clients.",
   "main": "index.js",
   "files": [
@@ -20,7 +20,9 @@
     "bch",
     "BCHD",
     "rpc",
-    "bitcoin"
+    "grpc",
+    "bitcoin",
+    "cash"
   ],
   "author": "James Cramer",
   "license": "MIT",
@@ -29,13 +31,13 @@
   },
   "homepage": "https://github.com/jcramer/grpc-bchrpc-node#readme",
   "devDependencies": {
+    "@types/node": "^12.7.2",
     "grpc_tools_node_protoc_ts": "2.5.4"
   },
   "dependencies": {
     "google-protobuf": "3.9.1",
     "grpc": "1.23.1",
     "protobufjs": "6.8.8",
-    "@types/google-protobuf": "3.7.1",
-    "@types/node": "12.7.2"
+    "@types/google-protobuf": "3.7.1"
   }
 }

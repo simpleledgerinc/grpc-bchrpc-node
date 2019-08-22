@@ -30,6 +30,9 @@ console.log(Buffer.from(res.getTransaction_asU8()).toString('hex'));
 
 ## Change Log
 
+### 0.6.0
+- Updated/added several gRPC methods to client.ts for SLPDB gRPC work
+
 ### 0.5.7
 - Lock down dep versions to prevent TS compile errors
 
