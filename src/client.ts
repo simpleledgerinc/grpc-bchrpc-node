@@ -2,11 +2,13 @@ import * as fs from 'fs';
 import * as grpc from 'grpc';
 import * as bchrpc from '../pb/bchrpc_pb'
 import * as bchrpc_grpc from '../pb/bchrpc_grpc_pb'
+import { rejects } from 'assert';
+import { resolve } from 'path';
 
 export class GrpcClient {
     client: bchrpc_grpc.bchrpcClient;
 
-    constructor({ url = undefined, rootCertPath = undefined, testnet = false }: { url?: string; rootCertPath?: string; testnet?: boolean } = {}) {
+    constructor({ url, rootCertPath, testnet }: { url?: string; rootCertPath?: string; testnet?: boolean } = {}) {
         let creds = grpc.credentials.createSsl();
         if(rootCertPath) {
             const rootCert = fs.readFileSync(rootCertPath);
@@ -140,8 +142,7 @@ export class GrpcClient {
 
     getBlockInfo({ index, hash, reverseOrder }:{ index?: number, hash?: string, reverseOrder?: boolean }): Promise<bchrpc.GetBlockInfoResponse> {
         let req = new bchrpc.GetBlockInfoRequest()
-        if(index)
-            req.setHeight(index);
+        if(index) req.setHeight(index);
         else if(hash)
             if(reverseOrder)
                 req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
@@ -177,5 +178,38 @@ export class GrpcClient {
         })
     }
 
-    
+    subscribeTransactions({ includeMempoolAcceptance, includeBlockAcceptance, includeSerializedTxn }: { includeMempoolAcceptance?: boolean, includeBlockAcceptance?: boolean, includeSerializedTxn?: boolean }
+        ): Promise<grpc.ClientReadableStream<bchrpc.TransactionNotification>> 
+    {
+        return new Promise((resolve, reject) => {
+            let req = new bchrpc.SubscribeTransactionsRequest();
+            includeMempoolAcceptance ? req.setIncludeMempool(true) : req.setIncludeMempool(false);
+            includeBlockAcceptance ? req.setIncludeInBlock(true) : req.setIncludeInBlock(false);
+            includeSerializedTxn ? req.setSerializeTx(true) : req.setSerializeTx(false);
+            let filter = new bchrpc.TransactionFilter();
+            filter.setAllTransactions(true);
+            req.setSubscribe(filter);
+            try {
+                resolve(this.client.subscribeTransactions(req));
+            } catch(err) {
+                reject(err);
+            }
+        })
+    }
+
+    subscribeBlocks({ includeSerializedBlock, includeTxnHashes, includeTxnData }: { includeSerializedBlock?: boolean, includeTxnHashes?: boolean, includeTxnData?: boolean }
+        ): Promise<grpc.ClientReadableStream<bchrpc.BlockNotification>>
+    {
+        return new Promise((resolve, reject) => {
+            let req = new bchrpc.SubscribeBlocksRequest();
+            includeTxnHashes ? req.setFullBlock(true) : req.setFullBlock(false);
+            includeTxnData ? req.setFullTransactions(true) : req.setFullTransactions(false);
+            includeSerializedBlock ? req.setSerializeBlock(true) : req.setSerializeBlock(false);
+            try {
+                resolve(this.client.subscribeBlocks(req));
+            } catch(err) {
+                reject(err);
+            }
+        })
+    }
 }

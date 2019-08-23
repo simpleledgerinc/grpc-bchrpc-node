@@ -30,6 +30,9 @@ console.log(Buffer.from(res.getTransaction_asU8()).toString('hex'));
 
 ## Change Log
 
+### 0.6.1
+- Added subscribe methods for txn and block notifications  
+
 ### 0.6.0
 - Updated/added several gRPC methods to client.ts for SLPDB gRPC work
 
