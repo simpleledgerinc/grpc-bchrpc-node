@@ -1,14 +1,12 @@
 import * as fs from 'fs';
 import * as grpc from 'grpc';
-import * as bchrpc from '../pb/bchrpc_pb'
-import * as bchrpc_grpc from '../pb/bchrpc_grpc_pb'
-import { rejects } from 'assert';
-import { resolve } from 'path';
+import * as bchrpc from '../pb/bchrpc_pb';
+import * as bchrpc_grpc from '../pb/bchrpc_grpc_pb';
 
 export class GrpcClient {
     client: bchrpc_grpc.bchrpcClient;
 
-    constructor({ url, rootCertPath, testnet }: { url?: string; rootCertPath?: string; testnet?: boolean } = {}) {
+    constructor({ url, rootCertPath, testnet, options }: { url?: string; rootCertPath?: string; testnet?: boolean, options?: object } = {}) {
         let creds = grpc.credentials.createSsl();
         if(rootCertPath) {
             const rootCert = fs.readFileSync(rootCertPath);
@@ -19,7 +17,13 @@ export class GrpcClient {
         } else if(!url) {
             url = "bchd-testnet.greyh.at:18335";
         }
-        this.client = new bchrpc_grpc.bchrpcClient(url, creds)
+        if(!options) {
+            options = {
+                'grpc.max_receive_message_length': -1, // unlimited
+            }
+        }
+
+        this.client = new bchrpc_grpc.bchrpcClient(url, creds, options)
     }
 
     getMempoolInfo(): Promise<bchrpc.GetMempoolInfoResponse> {

@@ -30,6 +30,10 @@ console.log(Buffer.from(res.getTransaction_asU8()).toString('hex'));
 
 ## Change Log
 
+### 0.6.2
+- Allow unlimited receive message data size limit by default for node.js gRPC Client
+- Add options parameter to client.ts
+
 ### 0.6.1
 - Added subscribe methods for txn and block notifications  
 
