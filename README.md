@@ -2,7 +2,7 @@
 
 
 ## Install
-`npm install grpc-bchrpc-node --save` (see [web](https://github.com/jcramer/grpc-bchrpc-web) version)
+`npm i grpc-bchrpc-node` (for web-browser based projects see [this](https://github.com/jcramer/grpc-bchrpc-web) version)
 
 
 ### Build from source (from `./bchrpc.proto`)
@@ -29,6 +29,12 @@ console.log(Buffer.from(res.getTransaction_asU8()).toString('hex'));
 
 
 ## Change Log
+
+### 0.7.0
+- Add an initial unit tests (WIP)
+- Add linting
+- Add submitTransaction method
+- (breaking change) Added includeMempool as a destructured parameters in getAddressUtxos
 
 ### 0.6.2
 - Allow unlimited receive message data size limit by default for node.js gRPC Client
