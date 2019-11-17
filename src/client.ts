@@ -75,6 +75,16 @@ export class GrpcClient {
         });
     }
 
+    public getAddressTransactions({ address }: { address: string }): Promise<bchrpc.GetAddressTransactionsResponse> {
+        const req = new bchrpc.GetAddressTransactionsRequest();
+        req.setAddress(address);
+        return new Promise((resolve, reject) => {
+            this.client.getAddressTransactions(req, (err, data) => {
+                if (err !== null) { reject(err); } else { resolve(data!); }
+            });
+        });
+    }
+
     public getUnspentTransaction({ hash, vout, reversedHashOrder, includeMempool }:
         { hash: string, vout: number, reversedHashOrder?: boolean,
             includeMempool?: boolean }): Promise<bchrpc.GetUnspentOutputResponse> {

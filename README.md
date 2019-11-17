@@ -30,6 +30,9 @@ console.log(Buffer.from(res.getTransaction_asU8()).toString('hex'));
 
 ## Change Log
 
+### 0.7.1
+- Add "getAddressTransactions" method and new unit test
+
 ### 0.7.0
 - Add an initial unit tests (WIP)
 - Add linting
