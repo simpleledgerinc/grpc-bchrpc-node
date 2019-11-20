@@ -85,7 +85,7 @@ export class GrpcClient {
         });
     }
 
-    public getUnspentTransaction({ hash, vout, reversedHashOrder, includeMempool }:
+    public getUnspentOutput({ hash, vout, reversedHashOrder, includeMempool }:
         { hash: string, vout: number, reversedHashOrder?: boolean,
             includeMempool?: boolean }): Promise<bchrpc.GetUnspentOutputResponse> {
         const req = new bchrpc.GetUnspentOutputRequest();

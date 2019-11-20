@@ -30,6 +30,9 @@ console.log(Buffer.from(res.getTransaction_asU8()).toString('hex'));
 
 ## Change Log
 
+### 0.8.0
+- Rename "getUnspentTransaction" to "getUnspentOutput"
+
 ### 0.7.1
 - Add "getAddressTransactions" method and new unit test
 
