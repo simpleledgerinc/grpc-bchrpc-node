@@ -132,7 +132,7 @@ export class GrpcClient {
             }
         } else {
             throw Error("No index or hash provided for block");
-        } 
+        }
         return new Promise((resolve, reject) => {
             this.client.getRawBlock(req, (err, data) => {
                 if (err !== null) { reject(err); } else { resolve(data!); }
@@ -174,9 +174,9 @@ export class GrpcClient {
             } else {
                 req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))));
             }
-            } else {
-                throw Error("No index or hash provided for block");
-            }
+        } else {
+            throw Error("No index or hash provided for block");
+        }
         return new Promise((resolve, reject) => {
             this.client.getBlockInfo(req, (err, data) => {
                 if (err !== null) { reject(err); } else { resolve(data!); };
@@ -237,15 +237,19 @@ export class GrpcClient {
         });
     }
 
-    public submitTransaction(txn: string|Buffer): Promise<bchrpc.SubmitTransactionResponse> {
-        let txnHex: string;
+    public submitTransaction({ txnBuf, txnHex, txn }: { txnBuf?: Buffer, txnHex?: string, txn?: Uint8Array }): Promise<bchrpc.SubmitTransactionResponse> {
+        let tx: string|Uint8Array;
         const req = new bchrpc.SubmitTransactionRequest();
-        if (typeof txn !== "string") {
-            txnHex = txn.toString("hex");
+        if (txnBuf) {
+            tx = txnBuf.toString("base64");
+        } else if (txnHex) {
+            tx = Buffer.from(txnHex, "hex").toString("base64");
+        } else if (txn) {
+            tx = txn;
         } else {
-            txnHex = txn;
+            throw Error("Most provide either Hex string, Buffer, or Uint8Array");
         }
-        req.setTransaction(txnHex);
+        req.setTransaction(tx);
         return new Promise((resolve, reject) => {
             this.client.submitTransaction(req, (err, data) => {
                 if (err !== null) { reject(err); } else { resolve(data!); }

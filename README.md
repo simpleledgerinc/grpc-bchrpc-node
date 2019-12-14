@@ -30,6 +30,9 @@ console.log(Buffer.from(res.getTransaction_asU8()).toString('hex'));
 
 ## Change Log
 
+### 0.9.0
+- Fix the `submitTransaction` method
+
 ### 0.8.0
 - Rename "getUnspentTransaction" to "getUnspentOutput"
 
