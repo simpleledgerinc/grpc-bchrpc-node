@@ -49,9 +49,9 @@ export class GrpcClient {
         { hash: string; reversedHashOrder?: boolean; }): Promise<bchrpc.GetRawTransactionResponse> {
         const req = new bchrpc.GetRawTransactionRequest();
         if (reversedHashOrder) {
-            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
+            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
         } else {
-            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))));
+            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))));
         }
         return new Promise((resolve, reject) => {
             this.client.getRawTransaction(req, (err, data) => {
@@ -64,9 +64,9 @@ export class GrpcClient {
         { hash: string; reversedHashOrder?: boolean; }): Promise<bchrpc.GetTransactionResponse> {
         const req = new bchrpc.GetTransactionRequest();
         if (reversedHashOrder) {
-            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
+            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
         } else {
-            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))));
+            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))));
         }
         return new Promise((resolve, reject) => {
             this.client.getTransaction(req, (err, data) => {
@@ -75,8 +75,31 @@ export class GrpcClient {
         });
     }
 
-    public getAddressTransactions({ address }: { address: string }): Promise<bchrpc.GetAddressTransactionsResponse> {
+    public getAddressTransactions({ address, nbSkip, nbFetch, height, hash, reversedHashOrder }:
+        { address: string,
+            nbSkip?: number, nbFetch?: number,
+            height?: number,
+            hash?: string,
+            reversedHashOrder?: boolean,
+        }):
+        Promise<bchrpc.GetAddressTransactionsResponse> {
         const req = new bchrpc.GetAddressTransactionsRequest();
+        if (nbSkip) {
+            req.setNbSkip(nbSkip);
+        }
+        if (nbFetch) {
+            req.setNbFetch(nbFetch);
+        }
+        if (height) {
+            req.setHeight(height);
+        }
+        if (hash) {
+            if (reversedHashOrder) {
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
+            } else {
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))));
+            }
+        }
         req.setAddress(address);
         return new Promise((resolve, reject) => {
             this.client.getAddressTransactions(req, (err, data) => {
@@ -93,9 +116,9 @@ export class GrpcClient {
             req.setIncludeMempool(true);
         }
         if (reversedHashOrder) {
-            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
+            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
         } else {
-            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))));
+            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))));
         }
         req.setIndex(vout);
         return new Promise((resolve, reject) => {
@@ -126,9 +149,9 @@ export class GrpcClient {
             req.setHeight(index);
         } else if (hash) {
             if (reversedHashOrder) {
-                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
             } else {
-                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))));
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))));
             }
         } else {
             throw Error("No index or hash provided for block");
@@ -148,9 +171,9 @@ export class GrpcClient {
             req.setHeight(index);
         } else if (hash) {
             if (reversedHashOrder) {
-                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
             } else {
-                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))));
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))));
             }
         } else {
             throw Error("No index or hash provided for block");
@@ -170,16 +193,16 @@ export class GrpcClient {
         const req = new bchrpc.GetBlockInfoRequest();
         if (index !== null && index !== undefined) { req.setHeight(index); } else if (hash) {
             if (reversedHashOrder) {
-                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
             } else {
-                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))));
+                req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))));
             }
         } else {
             throw Error("No index or hash provided for block");
         }
         return new Promise((resolve, reject) => {
             this.client.getBlockInfo(req, (err, data) => {
-                if (err !== null) { reject(err); } else { resolve(data!); };
+                if (err !== null) { reject(err); } else { resolve(data!); }
             });
         });
     }
@@ -195,7 +218,7 @@ export class GrpcClient {
     public getBlockHeaders(stopHash: string): Promise<bchrpc.GetHeadersResponse> {
         return new Promise((resolve, reject) => {
             const req = new bchrpc.GetHeadersRequest();
-            req.setStopHash(new Uint8Array(stopHash.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))).reverse());
+            req.setStopHash(new Uint8Array(stopHash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
             this.client.getHeaders(req, (err, data) => {
                 if (err !== null) { reject(err); } else { resolve(data!); }
             });
@@ -203,7 +226,7 @@ export class GrpcClient {
     }
 
     public subscribeTransactions({ includeMempoolAcceptance, includeBlockAcceptance, includeSerializedTxn }:
-        { includeMempoolAcceptance?: boolean, includeBlockAcceptance?: boolean, includeSerializedTxn?: boolean }
+        { includeMempoolAcceptance?: boolean, includeBlockAcceptance?: boolean, includeSerializedTxn?: boolean },
         ): Promise<grpc.ClientReadableStream<bchrpc.TransactionNotification>> {
         return new Promise((resolve, reject) => {
             const req = new bchrpc.SubscribeTransactionsRequest();
@@ -222,7 +245,7 @@ export class GrpcClient {
     }
 
     public subscribeBlocks({ includeSerializedBlock, includeTxnHashes, includeTxnData }:
-        { includeSerializedBlock?: boolean, includeTxnHashes?: boolean, includeTxnData?: boolean }
+        { includeSerializedBlock?: boolean, includeTxnHashes?: boolean, includeTxnData?: boolean },
         ): Promise<grpc.ClientReadableStream<bchrpc.BlockNotification>> {
         return new Promise((resolve, reject) => {
             const req = new bchrpc.SubscribeBlocksRequest();
