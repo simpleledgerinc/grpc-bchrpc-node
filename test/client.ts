@@ -4,6 +4,13 @@ import { GrpcClient } from "../src/client";
 const grpc = new GrpcClient();
 
 describe("grpc-bchrpc-node", () => {
+
+    it("getRawTransaction returns the transaction (README example)", async () => {
+        const txid = "11556da6ee3cb1d14727b3a8f4b37093b6fecd2bc7d577a02b4e98b7be58a7e8";
+        const res = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        assert.equal(res.getTransaction_asU8().length, 441);
+    });
+
     it("getBlockInfo for index 0", async () => {
         const info = await grpc.getBlockInfo({index: 0});
         assert.equal(info.getInfo()!.getHeight(), 0);
@@ -14,7 +21,7 @@ describe("grpc-bchrpc-node", () => {
     it("getAddressTransactions for and example address", async () => {
         const exampleAddress = "bitcoincash:qregyd3kcklc58fd6r8epfwulpvd9f4mr5gxg8n8y7";
         const firstTxid = "5248906d6ac8425f287727797307d7305291f57d30406cb627e6573bbb77a344";
-        const res = await grpc.getAddressTransactions({address: exampleAddress});
+        const res = await grpc.getAddressTransactions({address: exampleAddress, height: 0});
         const txns = res.getConfirmedTransactionsList();
         assert.equal(txns.length >= 3, true);
         const tx1 = txns.filter(t => Buffer.from(t.getHash_asU8().reverse()).toString("hex") === firstTxid)[0];

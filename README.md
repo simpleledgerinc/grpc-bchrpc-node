@@ -18,9 +18,19 @@ In this simple example we create a new client that connects to `bchd.greyh.at:83
 ```ts
 let grpc = new GrpcClient();
 let txid = "11556da6ee3cb1d14727b3a8f4b37093b6fecd2bc7d577a02b4e98b7be58a7e8";
-let res = await grpc.getRawTransaction({ hash: txid, reverseOrder: true });
+let res = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
 console.log(Buffer.from(res.getTransaction_asU8()).toString('hex'));
 ```
+
+See also the `test` directory for more examples of how to use.
+
+
+## Tests
+
+Some integration tests have been added. Extensive test coverage is not planned currently planned since this library is just a wrapper for BCHD's gRPC interface.
+
+`$ npm test`
+
 
 ## BCHD Servers
 * https://bchd.greyh.at:8335
