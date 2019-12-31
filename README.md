@@ -33,10 +33,29 @@ Some integration tests have been added. Extensive test coverage is not planned c
 
 
 ## BCHD Servers
+
 * https://bchd.greyh.at:8335
 * https://bchd.imaginary.cash:8335
 * https://bchd-testnet.greyh.at:18335
 * https://bchd.fountainhead.cash:443
+
+
+## Connecting to local BCHD
+
+To connect to a local BCHD server you will need to utilize a self-signed certificate.  The following command can be used to create a new cert and key file:
+
+```
+openssl req -x509 -out localhost.crt -keyout localhost.key \
+  -newkey rsa:2048 -nodes -sha256 \
+  -subj '/CN=localhost' -extensions EXT -config <( \
+   printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+```
+
+Start BCHD using `rpccert=` and `rpckey=` flags pointing to your new certificate files.
+
+Then you can connect using the following `GrpcClient` constructor:
+
+`const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "<path to cert>/localhost.crt"});`
 
 
 ## Change Log
