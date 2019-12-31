@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jcramer/grpc-bchrpc-node.git"
+    "url": "git+https://github.com/simpleledgerinc/grpc-bchrpc-node.git"
   },
   "keywords": [
     "bch",
