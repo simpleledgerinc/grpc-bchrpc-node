@@ -260,7 +260,8 @@ export class GrpcClient {
         });
     }
 
-    public submitTransaction({ txnBuf, txnHex, txn }: { txnBuf?: Buffer, txnHex?: string, txn?: Uint8Array }): Promise<bchrpc.SubmitTransactionResponse> {
+    public submitTransaction({ txnBuf, txnHex, txn }:
+        { txnBuf?: Buffer, txnHex?: string, txn?: Uint8Array }): Promise<bchrpc.SubmitTransactionResponse> {
         let tx: string|Uint8Array;
         const req = new bchrpc.SubmitTransactionRequest();
         if (txnBuf) {

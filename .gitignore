@@ -1,6 +1,8 @@
 pb/*.ts
 *.js
 *.d.ts
+!!pb/*.d.ts
 node_modules
 index.js
 *.js.map
+.nyc_output
