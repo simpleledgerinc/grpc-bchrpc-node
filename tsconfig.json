@@ -65,5 +65,8 @@
   "exclude": [
     "node_modules",
     "test/**/*.ts"
+  ], 
+  "files": [
+    "index.ts"
   ]
 }
