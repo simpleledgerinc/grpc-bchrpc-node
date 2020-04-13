@@ -45,7 +45,7 @@ Some integration tests have been added. Extensive test coverage is not planned c
 To connect to a local BCHD server you will need to utilize a self-signed certificate.  The following command can be used to create a new cert and key file:
 
 ```
-openssl req -x509 -out localhost.crt -keyout localhost.key \
+openssl req -x509 -days 100000 -out localhost.crt -keyout localhost.key \
   -newkey rsa:2048 -nodes -sha256 \
   -subj '/CN=localhost' -extensions EXT -config <( \
    printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
