@@ -46,4 +46,5 @@ describe("grpc-bchrpc-node", () => {
             assert.equal(err.message, "3 INVALID_ARGUMENT: tx rejected: transaction already exists");
         }
     });
+
 });

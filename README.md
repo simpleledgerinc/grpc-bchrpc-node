@@ -1,19 +1,20 @@
 # BCHD gRPC Interface for Node.js Clients
 
+This package provides a node.js client for connecting local BCHD instances of BCHD via gRPC.
 
 ## Install
-`npm i grpc-bchrpc-node` (for web-browser based projects see [this](https://github.com/jcramer/grpc-bchrpc-web) version)
+`$ npm i grpc-bchrpc-node` (for web-browser based projects see [this](https://github.com/jcramer/grpc-bchrpc-web) version)
 
 
 ### Build from source (from `./bchrpc.proto`)
-1. Install Protocol Compiler from: https://github.com/protocolbuffers/protobuf
-2. `npm install`
-3. `npm run build && tsc`
+1. Install Protobuf Compiler from: https://github.com/protocolbuffers/protobuf
+2. `$ npm i`
+3. `$ npm run build`
 
 
 ## Example usage
 
-In this simple example we create a new client that connects to `bchd.greyh.at:8335` by default.  We call `getRawTransaction` and then print the results to the console.  We use `reverseOrder` in call to getRawTransaction because BCHD works with transaction hash not the conventional reversed hash/txid.
+In this simple example we create a new client that connects to `bchd.greyh.at:8335` by default.  We call `getRawTransaction` and then print the results to the console.  We use `reversedHashOrder` in call to getRawTransaction because BCHD works with transaction hash not the conventional reversed hash/txid.
 
 ```ts
 let grpc = new GrpcClient();
@@ -47,8 +48,9 @@ To connect to a local BCHD server you will need to utilize a self-signed certifi
 ```
 openssl req -x509 -days 100000 -out localhost.crt -keyout localhost.key \
   -newkey rsa:2048 -nodes -sha256 \
-  -subj '/CN=localhost' -extensions EXT -config <( \
-   printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+  -subj '/CN=192.168.0.7' -extensions EXT -config <( \
+   printf "[dn]\nCN=192.168.0.7\n[req]\ndistinguished_name = dn\n[EXT] \
+   \nsubjectAltName=DNS:192.168.0.7\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
 ```
 
 Start BCHD using `rpccert=` and `rpckey=` flags pointing to your new certificate files.
