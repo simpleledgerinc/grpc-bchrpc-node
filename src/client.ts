@@ -35,9 +35,13 @@ export class GrpcClient {
         });
     }
 
-    public getRawMempool(): Promise<bchrpc.GetMempoolResponse> {
+    public getRawMempool({ fullTransactions = false }): Promise<bchrpc.GetMempoolResponse> {
         const req = new bchrpc.GetMempoolRequest();
-        req.setFullTransactions(false);
+        if (fullTransactions) {
+            req.setFullTransactions(true);
+        } else {
+            req.setFullTransactions(false);
+        }
         return new Promise((resolve, reject) => {
             this.client.getMempool(req, (err, data) => {
                 if (err !== null) { reject(err); } else { resolve(data!); }
