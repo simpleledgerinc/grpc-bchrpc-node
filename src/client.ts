@@ -225,8 +225,11 @@ export class GrpcClient {
         });
     }
 
-    public subscribeTransactions({ includeMempoolAcceptance, includeBlockAcceptance, includeSerializedTxn }:
-        { includeMempoolAcceptance?: boolean, includeBlockAcceptance?: boolean, includeSerializedTxn?: boolean },
+    public subscribeTransactions({ includeMempoolAcceptance, includeBlockAcceptance,
+                                    includeSerializedTxn, addresses, outpoints }:
+        { includeMempoolAcceptance?: boolean, includeBlockAcceptance?: boolean,
+            includeSerializedTxn?: boolean, addresses?: string[],
+            outpoints?: Array<{ txid: Buffer, vout: number }> },
         ): Promise<grpc.ClientReadableStream<bchrpc.TransactionNotification>> {
         return new Promise((resolve, reject) => {
             const req = new bchrpc.SubscribeTransactionsRequest();
@@ -234,7 +237,29 @@ export class GrpcClient {
             includeBlockAcceptance ? req.setIncludeInBlock(true) : req.setIncludeInBlock(false);
             includeSerializedTxn ? req.setSerializeTx(true) : req.setSerializeTx(false);
             const filter = new bchrpc.TransactionFilter();
-            filter.setAllTransactions(true);
+            if (addresses) {
+                for (const addr of addresses) {
+                    // TODO check for cashAddr format, auto convert slpAddr format to cashAddr
+                    filter.addAddresses(addr);
+                }
+                if (addresses.length === 0) {
+                    addresses = undefined;
+                }
+            }
+            if (outpoints) {
+                for (const outpoint of outpoints) {
+                    const o = new bchrpc.Transaction.Input.Outpoint();
+                    o.setHash(outpoint.txid.reverse());
+                    o.setIndex(outpoint.vout);
+                    filter.addOutpoints(o);
+                }
+                if (outpoints.length === 0) {
+                    outpoints = undefined;
+                }
+            }
+            if (! addresses && ! outpoints) {
+                filter.setAllTransactions(true);
+            }
             req.setSubscribe(filter);
             try {
                 resolve(this.client.subscribeTransactions(req));
