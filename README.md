@@ -62,6 +62,13 @@ Then you can connect using the following `GrpcClient` constructor:
 
 ## Change Log
 
+### 0.10.2
+- Add optional addresses/outpoint filters for transaction subscription
+- Add optional include full transaction in raw mempool request
+
+### 0.10.1
+- Typings update (export all grpc types)
+
 ### 0.10.0
 - Update the `getAddressTransactions` method with new parameters
 
