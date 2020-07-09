@@ -74,6 +74,9 @@ service bchrpc {
     // **Requires TxIndex***
     rpc GetMerkleProof(GetMerkleProofRequest) returns (GetMerkleProofResponse) {}
 
+    // Return SLP token metadata
+    rpc GetTokenMetadata(GetTokenMetadataRequest) returns (GetTokenMetadataResponse) {}
+
     // Submit a transaction to all connected peers.
     rpc SubmitTransaction(SubmitTransactionRequest) returns (SubmitTransactionResponse) {}
 
@@ -91,7 +94,7 @@ service bchrpc {
     // The parameters to filter transactions on can be updated by sending new
     // SubscribeTransactionsRequest objects on the stream.
     //
-    // Because this RPC using bi-directional streaming it cannot be used with
+    // Because this RPC is using bi-directional streaming it cannot be used with
     // grpc-web.
     //
     // **Requires TxIndex to receive input metadata**
@@ -197,9 +200,13 @@ message GetHeadersResponse {
 
 message GetTransactionRequest {
     bytes hash = 1;
+
+    bool include_slp_metadata = 2; // this is token metadata.  txn level SLP data will be returned regardless of this value
 }
 message GetTransactionResponse {
     Transaction transaction = 1;
+
+    TokenMetadata slp_metadata = 2;
 }
 
 message GetRawTransactionRequest {
@@ -339,6 +346,13 @@ message SubscribeBlocksRequest {
     bool serialize_block = 3;
 }
 
+message GetTokenMetadataRequest {
+    repeated bytes token_ids = 1;
+}
+
+message GetTokenMetadataResponse {
+    repeated TokenMetadata slp_metadata = 1;
+}
 
 // NOTIFICATIONS
 
@@ -421,6 +435,7 @@ message Transaction {
         int64 value = 5;
         bytes previous_script = 6;
         string address = 7;
+        SlpToken slp_token = 8;
     }
     message Output {
         uint32 index = 1;
@@ -429,8 +444,8 @@ message Transaction {
         string address = 4;
         string script_class = 5;
         string disassembled_script = 6;
+        SlpToken slp_token = 7;
     }
-
     bytes hash = 1;
     int32 version = 2;
     repeated Input inputs = 3;
@@ -443,6 +458,8 @@ message Transaction {
     int32 confirmations = 10;
     int32 block_height = 11;
     bytes block_hash = 12;
+
+    SlpTransactionInfo slp_transaction_info = 13;
 }
 
 message MempoolTransaction {
@@ -478,6 +495,93 @@ message TransactionFilter {
     // - scriptPubkey
 
     // Subscribed/Unsubscribe to everything. Other filters
-    // will be ignored.
+    // will be ignored.    
     bool all_transactions = 4;
+
+    // Subscribed/Unsubscribe to everything SLP. Other filters
+    // will be ignored, except this filter will be overriden by all_transactions=true
+    bool all_slp_transactions = 5;
+
+    // only transactions associated with the included tokenIds
+    repeated string slp_token_ids = 6;
+}
+
+// slp
+message SlpToken {
+    bytes token_id = 1;
+    uint64 amount = 2;
+}
+
+message SlpTransactionInfo {
+    SlpVersionType version_type = 1;
+    string parse_error = 2;
+    bytes token_id = 3;
+    enum BurnFlags {
+        BURNED_INPUTS_FROM_OUTPUTS_TOO_HIGH = 0;
+    }
+    repeated BurnFlags burn_flags = 4;
+    oneof slp_opreturn_metadata {
+        SlpV1GenesisMetadata v1_genesis_message = 5;
+        SlpV1MintMetadata v1_mint_message = 6;
+        SlpV1SendMetadata v1_send_message = 7;
+    }
+}
+
+message SlpV1GenesisMetadata {
+    string name = 1;
+    string ticker = 2;
+    string document_url = 3;
+    bytes document_hash = 4;
+    uint32 decimals = 5;
+    uint32 mint_baton_vout = 6;
+    uint64 mint_amount = 7;
+}
+
+message SlpV1MintMetadata {
+    uint32 mint_baton_vout = 1;
+    uint64 mint_amount = 2;
+}
+
+message SlpV1SendMetadata {
+    repeated uint64 amounts = 1;
+}
+
+enum SlpVersionType {
+    NON_SLP = 0;
+    SLP_UNSUPPORTED_VERSION = 1;
+    SLP_PARSE_ERROR = 2;
+    SLP_V1_GENESIS = 3;
+    SLP_V1_MINT = 4;
+    SLP_V1_SEND = 5;
+}
+
+message TokenMetadataTokenType1 {
+	// nothing special here
+}
+
+message TokenMetadataNFT1Group {
+    //repeated bytes nftChildIDs = 1; // DO WE WANT THIS?
+}
+
+message TokenMetadataNFT1Child {
+    bytes nft1_group_id = 1;
+}
+
+message TokenMetadata {
+	bytes token_id = 1;
+ 	uint32 token_type = 2;
+	string token_ticker = 3;
+	string token_name = 4;
+	string token_document_url = 5;
+	string token_document_hash = 6;
+	uint32 decimals = 7;
+	uint64 initial_token_mint_quantity = 8;
+    bytes mint_baton_txid = 9;
+    uint32 mint_baton_vout = 10;
+	uint32 height_created = 11;
+	oneof type_metadata {
+        TokenMetadataTokenType1 metadata_type1 = 12;
+        TokenMetadataNFT1Group metadata_nft1_group = 13;
+        TokenMetadataNFT1Child metadata_nft1_child = 14;
+    }
 }
