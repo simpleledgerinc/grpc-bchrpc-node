@@ -35,7 +35,11 @@ export class GrpcClient {
         });
     }
 
-    public getRawMempool({ fullTransactions = false }): Promise<bchrpc.GetMempoolResponse> {
+    public getRawMempool({
+        fullTransactions,
+    }: {
+        fullTransactions?: boolean,
+    } = {}): Promise<bchrpc.GetMempoolResponse> {
         const req = new bchrpc.GetMempoolRequest();
         if (fullTransactions) {
             req.setFullTransactions(true);
@@ -229,68 +233,15 @@ export class GrpcClient {
         });
     }
 
-    public subscribeTransactions({ includeMempoolAcceptance, includeBlockAcceptance,
-                                    includeSerializedTxn, addresses, outpoints }:
-        { includeMempoolAcceptance?: boolean, includeBlockAcceptance?: boolean,
-            includeSerializedTxn?: boolean, addresses?: string[],
-            outpoints?: Array<{ txid: Buffer, vout: number }> },
-        ): Promise<grpc.ClientReadableStream<bchrpc.TransactionNotification>> {
-        return new Promise((resolve, reject) => {
-            const req = new bchrpc.SubscribeTransactionsRequest();
-            includeMempoolAcceptance ? req.setIncludeMempool(true) : req.setIncludeMempool(false);
-            includeBlockAcceptance ? req.setIncludeInBlock(true) : req.setIncludeInBlock(false);
-            includeSerializedTxn ? req.setSerializeTx(true) : req.setSerializeTx(false);
-            const filter = new bchrpc.TransactionFilter();
-            if (addresses) {
-                for (const addr of addresses) {
-                    // TODO check for cashAddr format, auto convert slpAddr format to cashAddr
-                    filter.addAddresses(addr);
-                }
-                if (addresses.length === 0) {
-                    addresses = undefined;
-                }
-            }
-            if (outpoints) {
-                for (const outpoint of outpoints) {
-                    const o = new bchrpc.Transaction.Input.Outpoint();
-                    o.setHash(outpoint.txid.reverse());
-                    o.setIndex(outpoint.vout);
-                    filter.addOutpoints(o);
-                }
-                if (outpoints.length === 0) {
-                    outpoints = undefined;
-                }
-            }
-            if (! addresses && ! outpoints) {
-                filter.setAllTransactions(true);
-            }
-            req.setSubscribe(filter);
-            try {
-                resolve(this.client.subscribeTransactions(req));
-            } catch (err) {
-                reject(err);
-            }
-        });
-    }
-
-    public subscribeBlocks({ includeSerializedBlock, includeTxnHashes, includeTxnData }:
-        { includeSerializedBlock?: boolean, includeTxnHashes?: boolean, includeTxnData?: boolean },
-        ): Promise<grpc.ClientReadableStream<bchrpc.BlockNotification>> {
-        return new Promise((resolve, reject) => {
-            const req = new bchrpc.SubscribeBlocksRequest();
-            includeTxnHashes ? req.setFullBlock(true) : req.setFullBlock(false);
-            includeTxnData ? req.setFullTransactions(true) : req.setFullTransactions(false);
-            includeSerializedBlock ? req.setSerializeBlock(true) : req.setSerializeBlock(false);
-            try {
-                resolve(this.client.subscribeBlocks(req));
-            } catch (err) {
-                reject(err);
-            }
-        });
-    }
-
-    public submitTransaction({ txnBuf, txnHex, txn }:
-        { txnBuf?: Buffer, txnHex?: string, txn?: Uint8Array }): Promise<bchrpc.SubmitTransactionResponse> {
+    public submitTransaction({
+        txnBuf,
+        txnHex,
+        txn,
+    }: {
+        txnBuf?: Buffer,
+        txnHex?: string,
+        txn?: Uint8Array,
+    } = {}): Promise<bchrpc.SubmitTransactionResponse> {
         let tx: string|Uint8Array;
         const req = new bchrpc.SubmitTransactionRequest();
         if (txnBuf) {
@@ -307,6 +258,94 @@ export class GrpcClient {
             this.client.submitTransaction(req, (err, data) => {
                 if (err !== null) { reject(err); } else { resolve(data!); }
             });
+        });
+    }
+
+    public subscribeTransactions({
+        includeMempoolAcceptance,
+        includeBlockAcceptance,
+        includeSerializedTxn,
+        includeOnlySlp,
+        slpTokenIds,
+        addresses,
+        outpoints,
+    }: {
+        includeMempoolAcceptance?: boolean,
+        includeBlockAcceptance?: boolean,
+        includeSerializedTxn?: boolean,
+        includeOnlySlp?: boolean,
+        slpTokenIds?: string[],
+        addresses?: string[],
+        outpoints?: Array<{ txid: Buffer, vout: number }>,
+    } = {}): Promise<grpc.ClientReadableStream<bchrpc.TransactionNotification>> {
+        return new Promise((resolve, reject) => {
+            const req = new bchrpc.SubscribeTransactionsRequest();
+            includeMempoolAcceptance ? req.setIncludeMempool(true) : req.setIncludeMempool(false);
+            includeBlockAcceptance ? req.setIncludeInBlock(true) : req.setIncludeInBlock(false);
+            includeSerializedTxn ? req.setSerializeTx(true) : req.setSerializeTx(false);
+            const filter = new bchrpc.TransactionFilter();
+            filter.setAllTransactions(true);
+            if (addresses) {
+                for (const addr of addresses) {
+                    // TODO check for cashAddr format, auto convert slpAddr format to cashAddr
+                    filter.addAddresses(addr);
+                    filter.setAllTransactions(false);
+                }
+                if (addresses.length === 0) {
+                    addresses = undefined;
+                }
+            }
+            if (outpoints) {
+                for (const outpoint of outpoints) {
+                    const o = new bchrpc.Transaction.Input.Outpoint();
+                    o.setHash(outpoint.txid.reverse());
+                    o.setIndex(outpoint.vout);
+                    filter.addOutpoints(o);
+                    filter.setAllTransactions(false);
+                }
+                if (outpoints.length === 0) {
+                    outpoints = undefined;
+                }
+            }
+
+            if (includeOnlySlp) {
+                filter.setAllTransactions(false);
+                filter.setAllSlpTransactions(true);
+            } else if (slpTokenIds) {
+                if (slpTokenIds.length > 0) {
+                    filter.setAllTransactions(false);
+                    filter.setAllSlpTransactions(false);
+                    slpTokenIds.forEach((tokenId) => filter.addSlpTokenIds(Buffer.from(tokenId, "hex")));
+                }
+            }
+            req.setSubscribe(filter);
+            try {
+                resolve(this.client.subscribeTransactions(req));
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
+    public subscribeBlocks({
+        includeSerializedBlock,
+        includeTxnHashes,
+        includeTxnData,
+    }: {
+        includeSerializedBlock?: boolean,
+        includeTxnHashes?: boolean,
+        includeTxnData?: boolean,
+    } = {}): Promise<grpc.ClientReadableStream<bchrpc.BlockNotification>> {
+        return new Promise((resolve, reject) => {
+            const req = new bchrpc.SubscribeBlocksRequest();
+            includeTxnHashes ? req.setFullBlock(true) : req.setFullBlock(false);
+            includeTxnData ? req.setFullTransactions(true) : req.setFullTransactions(false);
+            includeSerializedBlock ? req.setSerializeBlock(true) : req.setSerializeBlock(false);
+            try {
+                resolve(this.client.subscribeBlocks(req));
+            } catch (err) {
+                reject(err);
+            }
         });
     }
 }
