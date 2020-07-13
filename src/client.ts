@@ -308,16 +308,15 @@ export class GrpcClient {
                 }
             }
 
-            if (includeOnlySlp) {
+            if (slpTokenIds && slpTokenIds.length > 0) {
+                filter.setAllTransactions(false);
+                filter.setAllSlpTransactions(false);
+                slpTokenIds.forEach((tokenId) => filter.addSlpTokenIds(Buffer.from(tokenId, "hex")));
+            } else if (includeOnlySlp) {
                 filter.setAllTransactions(false);
                 filter.setAllSlpTransactions(true);
-            } else if (slpTokenIds) {
-                if (slpTokenIds.length > 0) {
-                    filter.setAllTransactions(false);
-                    filter.setAllSlpTransactions(false);
-                    slpTokenIds.forEach((tokenId) => filter.addSlpTokenIds(Buffer.from(tokenId, "hex")));
-                }
             }
+
             req.setSubscribe(filter);
             try {
                 resolve(this.client.subscribeTransactions(req));
