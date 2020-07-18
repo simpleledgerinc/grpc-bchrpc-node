@@ -146,6 +146,7 @@ message GetBlockchainInfoResponse {
     int64 median_time = 5;
     bool tx_index = 6;
     bool addr_index =7;
+    bool slp_index = 8;
 }
 
 message GetBlockInfoRequest {
@@ -201,7 +202,7 @@ message GetHeadersResponse {
 message GetTransactionRequest {
     bytes hash = 1;
 
-    bool include_slp_metadata = 2; // this is token metadata.  txn level SLP data will be returned regardless of this value
+    bool include_token_metadata = 2;
 }
 message GetTransactionResponse {
     Transaction transaction = 1;
@@ -261,15 +262,18 @@ message GetRawAddressTransactionsResponse {
 message GetAddressUnspentOutputsRequest {
     string address = 1;
     bool include_mempool = 2;
+    bool include_token_metadata = 3;
 }
 message GetAddressUnspentOutputsResponse {
     repeated UnspentOutput outputs = 1;
+    repeated TokenMetadata token_metadata = 2;
 }
 
 message GetUnspentOutputRequest {
     bytes hash = 1;
     uint32 index = 2;
     bool include_mempool = 3;
+    bool include_token_metadata = 4;
 }
 message GetUnspentOutputResponse {
     Transaction.Input.Outpoint outpoint = 1;
@@ -278,6 +282,9 @@ message GetUnspentOutputResponse {
 
     bool is_coinbase = 4;
     int32 block_height = 5;
+
+    SlpToken slp_token = 6;
+    TokenMetadata token_metadata = 7;
 }
 
 message GetMerkleProofRequest {
@@ -291,6 +298,8 @@ message GetMerkleProofResponse {
 
 message SubmitTransactionRequest {
     bytes transaction = 1;
+    bool check_slp_validity = 2;
+    repeated Transaction.Input.Outpoint allowed_slp_burns = 3;
 }
 message SubmitTransactionResponse {
     bytes hash = 1;
@@ -484,6 +493,8 @@ message UnspentOutput {
 
     bool is_coinbase = 4;
     int32 block_height = 5;
+
+    SlpToken slp_token = 6;
 }
 
 message TransactionFilter {
@@ -510,7 +521,8 @@ message TransactionFilter {
 message SlpToken {
     bytes token_id = 1;
     uint64 amount = 2;
-    string address = 3;
+    bool is_mint_baton = 3;
+    string address = 4;
 }
 
 message SlpTransactionInfo {

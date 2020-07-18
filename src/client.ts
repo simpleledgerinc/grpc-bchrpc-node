@@ -68,9 +68,12 @@ export class GrpcClient {
         });
     }
 
-    public getTransaction({ hash, reversedHashOrder }:
-        { hash: string; reversedHashOrder?: boolean; }): Promise<bchrpc.GetTransactionResponse> {
+    public getTransaction({ hash, reversedHashOrder, includeTokenMetadata = true }:
+        { hash: string; reversedHashOrder?: boolean; includeTokenMetadata: boolean }): Promise<bchrpc.GetTransactionResponse> {
         const req = new bchrpc.GetTransactionRequest();
+        if (includeTokenMetadata) {
+            req.setIncludeTokenMetadata(true);
+        }
         if (reversedHashOrder) {
             req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
         } else {
@@ -116,10 +119,13 @@ export class GrpcClient {
         });
     }
 
-    public getUnspentOutput({ hash, vout, reversedHashOrder, includeMempool }:
+    public getUnspentOutput({ hash, vout, reversedHashOrder, includeMempool, includeTokenMetadata = true }:
         { hash: string, vout: number, reversedHashOrder?: boolean,
-            includeMempool?: boolean }): Promise<bchrpc.GetUnspentOutputResponse> {
+            includeMempool?: boolean, includeTokenMetadata?: boolean }): Promise<bchrpc.GetUnspentOutputResponse> {
         const req = new bchrpc.GetUnspentOutputRequest();
+        if (includeTokenMetadata) {
+            req.setIncludeTokenMetadata(true);
+        }
         if (includeMempool) {
             req.setIncludeMempool(true);
         }
@@ -136,9 +142,12 @@ export class GrpcClient {
         });
     }
 
-    public getAddressUtxos({ address, includeMempool }:
-        {address: string, includeMempool: boolean } ): Promise<bchrpc.GetAddressUnspentOutputsResponse> {
+    public getAddressUtxos({ address, includeMempool, includeTokenMetadata = true }:
+        { address: string, includeMempool?: boolean, includeTokenMetadata?: boolean } ): Promise<bchrpc.GetAddressUnspentOutputsResponse> {
         const req = new bchrpc.GetAddressUnspentOutputsRequest();
+        if (includeTokenMetadata) {
+            req.setIncludeTokenMetadata(true);
+        }
         req.setAddress(address);
         if (includeMempool) {
             req.setIncludeMempool(true);
@@ -237,10 +246,12 @@ export class GrpcClient {
         txnBuf,
         txnHex,
         txn,
+        allowedSlpBurns,
     }: {
         txnBuf?: Buffer,
         txnHex?: string,
         txn?: Uint8Array,
+        allowedSlpBurns?: bchrpc.Transaction.Input.Outpoint[],
     } = {}): Promise<bchrpc.SubmitTransactionResponse> {
         let tx: string|Uint8Array;
         const req = new bchrpc.SubmitTransactionRequest();
@@ -252,6 +263,11 @@ export class GrpcClient {
             tx = txn;
         } else {
             throw Error("Most provide either Hex string, Buffer, or Uint8Array");
+        }
+        if (allowedSlpBurns) {
+            for (const burn of allowedSlpBurns) {
+                req.addAllowedSlpBurns(burn);
+            }
         }
         req.setTransaction(tx);
         return new Promise((resolve, reject) => {
