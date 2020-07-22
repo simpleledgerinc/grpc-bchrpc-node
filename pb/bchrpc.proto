@@ -301,7 +301,7 @@ message GetMerkleProofResponse {
 
 message SubmitTransactionRequest {
     bytes transaction = 1;
-    bool check_slp_validity = 2;
+    bool skip_slp_validity_check = 2;
     repeated Transaction.Input.Outpoint allowed_slp_burns = 3;
 }
 message SubmitTransactionResponse {
