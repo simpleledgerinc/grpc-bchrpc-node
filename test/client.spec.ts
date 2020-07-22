@@ -99,10 +99,11 @@ describe("grpc-bchrpc-node", () => {
                     }
                     const parsingError = resp.getParsingError();
                     if (parsingError) {
-                        if (expectedParsingErrorsFromGoSlp.includes(parsingError)) {
-                            assert(expectedParsingErrorsFromGoSlp.includes(parsingError));
+
+                        if (expectedParsingErrorsFromGoSlp.has(parsingError)) {
+                            assert.equal(expectedParsingErrorsFromGoSlp.get(parsingError)!.includes(test.msg), true);
                         } else if (parsingError.includes("Unsupported token type:")) {
-                            assert(parsingError.includes("Unsupported token type:"));
+                            assert.equal(parsingError.includes("Unsupported token type:"), true);
                         } else {
                             throw Error("Test is missing error type: " + parsingError);
                         }
@@ -126,27 +127,112 @@ interface SlpMsgTest {
     code: number;
 }
 
-const expectedParsingErrorsFromGoSlp = [
-    "trailing data",
-    "scriptpubkey not op_return",
-    "scriptpubkey too small",
-    "lokad id wrong size",
-    "SLP not in first chunk",
-    "token_type not token-type1, nft1-group, or nft1-child",
-    "token_type string length must be 1 or 2",
-    "wrong number of chunks",
-    "impossible parsing result",
-    "decimals string length must be 1",
-    "documentHash must be size 0 or 32",
-    "tokenId invalid size",
-    "tokenID invalid size",
-    "amount string size not 8 bytes",
-    "decimals biger than 9",
-    "NFT1 child token must not have a minting baton",
-    "NFT1 child token must have divisibility set to 0 decimal places",
-    "NFT1 child token must have quantity of 1",
-    "NFT1 Child cannot have MINT transaction type.",
-    "mintBatonVout must be at least 2",
-    "token_amounts size is greater than 19",
-    "mint_baton_vout must be at least 2",
-];
+const expectedParsingErrorsFromGoSlp = new Map<string, string[]>();
+expectedParsingErrorsFromGoSlp.set("trailing data", [
+    "Script ending mid-PUSH (one byte short) must be SLP-invalid",
+    "Script ending mid-PUSH (no length) must be SLP-invalid",
+    "Script ending mid-PUSH (length is one byte short) must be SLP-invalid",
+    "(must be invalid: forbidden opcode): uses opcode OP_0",       // TODO: can we have a new GoSlp error for this, instead of "trailing data"
+    "(must be invalid: forbidden opcode): uses opcode OP_1",       // TODO: can we have a new GoSlp error for this, instead of "trailing data"
+    "(must be invalid: forbidden opcode): uses opcode OP_1NEGATE", // TODO: can we have a new GoSlp error for this, instead of "trailing data"
+    "(must be invalid: forbidden opcode): uses opcode 0x50",       // TODO: can we have a new GoSlp error for this, instead of "trailing data"
+]);
+
+expectedParsingErrorsFromGoSlp.set("scriptpubkey not op_return", [
+    "(not SLP): p2pkh address script",
+]);
+expectedParsingErrorsFromGoSlp.set("scriptpubkey too small", [
+    "(must be invalid: too short): stopped after lokad ID",
+    "(must be invalid: too short): stopped after token_type",
+    "(not SLP): empty op_return",
+    "(not SLP): first push is 4-byte '\\x00BET'",
+]);
+expectedParsingErrorsFromGoSlp.set("lokad id wrong size", [
+    "(not SLP): first push is 9-byte 'yours.org'",
+    "(not SLP): first push is 3-byte 'SLP'",
+    "(not SLP): first push is 5-byte 'SLP\\x00\\x00'",
+    "(not SLP): first push is 7-byte '\\xef\\xbb\\xbfSLP\\x00' (UTF8 byte order mark + 'SLP\\x00')",
+]);
+expectedParsingErrorsFromGoSlp.set("SLP not in first chunk", [
+    "(not SLP): first push is 4-byte '\\x00SLP'",
+]);
+expectedParsingErrorsFromGoSlp.set("token_type not token-type1, nft1-group, or nft1-child", [
+    "(unsupported token type, must be token_type=1, 65, or 129): 2 bytes for token_type=2",
+]);
+expectedParsingErrorsFromGoSlp.set("token_type string length must be 1 or 2", [
+    "(must be invalid: wrong size): 3 bytes for token_type",
+    "(must be invalid: wrong size): 0 bytes for token_type",
+]);
+expectedParsingErrorsFromGoSlp.set("wrong number of chunks", [
+    "(must be invalid: too short): stopped after transaction_type GENESIS",
+    "(must be invalid: too short): stopped after transaction_type MINT",
+    "(must be invalid: too short): stopped after transaction_type SEND",
+    "(must be invalid: wrong number of params) GENESIS with extra token amount",
+    "(must be invalid: wrong number of params) MINT with extra token amount",
+]);
+expectedParsingErrorsFromGoSlp.set("impossible parsing result", [
+    "(must be invalid: bad value): transaction_type null",
+    "(must be invalid: bad value): transaction_type 'INIT'",
+    "(must be invalid: bad value): transaction_type 'TRAN'",
+    "(must be invalid: bad value): transaction_type 'send'",
+    "(must be invalid: bad value): transaction_type 'SENÄ'",
+    "(must be invalid: bad value): transaction_type = 7-byte '\\xef\\xbb\\xbfSEND' (UTF8 byte order mark + 'SEND')",
+    "(must be invalid: bad value): transaction_type = 7-byte 'ï»¿SEND' (UTF8 byte order mark + 'SEND')", // this is required since previous line is converted to this
+    "(must be invalid: bad value): transaction_type = 10-byte UTF16 'SEND' (incl. BOM)",
+    "(must be invalid: bad value): transaction_type = 20-byte UTF32 'SEND' (incl. BOM)",
+]);
+expectedParsingErrorsFromGoSlp.set("decimals string length must be 1", [
+    "(must be invalid: wrong size): Genesis with 0-byte decimals",
+    "(must be invalid: wrong size): Genesis with 2-byte decimals",
+]);
+expectedParsingErrorsFromGoSlp.set("documentHash must be size 0 or 32", [
+    "(must be invalid: wrong size): Genesis with 31-byte dochash",
+    "(must be invalid: wrong size): Genesis with 33-byte dochash",
+    "(must be invalid: wrong size): Genesis with 64-byte dochash",
+    "(must be invalid: wrong size): Genesis with 20-byte dochash",
+    ""
+]);
+expectedParsingErrorsFromGoSlp.set("tokenId invalid size", [
+    "(must be invalid: wrong size): SEND with 0-byte token_id",
+    "(must be invalid: wrong size): SEND with 31-byte token_id",
+    "(must be invalid: wrong size): SEND with 33-byte token_id",
+]);
+expectedParsingErrorsFromGoSlp.set("tokenID invalid size", [
+    "(must be invalid: wrong size): MINT with 0-byte token_id",
+    "(must be invalid: wrong size): MINT with 31-byte token_id",
+    "(must be invalid: wrong size): MINT with 33-byte token_id",
+]);
+expectedParsingErrorsFromGoSlp.set("amount string size not 8 bytes", [
+    "(must be invalid: wrong size): SEND with a 7-byte amount",
+    "(must be invalid: wrong size): SEND with a 9-byte amount",
+    "(must be invalid: wrong size): SEND with a 0-byte amount",
+    "",
+]);
+expectedParsingErrorsFromGoSlp.set("decimals biger than 9", [
+    "(must be invalid: bad value): Genesis with decimals=10",
+]);
+expectedParsingErrorsFromGoSlp.set("NFT1 child token must not have a minting baton", [
+    "(must be invalid: bad value): NFT1 Child Genesis with mint_baton_vout!==null",
+]);
+expectedParsingErrorsFromGoSlp.set("NFT1 child token must have divisibility set to 0 decimal places", [
+    "(must be invalid: bad value): NFT1 Child Genesis with divisibility!==0",
+]);
+expectedParsingErrorsFromGoSlp.set("NFT1 child token must have quantity of 1", [
+    "(must be invalid: bad value): NFT1 Child Genesis with quanitity!==1",
+]);
+expectedParsingErrorsFromGoSlp.set("NFT1 Child cannot have MINT transaction type.", [
+    "(must be invalid: impossible state): typical MINT without baton for token_type=41",
+]);
+expectedParsingErrorsFromGoSlp.set("mintBatonVout must be at least 2", [
+    "(must be invalid: bad value): Genesis with mint_baton_vout=1",
+    "(must be invalid: bad value): Genesis with mint_baton_vout=0",
+    "(must be invalid: bad value): MINT with mint_baton_vout=1",
+    "(must be invalid: bad value): MINT with mint_baton_vout=0",
+]);
+expectedParsingErrorsFromGoSlp.set("token_amounts size is greater than 19", [
+    "(must be invalid: too many parameters): SEND with 20 token output amounts",
+]);
+expectedParsingErrorsFromGoSlp.set("mint_baton_vout must be at least 2", [
+    "(must be invalid: bad value): MINT with mint_baton_vout=1",
+    "(must be invalid: bad value): MINT with mint_baton_vout=0",
+]);
