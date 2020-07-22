@@ -1,7 +1,8 @@
 import assert from "assert";
+import { GetParsedSlpScriptResponse } from "../pb/bchrpc_pb";
 import { GrpcClient } from "../src/client";
 
-const grpc = new GrpcClient({url: "bchd.fountainhead.cash:443"});
+const scriptUnitTestData: SlpMsgTest[] = require("slp-unit-test-data/script_tests.json");
 
 describe("grpc-bchrpc-node", () => {
 
@@ -24,7 +25,7 @@ describe("grpc-bchrpc-node", () => {
         const res = await grpc.getAddressTransactions({address: exampleAddress, height: 0});
         const txns = res.getConfirmedTransactionsList();
         assert.equal(txns.length >= 3, true);
-        const tx1 = txns.filter(t => Buffer.from(t.getHash_asU8().reverse()).toString("hex") === firstTxid)[0];
+        const tx1 = txns.filter((t) => Buffer.from(t.getHash_asU8().reverse()).toString("hex") === firstTxid)[0];
         assert.equal(Buffer.from(tx1.getHash() as Uint8Array).toString("hex"), firstTxid);
 
         // check input values
@@ -68,4 +69,84 @@ describe("grpc-bchrpc-node", () => {
         }
     });
 
+    // TODO ... getTokenMetadata is not yet implemented in BCHD
+    // it("getTokenMetadata", async () => {
+    //     const tokenId = "";
+    //     await grpc.getTokenMetadata([tokenId]);
+    //     assert.equal("", "");
+    // });
+
+    it("getParsedSlpScript - MINT 100", async () => {
+        const script = Buffer.from("6a04534c50000101044d494e5420ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff4c00080000000000000064", "hex");
+        const resp = await grpc.parseSlpScript(script);
+        const tokenID = Buffer.from(resp.getTokenId());
+        assert.equal(resp.getV1Mint()!.getMintAmount(), 100);
+        assert.equal(tokenID.toString("hex"), "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+    });
+
+    describe("getParsedSlpScript - SLP Message Unit Tests", () => {
+        for (const test of scriptUnitTestData) {
+            it(test.msg, async () => {
+                const script = Buffer.from(test.script, "hex");
+                const eCode = test.code;
+                if (eCode) {
+                    let resp: GetParsedSlpScriptResponse;
+                    try {
+                        resp = await grpc.parseSlpScript(script);
+                    } catch (error) {
+                        console.log(error.message);
+                        process.exit();
+                    }
+                    const parsingError = resp.getParsingError();
+                    if (parsingError) {
+                        if (expectedParsingErrorsFromGoSlp.includes(parsingError)) {
+                            assert(expectedParsingErrorsFromGoSlp.includes(parsingError));
+                        } else if (parsingError.includes("Unsupported token type:")) {
+                            assert(parsingError.includes("Unsupported token type:"));
+                        } else {
+                            throw Error("Test is missing error type: " + parsingError);
+                        }
+                    } else {
+                        throw Error("BCHD did not return a parsing error");
+                    }
+                } else {
+                    const resp = await grpc.parseSlpScript(script);
+                    const parsedType = resp.getType();
+                    assert.equal(parsedType > 0, true);
+                }
+            });
+        }
+    });
+
 });
+
+interface SlpMsgTest {
+    msg: string;
+    script: string;
+    code: number;
+}
+
+const expectedParsingErrorsFromGoSlp = [
+    "trailing data",
+    "scriptpubkey not op_return",
+    "scriptpubkey too small",
+    "lokad id wrong size",
+    "SLP not in first chunk",
+    "token_type not token-type1, nft1-group, or nft1-child",
+    "token_type string length must be 1 or 2",
+    "wrong number of chunks",
+    "impossible parsing result",
+    "decimals string length must be 1",
+    "documentHash must be size 0 or 32",
+    "tokenId invalid size",
+    "tokenID invalid size",
+    "amount string size not 8 bytes",
+    "decimals biger than 9",
+    "NFT1 child token must not have a minting baton",
+    "NFT1 child token must have divisibility set to 0 decimal places",
+    "NFT1 child token must have quantity of 1",
+    "NFT1 Child cannot have MINT transaction type.",
+    "mintBatonVout must be at least 2",
+    "token_amounts size is greater than 19",
+    "mint_baton_vout must be at least 2",
+];

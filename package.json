@@ -43,7 +43,8 @@
     "nyc": "^14.1.1",
     "source-map-support": "^0.5.19",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.6",
+    "slp-unit-test-data": "git+https://github.com/simpleledger/slp-unit-test-data.git"
   },
   "dependencies": {
     "@types/google-protobuf": "^3.7.2",

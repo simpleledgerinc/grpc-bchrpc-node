@@ -363,4 +363,33 @@ export class GrpcClient {
             }
         });
     }
+
+    public getTokenMetadata(tokenIds: string[]|Buffer[]): Promise<bchrpc.GetTokenMetadataResponse> {
+        return new Promise((resolve, reject) => {
+            const req = new bchrpc.GetTokenMetadataRequest();
+            if (typeof tokenIds[0] === "string") {
+                (tokenIds as string[]).forEach((id) => req.addTokenIds(Buffer.from(id, "hex")));
+            } else {
+                (tokenIds as Buffer[]).forEach((id) => req.addTokenIds(id));
+            }
+
+            this.client.getTokenMetadata(req, (err, data) => {
+                if (err !== null) { reject(err); } else { resolve(data!); }
+            });
+        });
+    }
+
+    public parseSlpScript(script: string|Buffer): Promise<bchrpc.GetParsedSlpScriptResponse> {
+        return new Promise((resolve, reject) => {
+            const req = new bchrpc.GetParsedSlpScriptRequest();
+            if (typeof script === "string") {
+                req.setSlpOpreturnScript(Buffer.from(script, "hex"));
+            } else {
+                req.setSlpOpreturnScript(script);
+            }
+            this.client.getParsedSlpScript(req, (err, data) => {
+                if (err !== null) { reject(err); } else { resolve(data!); }
+            });
+        });
+    }
 }
