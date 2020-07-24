@@ -5,6 +5,7 @@ import * as bchrpc from "../pb/bchrpc_pb";
 
 export class GrpcClient {
     public client: bchrpc_grpc.bchrpcClient;
+    private _HAS_SLP_INDEX?: boolean;
 
     constructor({ url, rootCertPath, testnet, options }:
         { url?: string; rootCertPath?: string; testnet?: boolean, options?: object } = {}) {
@@ -242,19 +243,22 @@ export class GrpcClient {
         });
     }
 
-    public submitTransaction({
+    public async submitTransaction({
         txnBuf,
         txnHex,
         txn,
         allowedSlpBurns,
+        skipSlpValidityChecks = false,
     }: {
         txnBuf?: Buffer,
         txnHex?: string,
         txn?: Uint8Array,
         allowedSlpBurns?: bchrpc.Transaction.Input.Outpoint[],
+        skipSlpValidityChecks?: boolean,
     } = {}): Promise<bchrpc.SubmitTransactionResponse> {
         let tx: string|Uint8Array;
         const req = new bchrpc.SubmitTransactionRequest();
+
         if (txnBuf) {
             tx = txnBuf.toString("base64");
         } else if (txnHex) {
@@ -264,6 +268,15 @@ export class GrpcClient {
         } else {
             throw Error("Most provide either Hex string, Buffer, or Uint8Array");
         }
+
+        if (! skipSlpValidityChecks) {
+            if (! await this._checkForSlpIndex()) {
+                throw Error("Host BCHD instance does not have SLP indexing enabled.");
+            }
+        } else {
+            req.setSkipSlpValidityCheck(true);
+        }
+
         if (allowedSlpBurns) {
             for (const burn of allowedSlpBurns) {
                 req.addAllowedSlpBurns(burn);
@@ -379,6 +392,54 @@ export class GrpcClient {
         });
     }
 
+    public getTrustedValidation({
+        txos,
+        reversedHashOrder,
+        functionaryInfo,
+    }: {
+        txos: Array<{ hash: string|Buffer; vout: number; }>,
+        reversedHashOrder?: boolean,
+        functionaryInfo?: {
+            pubKey: string|Buffer,
+            type: bchrpc.GetTrustedValidationRequest.Functionary.MessageType,
+            sigType: bchrpc.GetTrustedValidationRequest.Functionary.SignatureType },
+    }): Promise<bchrpc.GetTrustedValidationResponse> {
+        return new Promise((resolve, reject) => {
+            const req = new bchrpc.GetTrustedValidationRequest();
+
+            // add txos
+            for (const txo of txos) {
+                const query = new bchrpc.GetTrustedValidationRequest.Query();
+                if (typeof txo.hash === "string") {
+                    txo.hash = Buffer.from(txo.hash, "hex");
+                }
+                if (reversedHashOrder) {
+                    txo.hash.reverse();
+                }
+                query.setPrevOutHash(txo.hash);
+                query.setPrevOutVout(txo.vout);
+                req.addQueries(query);
+            }
+
+            // add functionary info
+            if (functionaryInfo) {
+                const info = new bchrpc.GetTrustedValidationRequest.Functionary();
+                info.setType(functionaryInfo.type);
+                info.setSigType(functionaryInfo.sigType);
+                if (typeof functionaryInfo.pubKey === "string") {
+                    info.setPublicKey(Buffer.from(functionaryInfo.pubKey, "hex"));
+                } else {
+                    info.setPublicKey(functionaryInfo.pubKey);
+                }
+                req.setFunctionaryInfo(info);
+            }
+
+            this.client.getTrustedValidation(req, (err, data) => {
+                if (err !== null) { reject(err); } else { resolve(data!); }
+            });
+        });
+    }
+
     public parseSlpScript(script: string|Buffer): Promise<bchrpc.GetParsedSlpScriptResponse> {
         return new Promise((resolve, reject) => {
             const req = new bchrpc.GetParsedSlpScriptRequest();
@@ -391,5 +452,15 @@ export class GrpcClient {
                 if (err !== null) { reject(err); } else { resolve(data!); }
             });
         });
+    }
+
+    private async _checkForSlpIndex(): Promise<boolean> {
+        if (this._HAS_SLP_INDEX !== undefined) {
+            return this._HAS_SLP_INDEX;
+        } else {
+            const info = await this.getBlockchainInfo();
+            this._HAS_SLP_INDEX = info.getSlpIndex();
+            return this._HAS_SLP_INDEX;
+        }
     }
 }
