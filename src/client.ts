@@ -397,7 +397,7 @@ export class GrpcClient {
         reversedHashOrder,
         functionaryInfo,
     }: {
-        txos: Array<{ hash: string|Buffer; vout: number; }>,
+        txos: Array<{ hash: string; vout: number; }>,
         reversedHashOrder?: boolean,
         functionaryInfo?: {
             pubKey: string|Buffer,
@@ -410,13 +410,11 @@ export class GrpcClient {
             // add txos
             for (const txo of txos) {
                 const query = new bchrpc.GetTrustedValidationRequest.Query();
-                if (typeof txo.hash === "string") {
-                    txo.hash = Buffer.from(txo.hash, "hex");
-                }
+                let hash = Buffer.from(txo.hash, "hex");
                 if (reversedHashOrder) {
-                    txo.hash.reverse();
+                    hash = hash.slice().reverse();
                 }
-                query.setPrevOutHash(txo.hash);
+                query.setPrevOutHash(hash);
                 query.setPrevOutVout(txo.vout);
                 req.addQueries(query);
             }

@@ -4,6 +4,8 @@ import { GetParsedSlpScriptResponse, GetTrustedValidationResponse, GetTrustedVal
 
 const scriptUnitTestData: SlpMsgTest[] = require("slp-unit-test-data/script_tests.json");
 
+const grpc = new GrpcClient({ url: "bchd.fountainhead.cash:443" });
+
 describe("grpc-bchrpc-node", () => {
 
     it("getRawTransaction returns the transaction (README example)", async () => {
@@ -120,7 +122,7 @@ describe("grpc-bchrpc-node", () => {
     });
 
     it("trusted validation returns validity info", async () => {
-        const expected: Array<{hash: string|Buffer; vout: number; validAmt: number|string; tokenIDHex: string}> = [
+        const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "d2b81f055c8b0975c034ca16feaa7acaaae05da89463af81961d178cc2e56200", vout: 1, validAmt: 17600000000, tokenIDHex: "d6876f0fce603be43f15d34348bb1de1a8d688e1152596543da033a060cff798" },   // valid SLP send amt
             { hash: "03280743b4cb057bbbdb8f460a62ca4f6de404c9b2efdfdd4b5f986357a2a657", vout: 1, validAmt: 200000000, tokenIDHex: "d6876f0fce603be43f15d34348bb1de1a8d688e1152596543da033a060cff798" },     // valid SLP mint amt
             { hash: "f1bf99cfdd5d056de503350c9f6cabc3cd052d3dcaab7764708dc78145682bc4", vout: 1, validAmt: 100, tokenIDHex: "f1bf99cfdd5d056de503350c9f6cabc3cd052d3dcaab7764708dc78145682bc4" },                     // valid SLP genesis amt
@@ -140,7 +142,7 @@ describe("grpc-bchrpc-node", () => {
         }
         for (const res of results) {
             const exp = expected.find((i) => {
-                return i.hash.toString("hex") === Buffer.from(res.getPrevOutHash_asU8()).toString("hex") &&
+                return i.hash === Buffer.from(res.getPrevOutHash_asU8()).reverse().toString("hex") &&
                         i.vout === res.getPrevOutVout();
             });
             if (! exp) {
@@ -163,7 +165,7 @@ describe("grpc-bchrpc-node", () => {
     });
 
     it("trusted validation throws if 'invalid txn hash'", async () => {
-        const expected: Array<{hash: string|Buffer; vout: number; validAmt: number|string; tokenIDHex: string}> = [
+        const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "00", vout: 1, validAmt: 0, tokenIDHex: "" },
         ];
         let resp: GetTrustedValidationResponse;
@@ -177,7 +179,7 @@ describe("grpc-bchrpc-node", () => {
     });
 
     it("trusted validation throws if 'txid is missing from slp validity set'", async () => {
-        const expected: Array<{hash: string|Buffer; vout: number; validAmt: number|string; tokenIDHex: string}> = [
+        const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "e5459585b8f5df1e115b47f3ac72cff256cdb75e3bb69735a906d58c3ceb1631", vout: 1, validAmt: 0, tokenIDHex: "" },
         ];
         let resp: GetTrustedValidationResponse;
@@ -191,7 +193,7 @@ describe("grpc-bchrpc-node", () => {
     });
 
     it("trusted validation throws if 'slp output index cannot be 0 or > 19'", async () => {
-        const expected: Array<{hash: string|Buffer; vout: number; validAmt: number|string; tokenIDHex: string}> = [
+        const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "32c265ecc608e83f41082e4514c08ce5b748edd80e68817aa3a385994c931354", vout: 20, validAmt: 0, tokenIDHex: "" },
         ];
         let resp: GetTrustedValidationResponse;
@@ -205,7 +207,7 @@ describe("grpc-bchrpc-node", () => {
     });
 
     it("trusted validation throws if 'vout is not a valid SLP output' for MINT", async () => {
-        const expected: Array<{hash: string|Buffer; vout: number; validAmt: number|string; tokenIDHex: string}> = [
+        const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "9582c0fdb41f82c74f3ef25a87963e510c3e981dde6f069e5d6a8cd4a643ce2b", vout: 3, validAmt: 0, tokenIDHex: "" },
         ];
 
@@ -220,7 +222,7 @@ describe("grpc-bchrpc-node", () => {
     });
 
     it("trusted validation throws if 'vout is not a valid SLP output' for SEND", async () => {
-        const expected: Array<{hash: string|Buffer; vout: number; validAmt: number|string; tokenIDHex: string}> = [
+        const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "a69ef2d5bfe964dd0d17722b31419a0366d3613f2575a24f068e806ab3a4a131", vout: 3, validAmt: 0, tokenIDHex: "" },
         ];
 
@@ -235,7 +237,7 @@ describe("grpc-bchrpc-node", () => {
     });
 
     it("trusted validation throws if 'vout is not a valid SLP output' for GENESIS", async () => {
-        const expected: Array<{hash: string|Buffer; vout: number; validAmt: number|string; tokenIDHex: string}> = [
+        const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "f1bf99cfdd5d056de503350c9f6cabc3cd052d3dcaab7764708dc78145682bc4", vout: 3, validAmt: 0, tokenIDHex: "" },
         ];
 
@@ -250,7 +252,7 @@ describe("grpc-bchrpc-node", () => {
     });
 
     it("trusted validation throws on functionary request when not configured", async () => {
-        const expected: Array<{hash: string|Buffer; vout: number; validAmt: number|string; tokenIDHex: string}> = [
+        const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "d2b81f055c8b0975c034ca16feaa7acaaae05da89463af81961d178cc2e56200", vout: 1, validAmt: 17600000000, tokenIDHex: "d6876f0fce603be43f15d34348bb1de1a8d688e1152596543da033a060cff798" },
         ];
 
@@ -266,7 +268,8 @@ describe("grpc-bchrpc-node", () => {
                 txos: expected,
             });
         } catch (err) {
-            assert.equal(err.message.includes("slp validation functionary has not been configured"), true);
+            console.log(err.message);
+            assert.equal(err.message.includes("slp validation functionary not implemented"), true);
             return;
         }
         throw Error("test did not throw");
