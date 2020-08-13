@@ -69,8 +69,15 @@ export class GrpcClient {
         });
     }
 
-    public getTransaction({ hash, reversedHashOrder, includeTokenMetadata = true }:
-        { hash: string; reversedHashOrder?: boolean; includeTokenMetadata: boolean }): Promise<bchrpc.GetTransactionResponse> {
+    public getTransaction({
+        hash,
+        reversedHashOrder,
+        includeTokenMetadata = true,
+    }: {
+        hash: string;
+        reversedHashOrder?: boolean;
+        includeTokenMetadata?: boolean
+    }): Promise<bchrpc.GetTransactionResponse> {
         const req = new bchrpc.GetTransactionRequest();
         if (includeTokenMetadata) {
             req.setIncludeTokenMetadata(true);
@@ -243,17 +250,54 @@ export class GrpcClient {
         });
     }
 
+    public async checkSlpTransaction({
+        txnBuf,
+        txnHex,
+        txn,
+        requiredSlpBurns,
+    }: {
+        txnBuf?: Buffer,
+        txnHex?: string,
+        txn?: Uint8Array,
+        requiredSlpBurns?: bchrpc.SlpRequiredBurn[],
+    } = {}): Promise<bchrpc.CheckSlpTransactionResponse> {
+        let tx: string|Uint8Array;
+        const req = new bchrpc.CheckSlpTransactionRequest();
+
+        if (txnBuf) {
+            tx = txnBuf.toString("base64");
+        } else if (txnHex) {
+            tx = Buffer.from(txnHex, "hex").toString("base64");
+        } else if (txn) {
+            tx = txn;
+        } else {
+            throw Error("Most provide either Hex string, Buffer, or Uint8Array");
+        }
+
+        if (requiredSlpBurns) {
+            for (const burn of requiredSlpBurns) {
+                req.addRequiredSlpBurns(burn);
+            }
+        }
+        req.setTransaction(tx);
+        return new Promise((resolve, reject) => {
+            this.client.checkSlpTransaction(req, (err, data) => {
+                if (err !== null) { reject(err); } else { resolve(data!); }
+            });
+        });
+    }
+
     public async submitTransaction({
         txnBuf,
         txnHex,
         txn,
-        allowedSlpBurns,
+        requiredSlpBurns,
         skipSlpValidityChecks = false,
     }: {
         txnBuf?: Buffer,
         txnHex?: string,
         txn?: Uint8Array,
-        allowedSlpBurns?: bchrpc.Transaction.Input.Outpoint[],
+        requiredSlpBurns?: bchrpc.SlpRequiredBurn[],
         skipSlpValidityChecks?: boolean,
     } = {}): Promise<bchrpc.SubmitTransactionResponse> {
         let tx: string|Uint8Array;
@@ -277,9 +321,9 @@ export class GrpcClient {
             req.setSkipSlpValidityCheck(true);
         }
 
-        if (allowedSlpBurns) {
-            for (const burn of allowedSlpBurns) {
-                req.addAllowedSlpBurns(burn);
+        if (requiredSlpBurns) {
+            for (const burn of requiredSlpBurns) {
+                req.addRequiredSlpBurns(burn);
             }
         }
         req.setTransaction(tx);

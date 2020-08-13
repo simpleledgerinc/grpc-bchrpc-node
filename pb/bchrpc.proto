@@ -43,7 +43,8 @@ service bchrpc {
     // GetTransaction returns a transaction given a transaction hash.
     //
     // **Requires TxIndex**
-    // **Requires SlpIndex to receive slp input/output and TokenMetadata**
+    // **Requires SlpIndex to receive slp input/output metadata,
+    //   and TokenMetadata (if include_token_metadata=true in request) **
     rpc GetTransaction(GetTransactionRequest) returns (GetTransactionResponse) {}
 
     // GetRawTransaction returns a serialized transaction given a transaction hash.
@@ -55,7 +56,8 @@ service bchrpc {
     // limit, and from block options.
     //
     // **Requires AddressIndex**
-    // **Requires SlpIndex to receive slp input/output and TokenMetadata**
+    // **Requires SlpIndex to receive slp input/output metadata,
+    //   and TokenMetadata (if include_token_metadata=true in request) **
     rpc GetAddressTransactions(GetAddressTransactionsRequest) returns (GetAddressTransactionsResponse) {}
 
     // GetRawAddressTransactions the serialized raw transactions for
@@ -98,6 +100,9 @@ service bchrpc {
     //
     // **Requires SlpIndex with additional functionary key setup**
     rpc GetTrustedValidation(GetTrustedValidationRequest) returns (GetTrustedValidationResponse) {}
+
+    // CheckSlpTransaction checks the validity of a 
+    rpc CheckSlpTransaction(CheckSlpTransactionRequest) returns (CheckSlpTransactionResponse) {}
 
     // Submit a transaction to all connected peers.
     rpc SubmitTransaction(SubmitTransactionRequest) returns (SubmitTransactionResponse) {}
@@ -284,7 +289,7 @@ message GetTransactionResponse {
     // A marshaled transaction.
     Transaction transaction = 1;
 
-    TokenMetadata slp_metadata = 2;
+    TokenMetadata token_metadata = 2;
 }
 
 // Get an encoded transaction from a transaction hash.
@@ -333,6 +338,8 @@ message GetAddressTransactionsRequest {
         // starting block identified by block number.
         int32 height = 5;
     }
+
+    //bool include_token_metadata = 6;
 }
 message GetAddressTransactionsResponse {
 
@@ -340,6 +347,8 @@ message GetAddressTransactionsResponse {
     repeated Transaction confirmed_transactions = 1;
     // Transactions in mempool which have not been included in a block.
     repeated MempoolTransaction unconfirmed_transactions = 2;
+    // TokenMetadata will be populated with token metadata if include_token_metadata=true in request
+    //repeated TokenMetadata token_metadata = 3;
 }
 
 // Get encoded transactions related to a specific address.
@@ -449,10 +458,19 @@ message SubmitTransactionRequest {
     // The encoded transaction.
     bytes transaction = 1;
     bool skip_slp_validity_check = 2;
-    repeated Transaction.Input.Outpoint allowed_slp_burns = 3;
+    repeated SlpRequiredBurn required_slp_burns = 3;
 }
 message SubmitTransactionResponse {
     bytes hash = 1;
+}
+
+message CheckSlpTransactionRequest {
+    bytes transaction = 1;
+    repeated SlpRequiredBurn required_slp_burns = 2;
+}
+
+message CheckSlpTransactionResponse {
+    bool is_valid = 1;
 }
 
 // Request to subscribe or unsubscribe from a stream of transactions.
@@ -475,6 +493,8 @@ message SubscribeTransactionsRequest {
     // bitcoin protocol encoding. Default is false, transaction will be Marshaled
     // (see `Transaction`, `MempoolTransaction` and `TransactionNotification`)
     bool serialize_tx = 5;
+
+    //bool include_token_metadata = 6;
 }
 
 // Options to define data structure to be sent by SubscribeBlock stream:
@@ -517,7 +537,7 @@ message GetTokenMetadataRequest {
 }
 
 message GetTokenMetadataResponse {
-    repeated TokenMetadata slp_metadata = 1;
+    repeated TokenMetadata token_metadata = 1;
 }
 
 message GetParsedSlpScriptRequest {
@@ -822,12 +842,19 @@ message TransactionFilter {
     repeated bytes slp_token_ids = 6;
 }
 
-// slp
+// SLP token info used in transaction inputs / outputs
+//
+// WARNING: Some languages (e.g., JavaScript) may not properly handle the 'uint64'
+// for large amounts. For this reason, an annotation has been added for JS to
+// return a string for the amount field instead of casting uint64 to the JS 'number'
+// type. Other languages may require similar treatment.
+//
 message SlpToken {
     bytes token_id = 1;
-    uint64 amount = 2;
+    uint64 amount = 2 [jstype = JS_STRING];
     bool is_mint_baton = 3;
     string address = 4;
+    uint32 decimals = 5;
 }
 
 message SlpTransactionInfo {
@@ -903,34 +930,50 @@ enum SlpVersionType {       // everything except "NON_SLP" could be annotated wi
 }
 
 message TokenMetadataTokenType1 {
-    uint64 token_mint_quantity = 1;
-    bytes mint_baton_txid = 2;
-    uint32 mint_baton_vout = 3;
+    bytes token_ticker = 1;
+	bytes token_name = 2;
+	bytes token_document_url = 3;
+	bytes token_document_hash = 4;
+	uint32 decimals = 5;
+    bytes mint_baton_txid = 6;
+    uint32 mint_baton_vout = 7;
 }
 
 message TokenMetadataNFT1Group {
-    uint64 token_mint_quantity = 1;
-    bytes mint_baton_txid = 2;
-    uint32 mint_baton_vout = 3;
-    //repeated bytes nftChildIDs = 4; // DO WE WANT THIS?
+    bytes token_ticker = 1;
+	bytes token_name = 2;
+	bytes token_document_url = 3;
+	bytes token_document_hash = 4;
+	uint32 decimals = 5;
+    bytes mint_baton_txid = 6;
+    uint32 mint_baton_vout = 7;
+    //repeated bytes nftChildIDs = 9; // DO WE WANT THIS?
 }
 
 message TokenMetadataNFT1Child {
-    bytes group_id = 1;
+    bytes token_ticker = 1;
+	bytes token_name = 2;
+	bytes token_document_url = 3;
+	bytes token_document_hash = 4;
+    bytes group_id = 5;
 }
 
 message TokenMetadata {
 	bytes token_id = 1;
  	uint32 token_type = 2;
-    bytes token_ticker = 3;
-	bytes token_name = 4;
-	bytes token_document_url = 5;
-	bytes token_document_hash = 6;
-	uint32 decimals = 7;
-	uint32 height_created = 8;
 	oneof type_metadata {
-        TokenMetadataTokenType1 type1 = 9;
-        TokenMetadataNFT1Group nft1_group = 10;
-        TokenMetadataNFT1Child nft1_child = 11;
+        TokenMetadataTokenType1 type1 = 3;
+        TokenMetadataNFT1Group nft1_group = 4;
+        TokenMetadataNFT1Child nft1_child = 5;
+    }
+}
+
+message SlpRequiredBurn {
+    Transaction.Input.Outpoint outpoint = 1;
+    bytes token_id = 2;
+    uint32 token_type = 3;
+    oneof burn_intention {
+        uint64 amount = 4;
+        bool mint_baton = 5;
     }
 }

@@ -1,12 +1,187 @@
 import assert from "assert";
+import Big from "big.js";
+import { GetParsedSlpScriptResponse, GetTrustedValidationRequest,
+    GetTrustedValidationResponse, GetUnspentOutputResponse } from "../pb/bchrpc_pb";
 import { GrpcClient } from "../src/client";
-import { GetParsedSlpScriptResponse, GetTrustedValidationResponse, GetTrustedValidationRequest } from "../pb/bchrpc_pb";
 
 const scriptUnitTestData: SlpMsgTest[] = require("slp-unit-test-data/script_tests.json");
 
-const grpc = new GrpcClient({ url: "bchd.fountainhead.cash:443" });
+const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "/Users/jamescramer/localhost.crt" });
+// const grpc = new GrpcClient({ url: "bchd.fountainhead.cash:443" });
+// const grpc = new GrpcClient({ url: "bchd.ny1.simpleledger.io:8335" });
 
 describe("grpc-bchrpc-node", () => {
+
+    it("getBlockchainInfo", async () => {
+        const info = await grpc.getBlockchainInfo();
+        assert.equal(info.getSlpIndex(), true);
+        assert.equal(info.getTxIndex(), true);
+        assert.equal(info.getAddrIndex(), true);
+        console.log(`Node best block height: ${info.getBestHeight()}`);
+    });
+
+    it("getTransaction - token type 1 w/ token metadata", async () => {
+        const txidHex = "8a6d226241b96a24ea80c94836fd03251de7138c2a07ada490beb8d1936ea702";
+        const res = await grpc.getTransaction({ hash: txidHex, reversedHashOrder: true, includeTokenMetadata: true });
+
+        // check slp token output data (CHECK BIG NUMBER CASE!!)
+        const outputs = res.getTransaction()!.getOutputsList();
+        let totalAmtOut = Big(0);
+        for (const outs of outputs) {
+            if (outs.getSlpToken()) {
+                const slpToken = outs.getSlpToken()!;
+                const amt = BigInt(slpToken.getAmount()!);
+                assert.equal([139200347639, 433852691149408].includes(parseInt(slpToken.getAmount(), 10)), true);
+                assert.equal(slpToken.getDecimals(), 8);
+                totalAmtOut = totalAmtOut.add(slpToken.getAmount());
+
+                // TODO: get addresses
+                // assert.equal([
+                //                 "simpleledger:qprqzzhhve7sgysgf8h29tumywnaeyqm7ykzvpsuxy",
+                //                 "simpleledger:qpluak66akyaz38tsz87teyuma5rf6cqhq664ple3v",
+                //             ].includes(slpToken.getAddress()), true);
+            }
+        }
+
+        // check slp token input data
+        const inputs = res.getTransaction()!.getInputsList();
+        let totalAmtIn = Big(0);
+        for (const ins of inputs) {
+            if (ins.getSlpToken()) {
+                const slpToken = ins.getSlpToken()!;
+                assert.equal(slpToken.getDecimals(), 8);
+                totalAmtIn = totalAmtIn.add(slpToken.getAmount());
+            }
+        }
+
+        // check inputs == output amount
+        assert.equal(totalAmtIn.gt(0), true);
+        assert.equal(totalAmtIn.cmp(totalAmtOut), 0);
+
+        // check token metadata
+        assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenName()!).toString("utf8"), "Spice");
+        assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenTicker()).toString("utf8"), "SPICE");
+        assert.equal(res.getTokenMetadata()!.getType1()!.getDecimals()!, 8);
+        assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenDocumentUrl()).toString("utf8"), "spiceslp@gmail.com");
+        assert.equal(Buffer.from(res.getTokenMetadata()!.getTokenId_asU8()!).toString("hex"), "4de69e374a8ed21cbddd47f2338cc0f479dc58daa2bbe11cd604ca488eca0ddf");
+
+        // TODO: need to set proper Mint baton txid / vout
+        assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonTxid(), "");
+        assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 0);
+    });
+
+    it("getTransaction - max uint64 SlpToken", async () => {
+        const txidHex = "a7b885eb3ea084c8ba87d045afe89e48e3e5555442aad0ec27fb342bc93f3702";
+        const res = await grpc.getTransaction({ hash: txidHex, reversedHashOrder: true, includeTokenMetadata: true });
+
+        // check slp token output data (CHECK BIG NUMBER CASE!!)
+        const outputs = res.getTransaction()!.getOutputsList();
+        let totalOut = Big(0);
+        for (const out of outputs) {
+            if (out.getSlpToken()) {
+                assert.equal(Big(out.getSlpToken()!.getAmount()).cmp("18446744073709551615"), 0);
+                totalOut = totalOut.add(out.getSlpToken()!.getAmount());
+            }
+        }
+
+        assert.equal(totalOut.cmp(Big("18446744073709551615")), 0);
+
+        // TODO: need to set proper Mint baton txid / vout
+        assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonTxid(), "");
+        assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 0);
+    });
+
+    it("checkSlpTransaction - returns error on missing inputs or outputs", async () => {
+        const txnBuf = Buffer.from("00000000000000000000", "hex");
+        try {
+            await grpc.checkSlpTransaction({txnBuf});
+        } catch (err) {
+            assert.equal(err.message.includes("transaction is missing inputs or outputs"), true);
+            return;
+        }
+        throw Error("transaction was not rejected");
+    });
+
+    it("getTokenMetadata for type 1 token w/ minting baton", async () => {
+        const tokenID = Buffer.from("bb29e8a651a6cb0ac067b8d9b2f64c46eeb7921ab8a9b874a19703a910a370c7", "hex");
+        const res = await grpc.getTokenMetadata([ tokenID ]);
+        const tm = res.getTokenMetadataList()![0];
+
+        // check minting baton txid & vout
+        assert.equal(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8().slice().reverse()).toString("hex"),
+            "33e504ca8d11d4d928f6439729a05074cd50ac8ba8d43570d452eff203d840e4");
+        assert.equal(tm.getType1()!.getMintBatonVout(), 2);
+
+        // check genesis properties
+        assert.equal(Buffer.from(tm.getType1()!.getTokenName()).toString("utf8"), "Fake USD");
+        assert.equal(Buffer.from(tm.getType1()!.getTokenTicker()).toString("utf8"), "USDF");
+    });
+
+    it("getTokenMetadata for NFT child token w/ group ID", async () => {
+        const tokenID = Buffer.from("f8941855665c09ffb77b8b9e0af0f14a92782c1cc5560b33fe479fe64a19dfd5", "hex");
+        const res = await grpc.getTokenMetadata([ tokenID ]);
+        const tm = res.getTokenMetadataList()![0];
+
+        // check minting baton txid & vout
+        assert.equal(Buffer.from(tm.getNft1Child()!.getGroupId()).toString("hex"),
+            "8501a019953ba16a20807a08a02d49a3441235132e4b2a14546c0bc2421a131e");
+
+        // check genesis properties
+        assert.equal(Buffer.from(tm.getNft1Child()!.getTokenName()).toString("utf8"), "sharp pointy sword");
+        assert.equal(Buffer.from(tm.getNft1Child()!.getTokenTicker()).toString("utf8"), "");
+    });
+
+    it("getAddressUnspentOutputs", async () => {
+        const address = "bitcoincash:qz5x4wy6vtkuc0z4m9yxf6lfej4sx44wdv2lqnmfkl";
+        const res = await grpc.getAddressUtxos({address, includeMempool: true, includeTokenMetadata: true });
+        const outs = res.getOutputsList()!;
+        const tokens = res.getTokenMetadataList()!;
+        for (const out of outs) {
+            console.log(`satoshis: ${out.getValue()}`);
+            if (out.getSlpToken()) {
+                const _token = tokens.find((t) =>
+                    Buffer.from(t.getTokenId_asU8()).toString("hex") === Buffer.from(out.getSlpToken()!.getTokenId_asU8()).toString("hex"));
+                if (! _token) {
+                    throw Error("missing token id");
+                }
+                console.log(`token id: ${Buffer.from(_token.getTokenId_asU8()).toString("hex")}`);
+                let divisibility: number;
+                if (_token.hasType1()) {
+                    divisibility = _token.getType1()!.getDecimals();
+                } else if (_token.hasNft1Group()) {
+                    divisibility = _token.getNft1Group()!.getDecimals();
+                } else if (_token.hasNft1Child()) {
+                    divisibility = 0;
+                } else {
+                    throw Error("unknown error");
+                }
+
+                console.log(`token amt: ${Big(out.getSlpToken()!.getAmount()).div(10 ** divisibility)}`);
+            }
+        }
+    });
+
+    it("getUnspentOutput returns slp mempool item", async () => {
+        const txid = "ff7f98a8234cd6d0a5a8372331269a1bd9a42038aba5f01701e274ec33b1aa7e";
+        let error: any;
+        let res: GetUnspentOutputResponse;
+        try {
+            res = await grpc.getUnspentOutput({
+                hash: txid,
+                vout: 1,
+                reversedHashOrder: true,
+                includeMempool: true,
+                includeTokenMetadata: true,
+            });
+        } catch (err) {
+            error = err;
+        }
+        if (error) {
+            assert.equal(["5 NOT_FOUND: utxo spent in mempool", "5 NOT_FOUND: utxo not found"].includes(error.message), true);
+        } else {
+            throw Error("did not throw and expected error.");
+        }
+    });
 
     it("getRawTransaction returns the transaction (README example)", async () => {
         const txid = "11556da6ee3cb1d14727b3a8f4b37093b6fecd2bc7d577a02b4e98b7be58a7e8";
@@ -345,7 +520,7 @@ expectedParsingErrorsFromGoSlp.set("documentHash must be size 0 or 32", [
     "(must be invalid: wrong size): Genesis with 33-byte dochash",
     "(must be invalid: wrong size): Genesis with 64-byte dochash",
     "(must be invalid: wrong size): Genesis with 20-byte dochash",
-    ""
+    "",
 ]);
 expectedParsingErrorsFromGoSlp.set("tokenId invalid size", [
     "(must be invalid: wrong size): SEND with 0-byte token_id",

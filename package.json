@@ -34,17 +34,19 @@
   "homepage": "https://github.com/jcramer/grpc-bchrpc-node#readme",
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^0.1.3",
+    "@types/big.js": "^4.0.5",
     "@types/mocha": "^5.1.1",
     "@types/node": "^12.12.48",
+    "big.js": "^5.2.2",
     "grpc-tools": "^1.9.0",
     "grpc_tools_node_protoc_ts": "^4.1.0",
     "mocha": "^7.2.0",
     "mocha-steps": "^1.3.0",
     "nyc": "^14.1.1",
+    "slp-unit-test-data": "git+https://github.com/simpleledger/slp-unit-test-data.git",
     "source-map-support": "^0.5.19",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.6",
-    "slp-unit-test-data": "git+https://github.com/simpleledger/slp-unit-test-data.git"
+    "typescript": "^3.9.6"
   },
   "dependencies": {
     "@types/google-protobuf": "^3.7.2",
