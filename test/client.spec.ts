@@ -6,7 +6,7 @@ import { GrpcClient } from "../src/client";
 
 const scriptUnitTestData: SlpMsgTest[] = require("slp-unit-test-data/script_tests.json");
 
-const grpc = new GrpcClient({ url: "bchd.ny1.simpleledger.io:8335", rootCertPath: "" });
+const grpc = new GrpcClient({ url: "bchd.ny1.simpleledger.io", rootCertPath: "" });
 
 describe("grpc-bchrpc-node", () => {
 
