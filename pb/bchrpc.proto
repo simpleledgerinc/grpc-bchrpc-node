@@ -100,6 +100,9 @@ service bchrpc {
     // **Requires SlpIndex with additional functionary key setup**
     rpc GetTrustedSlpValidation(GetTrustedSlpValidationRequest) returns (GetTrustedSlpValidationResponse) {}
 
+    // GetBip44HdAddress returns an address associated with the HD path 
+    rpc GetBip44HdAddress(GetBip44HdAddressRequest) returns (GetBip44HdAddressResponse) {}
+
     // CheckSlpTransaction checks the SLP validity of an unbroadcasted transaction
     rpc CheckSlpTransaction(CheckSlpTransactionRequest) returns (CheckSlpTransactionResponse) {}
 
@@ -593,6 +596,19 @@ message GetTrustedSlpValidationResponse {
 
     // allows server to respond to a request with multiple
     repeated ValidityResult results = 1;
+}
+
+message GetBip44HdAddressRequest {
+    string xpub = 1;
+    bool change = 2;
+    uint32 address_index = 3;
+    bool include_slp_addr = 4;
+}
+
+message GetBip44HdAddressResponse {
+    bytes pub_key = 1;
+    string cash_addr = 2;
+    string slp_addr = 3;
 }
 
 // NOTIFICATIONS

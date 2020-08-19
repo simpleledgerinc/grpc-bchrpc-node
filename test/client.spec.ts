@@ -471,6 +471,42 @@ describe("grpc-bchrpc-node", () => {
         }
         throw Error("test did not throw");
     });
+
+    it("getBip44Address", async () => {
+        const res = await grpc.getBip44HdAddress({
+            xpub: "xpub6CnNNTEFauNBS6TDWzEcWqXU1DXN5BU3Q165QKWYnaPNQcm6Y8NzoRjZNMRCcayDgx4BTVxTCYDWDYNfX8ej1WiCDWB9vBUJ8BFSzQbhATC",
+            isChange: false,
+            addressIndex: 0,
+        });
+
+        assert.equal(res.getCashAddr(), "bitcoincash:qrlk9amfej0dj8n4pm58uf7awl2c5lsd5uf2n9muex");
+        assert.equal(res.getSlpAddr(), "simpleledger:qrlk9amfej0dj8n4pm58uf7awl2c5lsd5u93c7wu8c");
+        assert.equal(Buffer.from(res.getPubKey_asU8()).toString("hex"), "02990538a53c000f1da9d34634746765eb3fa6ca450cfbea13300f0df1aef8e00e");
+    });
+
+    it("getBip44Address", async () => {
+        const res = await grpc.getBip44HdAddress({
+            xpub: "xpub6CnNNTEFauNBS6TDWzEcWqXU1DXN5BU3Q165QKWYnaPNQcm6Y8NzoRjZNMRCcayDgx4BTVxTCYDWDYNfX8ej1WiCDWB9vBUJ8BFSzQbhATC",
+            isChange: false,
+            addressIndex: 1,
+        });
+
+        assert.equal(res.getCashAddr(), "bitcoincash:qq29mq80662z00gss7tmrt8y2nfawfmx45gj3yqfqy");
+        assert.equal(res.getSlpAddr(), "simpleledger:qq29mq80662z00gss7tmrt8y2nfawfmx45yf6l4f76");
+        assert.equal(Buffer.from(res.getPubKey_asU8()).toString("hex"), "023f62244d3e050eb8018fcf73f4ea7c8a6b7a8f01e0afaa585b9c1c3d5cdf6775");
+    });
+
+    it("getBip44Address", async () => {
+        const res = await grpc.getBip44HdAddress({
+            xpub: "xpub6CnNNTEFauNBS6TDWzEcWqXU1DXN5BU3Q165QKWYnaPNQcm6Y8NzoRjZNMRCcayDgx4BTVxTCYDWDYNfX8ej1WiCDWB9vBUJ8BFSzQbhATC",
+            isChange: true,
+            addressIndex: 1,
+        });
+
+        assert.equal(res.getCashAddr(), "bitcoincash:qz0s5gngtrmwcp9pwfpp4dzzr5a7e6pt9ypmvpvrlf");
+        assert.equal(res.getSlpAddr(), "simpleledger:qz0s5gngtrmwcp9pwfpp4dzzr5a7e6pt9ydq86erph");
+        assert.equal(Buffer.from(res.getPubKey_asU8()).toString("hex"), "0289e06414948c7d044ed7b3f09cb8a9a2709f629d9fdbd642033ca3725731a2a2");
+    });
 });
 
 interface SlpMsgTest {

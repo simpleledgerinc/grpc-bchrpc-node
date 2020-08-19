@@ -482,6 +482,21 @@ export class GrpcClient {
         });
     }
 
+    public getBip44HdAddress({ xpub, isChange, addressIndex }:
+        {xpub: string, isChange: boolean, addressIndex: number }): Promise<bchrpc.GetBip44HdAddressResponse> {
+
+        return new Promise((resolve, reject) => {
+            const req = new bchrpc.GetBip44HdAddressRequest();
+            req.setXpub(xpub);
+            req.setChange(isChange);
+            req.setAddressIndex(addressIndex);
+
+            this.client.getBip44HdAddress(req, (err, data) => {
+                if (err !== null) { reject(err); } else { resolve(data!); }
+            });
+        });
+    }
+
     public getParsedSlpScript(script: string|Buffer): Promise<bchrpc.GetParsedSlpScriptResponse> {
         return new Promise((resolve, reject) => {
             const req = new bchrpc.GetParsedSlpScriptRequest();
