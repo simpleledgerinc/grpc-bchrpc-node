@@ -56,8 +56,7 @@ service bchrpc {
     // limit, and from block options.
     //
     // **Requires AddressIndex**
-    // **Requires SlpIndex to receive slp input/output metadata,
-    //   and TokenMetadata (if include_token_metadata=true in request) **
+    // **Requires SlpIndex to receive slp input/output and TokenMetadata**
     rpc GetAddressTransactions(GetAddressTransactionsRequest) returns (GetAddressTransactionsResponse) {}
 
     // GetRawAddressTransactions the serialized raw transactions for
@@ -99,9 +98,9 @@ service bchrpc {
     // which may be used in oracle based applications
     //
     // **Requires SlpIndex with additional functionary key setup**
-    rpc GetTrustedValidation(GetTrustedValidationRequest) returns (GetTrustedValidationResponse) {}
+    rpc GetTrustedSlpValidation(GetTrustedSlpValidationRequest) returns (GetTrustedSlpValidationResponse) {}
 
-    // CheckSlpTransaction checks the validity of a 
+    // CheckSlpTransaction checks the SLP validity of an unbroadcasted transaction
     rpc CheckSlpTransaction(CheckSlpTransactionRequest) returns (CheckSlpTransactionResponse) {}
 
     // Submit a transaction to all connected peers.
@@ -338,8 +337,6 @@ message GetAddressTransactionsRequest {
         // starting block identified by block number.
         int32 height = 5;
     }
-
-    //bool include_token_metadata = 6;
 }
 message GetAddressTransactionsResponse {
 
@@ -347,8 +344,6 @@ message GetAddressTransactionsResponse {
     repeated Transaction confirmed_transactions = 1;
     // Transactions in mempool which have not been included in a block.
     repeated MempoolTransaction unconfirmed_transactions = 2;
-    // TokenMetadata will be populated with token metadata if include_token_metadata=true in request
-    //repeated TokenMetadata token_metadata = 3;
 }
 
 // Get encoded transactions related to a specific address.
@@ -493,8 +488,6 @@ message SubscribeTransactionsRequest {
     // bitcoin protocol encoding. Default is false, transaction will be Marshaled
     // (see `Transaction`, `MempoolTransaction` and `TransactionNotification`)
     bool serialize_tx = 5;
-
-    //bool include_token_metadata = 6;
 }
 
 // Options to define data structure to be sent by SubscribeBlock stream:
@@ -557,7 +550,7 @@ message GetParsedSlpScriptResponse {
     }
 }
 
-message GetTrustedValidationRequest {
+message GetTrustedSlpValidationRequest {
     message Query {
         bytes prev_out_hash = 1;
         uint32 prev_out_vout = 2;
@@ -579,7 +572,7 @@ message GetTrustedValidationRequest {
     Functionary functionary_info = 2;
 }
 
-message GetTrustedValidationResponse {
+message GetTrustedSlpValidationResponse {
     message ValidityResult {
         bytes prev_out_hash = 1;
         uint32 prev_out_vout = 2;
@@ -935,7 +928,7 @@ message TokenMetadataTokenType1 {
 	bytes token_document_url = 3;
 	bytes token_document_hash = 4;
 	uint32 decimals = 5;
-    bytes mint_baton_txid = 6;
+    bytes mint_baton_txid = 6;   // txn must be confirmed
     uint32 mint_baton_vout = 7;
 }
 
@@ -945,9 +938,8 @@ message TokenMetadataNFT1Group {
 	bytes token_document_url = 3;
 	bytes token_document_hash = 4;
 	uint32 decimals = 5;
-    bytes mint_baton_txid = 6;
+    bytes mint_baton_txid = 6;   // txn must be confirmed
     uint32 mint_baton_vout = 7;
-    //repeated bytes nftChildIDs = 9; // DO WE WANT THIS?
 }
 
 message TokenMetadataNFT1Child {

@@ -436,7 +436,7 @@ export class GrpcClient {
         });
     }
 
-    public getTrustedValidation({
+    public getTrustedSlpValidation({
         txos,
         reversedHashOrder,
         functionaryInfo,
@@ -445,15 +445,15 @@ export class GrpcClient {
         reversedHashOrder?: boolean,
         functionaryInfo?: {
             pubKey: string|Buffer,
-            type: bchrpc.GetTrustedValidationRequest.Functionary.MessageType,
-            sigType: bchrpc.GetTrustedValidationRequest.Functionary.SignatureType },
-    }): Promise<bchrpc.GetTrustedValidationResponse> {
+            type: bchrpc.GetTrustedSlpValidationRequest.Functionary.MessageType,
+            sigType: bchrpc.GetTrustedSlpValidationRequest.Functionary.SignatureType },
+    }): Promise<bchrpc.GetTrustedSlpValidationResponse> {
         return new Promise((resolve, reject) => {
-            const req = new bchrpc.GetTrustedValidationRequest();
+            const req = new bchrpc.GetTrustedSlpValidationRequest();
 
             // add txos
             for (const txo of txos) {
-                const query = new bchrpc.GetTrustedValidationRequest.Query();
+                const query = new bchrpc.GetTrustedSlpValidationRequest.Query();
                 let hash = Buffer.from(txo.hash, "hex");
                 if (reversedHashOrder) {
                     hash = hash.slice().reverse();
@@ -465,7 +465,7 @@ export class GrpcClient {
 
             // add functionary info
             if (functionaryInfo) {
-                const info = new bchrpc.GetTrustedValidationRequest.Functionary();
+                const info = new bchrpc.GetTrustedSlpValidationRequest.Functionary();
                 info.setType(functionaryInfo.type);
                 info.setSigType(functionaryInfo.sigType);
                 if (typeof functionaryInfo.pubKey === "string") {
@@ -476,13 +476,13 @@ export class GrpcClient {
                 req.setFunctionaryInfo(info);
             }
 
-            this.client.getTrustedValidation(req, (err, data) => {
+            this.client.getTrustedSlpValidation(req, (err, data) => {
                 if (err !== null) { reject(err); } else { resolve(data!); }
             });
         });
     }
 
-    public parseSlpScript(script: string|Buffer): Promise<bchrpc.GetParsedSlpScriptResponse> {
+    public getParsedSlpScript(script: string|Buffer): Promise<bchrpc.GetParsedSlpScriptResponse> {
         return new Promise((resolve, reject) => {
             const req = new bchrpc.GetParsedSlpScriptRequest();
             if (typeof script === "string") {

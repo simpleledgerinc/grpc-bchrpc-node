@@ -1,14 +1,12 @@
 import assert from "assert";
 import Big from "big.js";
-import { GetParsedSlpScriptResponse, GetTrustedValidationRequest,
-    GetTrustedValidationResponse, GetUnspentOutputResponse } from "../pb/bchrpc_pb";
+import { GetParsedSlpScriptResponse, GetTrustedSlpValidationRequest,
+    GetTrustedSlpValidationResponse, GetUnspentOutputResponse } from "../pb/bchrpc_pb";
 import { GrpcClient } from "../src/client";
 
 const scriptUnitTestData: SlpMsgTest[] = require("slp-unit-test-data/script_tests.json");
 
-const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "/Users/jamescramer/localhost.crt" });
-// const grpc = new GrpcClient({ url: "bchd.fountainhead.cash:443" });
-// const grpc = new GrpcClient({ url: "bchd.ny1.simpleledger.io:8335" });
+const grpc = new GrpcClient({ url: "bchd.ny1.simpleledger.io:8335", rootCertPath: "" });
 
 describe("grpc-bchrpc-node", () => {
 
@@ -131,20 +129,44 @@ describe("grpc-bchrpc-node", () => {
         assert.equal(Buffer.from(tm.getNft1Child()!.getTokenTicker()).toString("utf8"), "");
     });
 
+    it("getTokenMetadata for token with burned minting baton after Genesis", async () => {
+        const tokenID = Buffer.from("9764efdb585963120faff71fbfc38c2eb8995af11e228587dc08d1f3c0c82157", "hex");
+        const res = await grpc.getTokenMetadata([ tokenID ]);
+        const tm = res.getTokenMetadataList()![0];
+
+        assert.equal(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8()).toString("hex"), "");
+    });
+
+    it("getTokenMetadata for token with burned minting baton after Mint", async () => {
+        const tokenID = Buffer.from("c44029110ecc637a289b9da0e7ccad197788d0d82684a7607cbe2d5c13ce5b08", "hex");
+        const res = await grpc.getTokenMetadata([ tokenID ]);
+        const tm = res.getTokenMetadataList()![0];
+
+        assert.equal(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8()).toString("hex"), "");
+    });
+
+    it("getTokenMetadata for token with burned", async () => {
+        const tokenID = Buffer.from("a17054f4cdb99fca43ad8ae218fd55c53814c02c450fb540a263edab5f1ac527", "hex");
+        const res = await grpc.getTokenMetadata([ tokenID ]);
+        const tm = res.getTokenMetadataList()![0];
+
+        assert.equal(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8()).toString("hex"), "");
+    });
+
     it("getAddressUnspentOutputs", async () => {
         const address = "bitcoincash:qz5x4wy6vtkuc0z4m9yxf6lfej4sx44wdv2lqnmfkl";
         const res = await grpc.getAddressUtxos({address, includeMempool: true, includeTokenMetadata: true });
         const outs = res.getOutputsList()!;
         const tokens = res.getTokenMetadataList()!;
         for (const out of outs) {
-            console.log(`satoshis: ${out.getValue()}`);
+            //console.log(`satoshis: ${out.getValue()}`);
             if (out.getSlpToken()) {
                 const _token = tokens.find((t) =>
                     Buffer.from(t.getTokenId_asU8()).toString("hex") === Buffer.from(out.getSlpToken()!.getTokenId_asU8()).toString("hex"));
                 if (! _token) {
                     throw Error("missing token id");
                 }
-                console.log(`token id: ${Buffer.from(_token.getTokenId_asU8()).toString("hex")}`);
+                //console.log(`token id: ${Buffer.from(_token.getTokenId_asU8()).toString("hex")}`);
                 let divisibility: number;
                 if (_token.hasType1()) {
                     divisibility = _token.getType1()!.getDecimals();
@@ -156,7 +178,7 @@ describe("grpc-bchrpc-node", () => {
                     throw Error("unknown error");
                 }
 
-                console.log(`token amt: ${Big(out.getSlpToken()!.getAmount()).div(10 ** divisibility)}`);
+                //console.log(`token amt: ${Big(out.getSlpToken()!.getAmount()).div(10 ** divisibility)}`);
             }
         }
     });
@@ -220,7 +242,7 @@ describe("grpc-bchrpc-node", () => {
         const txnHex = "010000000552df9fd3f9bf1f13993e8b7e5b42530394ed644f0df4c0fdd32cf531acc75505030000006a47304402201039b25fa81feb74d8dd0eb25ae065e8baf3c944d7728f77fb68fa0c9b67d2c2022013f0bc158946826791c58dcd5187da1b2dfb3dd36227880e6d3830fe91327ea7c1210383c67be45a2bef59274c29341dd55592973d0b0f14c7810a353fbdff62f613defeffffff34e29914bd556e3a3818342ceff2ae526ef96bf3c3d09777df9f655be52931cf100300006a473044022034070971b4a27f279560a2f8b735ee3324d0dea54999bc24f851a7c6d500a1a102200b09402cf061a15f8ec88f606d8a864f9cc0e86c50ea78c9ce282337bdce19af4121020414832a8304904eec02ae00997ece267f234908d06633d75a8a4e1e4350e172ffffffff34e29914bd556e3a3818342ceff2ae526ef96bf3c3d09777df9f655be52931cf0f0300006a473044022071c84830f0da6abf35f93abebf2a8f3415cbeb3e9d967321a6944bbb6b6ec6aa022006bbfd5019fbc3d516dea6dde5f1d78c4e5428e6f305f00964efde70490ed2374121020414832a8304904eec02ae00997ece267f234908d06633d75a8a4e1e4350e172ffffffff34e29914bd556e3a3818342ceff2ae526ef96bf3c3d09777df9f655be52931cf0e0300006b483045022100ba0e0e300047c23f0e1bf5b83c240f8ad8da99c8021177b75329e30432953855022024d7ddffe1b8ad31d6f0a7955d7ae4d915ab40b31c367f9ed6e0400bc9ba69a94121020414832a8304904eec02ae00997ece267f234908d06633d75a8a4e1e4350e172ffffffff34e29914bd556e3a3818342ceff2ae526ef96bf3c3d09777df9f655be52931cf0d0300006b4830450221009d35b7f99e55486d4d5ee7208dc4c34c157e68f55a4fc7b7765c86b8d9af296f022058d754701593829d0ed4a5ea8881737ae185c7ead271b748e4eb76b92386261d4121020414832a8304904eec02ae00997ece267f234908d06633d75a8a4e1e4350e172ffffffff040000000000000000496a04534c500001010453454e4420c4b0d62156b3fa5c8f3436079b5394f7edc1bef5dc1cd2f9d0c4d46f82cca47908000000000000000108000000000000000408000000000000005a22020000000000001976a914d20919767967b6305778ef2c8680e1bab9f9070588ac22020000000000001976a914750689c893d2b2a0e805b8b356283126d7d1e5c088ac22020000000000001976a9149af63d01b056c5b3e0a1d6f74e46ba0543a579bd88ac00000000";
         let error: any;
         try {
-            await grpc.submitTransaction({txnHex});
+            await grpc.submitTransaction({txnHex, skipSlpValidityChecks: true});
         } catch (err) {
             error = err;
         }
@@ -255,7 +277,7 @@ describe("grpc-bchrpc-node", () => {
 
     it("getParsedSlpScript - MINT 100", async () => {
         const script = Buffer.from("6a04534c50000101044d494e5420ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff4c00080000000000000064", "hex");
-        const resp = await grpc.parseSlpScript(script);
+        const resp = await grpc.getParsedSlpScript(script);
         const tokenID = Buffer.from(resp.getTokenId());
         assert.equal(resp.getV1Mint()!.getMintAmount(), 100);
         assert.equal(tokenID.toString("hex"), "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
@@ -269,7 +291,7 @@ describe("grpc-bchrpc-node", () => {
                 if (eCode) {
                     let resp: GetParsedSlpScriptResponse;
                     try {
-                        resp = await grpc.parseSlpScript(script);
+                        resp = await grpc.getParsedSlpScript(script);
                     } catch (error) {
                         console.log(error.message);
                         process.exit();
@@ -288,7 +310,7 @@ describe("grpc-bchrpc-node", () => {
                         throw Error("BCHD did not return a parsing error");
                     }
                 } else {
-                    const resp = await grpc.parseSlpScript(script);
+                    const resp = await grpc.getParsedSlpScript(script);
                     const parsedType = resp.getType();
                     assert.equal(parsedType > 0, true);
                 }
@@ -305,9 +327,9 @@ describe("grpc-bchrpc-node", () => {
             { hash: "f1bf99cfdd5d056de503350c9f6cabc3cd052d3dcaab7764708dc78145682bc4", vout: 2, validAmt: "MINT_BATON", tokenIDHex: "f1bf99cfdd5d056de503350c9f6cabc3cd052d3dcaab7764708dc78145682bc4" },          // slp genesis transaction, but targeting the mint baton output
         ];
 
-        let resp: GetTrustedValidationResponse;
+        let resp: GetTrustedSlpValidationResponse;
         try {
-            resp = await grpc.getTrustedValidation({ txos: expected, reversedHashOrder: true });
+            resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
             throw err;
         }
@@ -326,11 +348,11 @@ describe("grpc-bchrpc-node", () => {
             assert.equal(exp.tokenIDHex, Buffer.from(res.getTokenId_asU8()).toString("hex"));
             const resultType = res.getValidityResultTypeCase();
             switch (resultType) {
-                case GetTrustedValidationResponse.ValidityResult.ValidityResultTypeCase.V1_MINT_BATON:
+                case GetTrustedSlpValidationResponse.ValidityResult.ValidityResultTypeCase.V1_MINT_BATON:
                     assert.equal(res.getV1TokenAmount(), 0);
                     assert.equal(res.getV1MintBaton(), exp.validAmt === "MINT_BATON");
                     break;
-                case GetTrustedValidationResponse.ValidityResult.ValidityResultTypeCase.V1_TOKEN_AMOUNT:
+                case GetTrustedSlpValidationResponse.ValidityResult.ValidityResultTypeCase.V1_TOKEN_AMOUNT:
                     assert.equal(res.getV1TokenAmount(), exp.validAmt);
                     break;
                 default:
@@ -343,9 +365,9 @@ describe("grpc-bchrpc-node", () => {
         const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "00", vout: 1, validAmt: 0, tokenIDHex: "" },
         ];
-        let resp: GetTrustedValidationResponse;
+        let resp: GetTrustedSlpValidationResponse;
         try {
-            resp = await grpc.getTrustedValidation({ txos: expected, reversedHashOrder: true });
+            resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
             assert.equal(err.message.includes("invalid txn hash"), true);
             return;
@@ -357,9 +379,9 @@ describe("grpc-bchrpc-node", () => {
         const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "e5459585b8f5df1e115b47f3ac72cff256cdb75e3bb69735a906d58c3ceb1631", vout: 1, validAmt: 0, tokenIDHex: "" },
         ];
-        let resp: GetTrustedValidationResponse;
+        let resp: GetTrustedSlpValidationResponse;
         try {
-            resp = await grpc.getTrustedValidation({ txos: expected, reversedHashOrder: true });
+            resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
             assert.equal(err.message.includes("txid is missing from slp validity set"), true);
             return;
@@ -371,9 +393,9 @@ describe("grpc-bchrpc-node", () => {
         const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "32c265ecc608e83f41082e4514c08ce5b748edd80e68817aa3a385994c931354", vout: 20, validAmt: 0, tokenIDHex: "" },
         ];
-        let resp: GetTrustedValidationResponse;
+        let resp: GetTrustedSlpValidationResponse;
         try {
-            resp = await grpc.getTrustedValidation({ txos: expected, reversedHashOrder: true });
+            resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
             assert.equal(err.message.includes("slp output index cannot be 0 or > 19"), true);
             return;
@@ -386,9 +408,9 @@ describe("grpc-bchrpc-node", () => {
             { hash: "9582c0fdb41f82c74f3ef25a87963e510c3e981dde6f069e5d6a8cd4a643ce2b", vout: 3, validAmt: 0, tokenIDHex: "" },
         ];
 
-        let resp: GetTrustedValidationResponse;
+        let resp: GetTrustedSlpValidationResponse;
         try {
-            resp = await grpc.getTrustedValidation({ txos: expected, reversedHashOrder: true });
+            resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
             assert.equal(err.message.includes("vout is not a valid SLP output"), true);
             return;
@@ -401,9 +423,9 @@ describe("grpc-bchrpc-node", () => {
             { hash: "a69ef2d5bfe964dd0d17722b31419a0366d3613f2575a24f068e806ab3a4a131", vout: 3, validAmt: 0, tokenIDHex: "" },
         ];
 
-        let resp: GetTrustedValidationResponse;
+        let resp: GetTrustedSlpValidationResponse;
         try {
-            resp = await grpc.getTrustedValidation({ txos: expected, reversedHashOrder: true });
+            resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
             assert.equal(err.message.includes("vout is not a valid SLP output"), true);
             return;
@@ -416,9 +438,9 @@ describe("grpc-bchrpc-node", () => {
             { hash: "f1bf99cfdd5d056de503350c9f6cabc3cd052d3dcaab7764708dc78145682bc4", vout: 3, validAmt: 0, tokenIDHex: "" },
         ];
 
-        let resp: GetTrustedValidationResponse;
+        let resp: GetTrustedSlpValidationResponse;
         try {
-            resp = await grpc.getTrustedValidation({ txos: expected, reversedHashOrder: true });
+            resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
             assert.equal(err.message.includes("vout is not a valid SLP output"), true);
             return;
@@ -431,19 +453,19 @@ describe("grpc-bchrpc-node", () => {
             { hash: "d2b81f055c8b0975c034ca16feaa7acaaae05da89463af81961d178cc2e56200", vout: 1, validAmt: 17600000000, tokenIDHex: "d6876f0fce603be43f15d34348bb1de1a8d688e1152596543da033a060cff798" },
         ];
 
-        let resp: GetTrustedValidationResponse;
+        let resp: GetTrustedSlpValidationResponse;
         try {
-            resp = await grpc.getTrustedValidation({
+            resp = await grpc.getTrustedSlpValidation({
                 functionaryInfo: {
                     pubKey: "00",
-                    type: GetTrustedValidationRequest.Functionary.MessageType.STANDARD,
-                    sigType: GetTrustedValidationRequest.Functionary.SignatureType.SECP256K1_SCHNORR,
+                    type: GetTrustedSlpValidationRequest.Functionary.MessageType.STANDARD,
+                    sigType: GetTrustedSlpValidationRequest.Functionary.SignatureType.SECP256K1_SCHNORR,
                 },
                 reversedHashOrder: true,
                 txos: expected,
             });
         } catch (err) {
-            console.log(err.message);
+            //console.log(err.message);
             assert.equal(err.message.includes("slp validation functionary not implemented"), true);
             return;
         }
