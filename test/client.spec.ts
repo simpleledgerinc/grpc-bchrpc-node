@@ -25,19 +25,19 @@ describe("grpc-bchrpc-node", () => {
         // check slp token output data (CHECK BIG NUMBER CASE!!)
         const outputs = res.getTransaction()!.getOutputsList();
         let totalAmtOut = Big(0);
-        for (const outs of outputs) {
-            if (outs.getSlpToken()) {
-                const slpToken = outs.getSlpToken()!;
+        for (const out of outputs) {
+            if (out.getSlpToken()) {
+                const slpToken = out.getSlpToken()!;
                 const amt = BigInt(slpToken.getAmount()!);
                 assert.equal([139200347639, 433852691149408].includes(parseInt(slpToken.getAmount(), 10)), true);
                 assert.equal(slpToken.getDecimals(), 8);
                 totalAmtOut = totalAmtOut.add(slpToken.getAmount());
 
-                // TODO: get addresses
-                // assert.equal([
-                //                 "simpleledger:qprqzzhhve7sgysgf8h29tumywnaeyqm7ykzvpsuxy",
-                //                 "simpleledger:qpluak66akyaz38tsz87teyuma5rf6cqhq664ple3v",
-                //             ].includes(slpToken.getAddress()), true);
+                // check slp addresses
+                assert.equal([
+                    "qprqzzhhve7sgysgf8h29tumywnaeyqm7ykzvpsuxy",
+                    "qpluak66akyaz38tsz87teyuma5rf6cqhq664ple3v",
+                ].includes(slpToken.getAddress()), true);
             }
         }
 
@@ -63,7 +63,7 @@ describe("grpc-bchrpc-node", () => {
         assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenDocumentUrl()).toString("utf8"), "spiceslp@gmail.com");
         assert.equal(Buffer.from(res.getTokenMetadata()!.getTokenId_asU8()!).toString("hex"), "4de69e374a8ed21cbddd47f2338cc0f479dc58daa2bbe11cd604ca488eca0ddf");
 
-        // TODO: need to set proper Mint baton txid / vout
+        // verify current Mint baton txid / vout
         assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonTxid(), "");
         assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 0);
     });
@@ -84,9 +84,59 @@ describe("grpc-bchrpc-node", () => {
 
         assert.equal(totalOut.cmp(Big("18446744073709551615")), 0);
 
-        // TODO: need to set proper Mint baton txid / vout
+        // verify Mint baton txid / vout
         assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonTxid(), "");
         assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 0);
+    });
+
+    it("getTransaction - mint transaction", async () => {
+        const txidHex = "59c30c1e6854a830632fa5486e39fd9243108a7534c3f0918e56aa2bf9f943f5";
+        const res = await grpc.getTransaction({ hash: txidHex, reversedHashOrder: true, includeTokenMetadata: true });
+
+        // check slp token output data (CHECK BIG NUMBER CASE!!)
+        const outputs = res.getTransaction()!.getOutputsList();
+        let totalAmtOut = Big(0);
+        for (const out of outputs) {
+            if (out.getSlpToken()) {
+                const slpToken = out.getSlpToken()!;
+                const amt = BigInt(slpToken.getAmount()!);
+                assert.equal([133333333, 0].includes(parseInt(slpToken.getAmount(), 10)), true);
+                assert.equal(slpToken.getDecimals(), 6);
+                totalAmtOut = totalAmtOut.add(slpToken.getAmount());
+
+                // check slp addresses
+                assert.equal([
+                    "qrzuvtyqs7f843natt3cvl2lenme2tcl3qvvl8ydjj",
+                    "pz0n40tkppxq7nq7vewvjtfe2dwre0k2z580r6u7df",
+                ].includes(slpToken.getAddress()), true);
+            }
+        }
+
+        // check slp token input data
+        const inputs = res.getTransaction()!.getInputsList();
+        let totalAmtIn = Big(0);
+        for (const ins of inputs) {
+            if (ins.getSlpToken()) {
+                const slpToken = ins.getSlpToken()!;
+                assert.equal(slpToken.getDecimals(), 6);
+                totalAmtIn = totalAmtIn.add(slpToken.getAmount());
+            }
+        }
+
+        // check inputs == output amount
+        assert.equal(totalAmtIn.eq(0), true);
+        assert.equal(totalAmtIn.lt(totalAmtOut), true);
+
+        // check token metadata
+        assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenName()!).toString("utf8"), "Mistcoin");
+        assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenTicker()).toString("utf8"), "MIST");
+        assert.equal(res.getTokenMetadata()!.getType1()!.getDecimals()!, 6);
+        assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenDocumentUrl()).toString("utf8"), "https://mistcoin.org");
+        assert.equal(Buffer.from(res.getTokenMetadata()!.getTokenId_asU8()!).toString("hex"), "d6876f0fce603be43f15d34348bb1de1a8d688e1152596543da033a060cff798");
+
+        // verify current Mint baton txid / vout
+        assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonTxid().length === 32, true);
+        assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 2);
     });
 
     it("checkSlpTransaction - returns error on missing inputs or outputs", async () => {
