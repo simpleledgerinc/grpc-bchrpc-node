@@ -204,7 +204,7 @@ describe("grpc-bchrpc-node", () => {
     });
 
     it("getAddressUnspentOutputs", async () => {
-        const address = "bitcoincash:qz5x4wy6vtkuc0z4m9yxf6lfej4sx44wdv2lqnmfkl";
+        const address = "simpleledger:qz5x4wy6vtkuc0z4m9yxf6lfej4sx44wdvxytgwfgp";
         const res = await grpc.getAddressUtxos({address, includeMempool: true, includeTokenMetadata: true });
         const outs = res.getOutputsList()!;
         const tokens = res.getTokenMetadataList()!;
@@ -274,7 +274,7 @@ describe("grpc-bchrpc-node", () => {
     });
 
     it("getAddressTransactions for and example address", async () => {
-        const exampleAddress = "bitcoincash:qregyd3kcklc58fd6r8epfwulpvd9f4mr5gxg8n8y7";
+        const exampleAddress = "simpleledger:qregyd3kcklc58fd6r8epfwulpvd9f4mr5yarux86q";
         const firstTxid = "5248906d6ac8425f287727797307d7305291f57d30406cb627e6573bbb77a344";
         const res = await grpc.getAddressTransactions({address: exampleAddress, height: 0});
         const txns = res.getConfirmedTransactionsList();
@@ -322,13 +322,6 @@ describe("grpc-bchrpc-node", () => {
             throw Error("did not throw and expected error.");
         }
     });
-
-    // TODO ... getTokenMetadata is not yet implemented in BCHD
-    // it("getTokenMetadata", async () => {
-    //     const tokenId = "";
-    //     await grpc.getTokenMetadata([tokenId]);
-    //     assert.equal("", "");
-    // });
 
     it("getParsedSlpScript - MINT 100", async () => {
         const script = Buffer.from("6a04534c50000101044d494e5420ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff4c00080000000000000064", "hex");
