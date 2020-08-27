@@ -208,9 +208,10 @@ describe("grpc-bchrpc-node", () => {
         const res = await grpc.getAddressUtxos({address, includeMempool: true, includeTokenMetadata: true });
         const outs = res.getOutputsList()!;
         const tokens = res.getTokenMetadataList()!;
+        const tokenIDs = new Set<string>();
         for (const out of outs) {
-            //console.log(`satoshis: ${out.getValue()}`);
             if (out.getSlpToken()) {
+                tokenIDs.add(Buffer.from(out.getSlpToken()!.getTokenId_asU8()).toString("hex"));
                 const _token = tokens.find((t) =>
                     Buffer.from(t.getTokenId_asU8()).toString("hex") === Buffer.from(out.getSlpToken()!.getTokenId_asU8()).toString("hex"));
                 if (! _token) {
@@ -231,6 +232,10 @@ describe("grpc-bchrpc-node", () => {
                 //console.log(`token amt: ${Big(out.getSlpToken()!.getAmount()).div(10 ** divisibility)}`);
             }
         }
+
+        // check all token IDs are represented in "TokenMetadataList"
+        assert.equal(tokenIDs.size, tokens.length);
+        
     });
 
     it("getUnspentOutput returns slp mempool item", async () => {
