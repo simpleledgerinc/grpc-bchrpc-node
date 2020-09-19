@@ -438,14 +438,9 @@ export class GrpcClient {
     public getTrustedSlpValidation({
         txos,
         reversedHashOrder,
-        functionaryInfo,
     }: {
         txos: Array<{ hash: string; vout: number; }>,
-        reversedHashOrder?: boolean,
-        functionaryInfo?: {
-            pubKey: string|Buffer,
-            type: bchrpc.GetTrustedSlpValidationRequest.Functionary.MessageType,
-            sigType: bchrpc.GetTrustedSlpValidationRequest.Functionary.SignatureType },
+        reversedHashOrder?: boolean
     }): Promise<bchrpc.GetTrustedSlpValidationResponse> {
         return new Promise((resolve, reject) => {
             const req = new bchrpc.GetTrustedSlpValidationRequest();
@@ -460,19 +455,6 @@ export class GrpcClient {
                 query.setPrevOutHash(hash);
                 query.setPrevOutVout(txo.vout);
                 req.addQueries(query);
-            }
-
-            // add functionary info
-            if (functionaryInfo) {
-                const info = new bchrpc.GetTrustedSlpValidationRequest.Functionary();
-                info.setType(functionaryInfo.type);
-                info.setSigType(functionaryInfo.sigType);
-                if (typeof functionaryInfo.pubKey === "string") {
-                    info.setPublicKey(Buffer.from(functionaryInfo.pubKey, "hex"));
-                } else {
-                    info.setPublicKey(functionaryInfo.pubKey);
-                }
-                req.setFunctionaryInfo(info);
             }
 
             this.client.getTrustedSlpValidation(req, (err, data) => {

@@ -496,30 +496,6 @@ describe("grpc-bchrpc-node", () => {
         throw Error("test did not throw");
     });
 
-    it("trusted validation throws on functionary request when not configured", async () => {
-        const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
-            { hash: "d2b81f055c8b0975c034ca16feaa7acaaae05da89463af81961d178cc2e56200", vout: 1, validAmt: 17600000000, tokenIDHex: "d6876f0fce603be43f15d34348bb1de1a8d688e1152596543da033a060cff798" },
-        ];
-
-        let resp: GetTrustedSlpValidationResponse;
-        try {
-            resp = await grpc.getTrustedSlpValidation({
-                functionaryInfo: {
-                    pubKey: "00",
-                    type: GetTrustedSlpValidationRequest.Functionary.MessageType.STANDARD,
-                    sigType: GetTrustedSlpValidationRequest.Functionary.SignatureType.SECP256K1_SCHNORR,
-                },
-                reversedHashOrder: true,
-                txos: expected,
-            });
-        } catch (err) {
-            //console.log(err.message);
-            assert.equal(err.message.includes("slp validation functionary not implemented"), true);
-            return;
-        }
-        throw Error("test did not throw");
-    });
-
     it("getBip44Address", async () => {
         const res = await grpc.getBip44HdAddress({
             xpub: "xpub6CnNNTEFauNBS6TDWzEcWqXU1DXN5BU3Q165QKWYnaPNQcm6Y8NzoRjZNMRCcayDgx4BTVxTCYDWDYNfX8ej1WiCDWB9vBUJ8BFSzQbhATC",
