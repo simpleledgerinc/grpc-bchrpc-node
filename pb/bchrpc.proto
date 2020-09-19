@@ -1,6 +1,8 @@
 syntax = "proto3";
+option go_package="github.com/gcash/bchd/bchrpc/pb";
 
 package pb;
+option java_package = "cash.bchd.rpc";
 
 // bchrpc contains a set of RPCs that can be exposed publicly via
 // the command line options. This service could be authenticated or
@@ -32,19 +34,18 @@ service bchrpc {
     // **Requires CfIndex**
     rpc GetBlockFilter(GetBlockFilterRequest) returns (GetBlockFilterResponse) {}
 
-    // GetHeaders takes a block locator object and returns
-    // a batch of no more than 2000 headers. Upon parsing the block locator, if the server
-    // concludes there has been a fork, it will send headers starting at the fork point,
-    // or genesis if no blocks in the locator are in the best chain. If the locator is
-    // already at the tip no headers will be returned.
+    // GetHeaders takes a block locator object and returns a batch of no more than 2000
+    // headers. Upon parsing the block locator, if the server concludes there has been a
+    // fork, it will send headers starting at the fork point, or genesis if no blocks in
+    // the locator are in the best chain. If the locator is already at the tip no headers
+    // will be returned.
     // see: bchd/bchrpc/documentation/wallet_operation.md
     rpc GetHeaders(GetHeadersRequest) returns (GetHeadersResponse) {}
 
     // GetTransaction returns a transaction given a transaction hash.
     //
     // **Requires TxIndex**
-    // **Requires SlpIndex to receive slp input/output metadata,
-    //   and TokenMetadata (if include_token_metadata=true in request) **
+    // **Requires SlpIndex for slp related information **
     rpc GetTransaction(GetTransactionRequest) returns (GetTransactionResponse) {}
 
     // GetRawTransaction returns a serialized transaction given a transaction hash.
@@ -56,7 +57,7 @@ service bchrpc {
     // limit, and from block options.
     //
     // **Requires AddressIndex**
-    // **Requires SlpIndex to receive slp input/output and TokenMetadata**
+    // **Requires SlpIndex for slp related information **
     rpc GetAddressTransactions(GetAddressTransactionsRequest) returns (GetAddressTransactionsResponse) {}
 
     // GetRawAddressTransactions the serialized raw transactions for
@@ -69,13 +70,13 @@ service bchrpc {
     // for the given address.
     //
     // **Requires AddressIndex**
-    // **Requires SlpIndex to receive slp input/output and TokenMetadata**
+    // **Requires SlpIndex for slp related information **
     rpc GetAddressUnspentOutputs(GetAddressUnspentOutputsRequest) returns (GetAddressUnspentOutputsResponse) {}
 
     // GetUnspentOutput takes an unspent output in the utxo set and returns
     // the utxo metadata or not found.
     //
-    // **Requires SlpIndex to receive slp input/output and TokenMetadata**
+    // **Requires SlpIndex for slp related information **
     rpc GetUnspentOutput(GetUnspentOutputRequest) returns (GetUnspentOutputResponse) {}
 
     // GetMerkleProof returns a Merkle (SPV) proof for a specific transaction
@@ -84,7 +85,7 @@ service bchrpc {
     // **Requires TxIndex**
     rpc GetMerkleProof(GetMerkleProofRequest) returns (GetMerkleProofResponse) {}
 
-    // GetTokenMetadata return SLP token metadata
+    // GetTokenMetadata return SLP token metadata for one or more tokens.
     //
     // **Requires SlpIndex**
     rpc GetTokenMetadata(GetTokenMetadataRequest) returns (GetTokenMetadataResponse) {}
@@ -93,29 +94,28 @@ service bchrpc {
     // using goslp package.  This endpoint does not require SlpIndex.
     rpc GetParsedSlpScript(GetParsedSlpScriptRequest) returns (GetParsedSlpScriptResponse) {}
 
-    // GetTrustedValidation returns SLP validity related information for one or more transactions
-    // the client may requests a signed message following a specified message format
-    // which may be used in oracle based applications
+    // GetTrustedValidation returns SLP validity related information for one or more transactions.
     //
-    // **Requires SlpIndex with additional functionary key setup**
+    // **Requires SlpIndex**
     rpc GetTrustedSlpValidation(GetTrustedSlpValidationRequest) returns (GetTrustedSlpValidationResponse) {}
 
-    // GetBip44HdAddress returns an address associated with the HD path 
+    // GetBip44HdAddress returns an address associated with a provided xpub, address index, and
+    // selecting either internal or external by setting the change boolean.  If SlpIndex is disabled
+    // the slpAddress string will be an empty string.
     rpc GetBip44HdAddress(GetBip44HdAddressRequest) returns (GetBip44HdAddressResponse) {}
 
-    // CheckSlpTransaction checks the SLP validity of an unbroadcasted transaction
+    // CheckSlpTransaction checks the SLP validity of an unbroadcasted transaction.
     rpc CheckSlpTransaction(CheckSlpTransactionRequest) returns (CheckSlpTransactionResponse) {}
 
     // Submit a transaction to all connected peers.
     rpc SubmitTransaction(SubmitTransactionRequest) returns (SubmitTransactionResponse) {}
 
     // SubscribeTransactions creates subscription to all relevant transactions based on
-    // the subscription filter.  The parameters to filter transactions on can be
-    // updated by sending new SubscribeTransactionsRequest objects on the stream.
+    // the subscription filter.
     //
     // This RPC does not use bidirectional streams and therefore can be used
     // with grpc-web. You will need to close and reopen the stream whenever
-    // you want to update the addresses. If you are not using grpc-web
+    // you want to update the subscription filter. If you are not using grpc-web
     // then SubscribeTransactionStream is more appropriate.
     //
     // **Requires TxIndex to receive input metadata**
@@ -159,9 +159,9 @@ message GetMempoolResponse {
     message TransactionData {
         // Either one of the two following is provided, depending on the request.
         oneof txids_or_txs {
-            // The transaction hash
+            // The transaction hash, little-endian.
             bytes transaction_hash = 1;
-            // The transaction data
+            // The transaction data.
             Transaction transaction = 2;
         }
     }
@@ -193,7 +193,7 @@ message GetBlockchainInfoResponse {
 
     // The current number of blocks on the longest chain.
     int32 best_height = 2;
-    // The hash of the best (tip) block in the most-work fully-validated chain.
+    // The hash of the best (tip) block in the most-work fully-validated chain, little-endian.
     bytes best_block_hash = 3;
     // Threshold for adding new blocks.
     double difficulty = 4;
@@ -267,12 +267,12 @@ message GetBlockFilterResponse {
 // Request headers using a list of known block hashes.
 message GetHeadersRequest {
     // A list of block hashes known to the client (most recent first) which
-    // is exponentially  sparser toward the genesis block (0).
+    // is exponentially sparser toward the genesis block (0), little-endian.
     // Common practice is to include all of the last 10 blocks, and then
     // 9 blocks for each order of ten thereafter.
     repeated bytes block_locator_hashes = 1;
-    // hash of the latest desired block header; only blocks occurring before
-    // the stop will be returned.
+    // hash of the latest desired block header, little-endian; only blocks
+    // occurring before the stop will be returned.
     bytes stop_hash = 2;
 }
 message GetHeadersResponse {
@@ -282,7 +282,7 @@ message GetHeadersResponse {
 
 // Get a transaction from a transaction hash.
 message GetTransactionRequest {
-    // A transaction hash.
+    // A transaction hash, little-endian.
     bytes hash = 1;
 
     bool include_token_metadata = 2;
@@ -296,7 +296,7 @@ message GetTransactionResponse {
 
 // Get an encoded transaction from a transaction hash.
 message GetRawTransactionRequest {
-    // A transaction hash.
+    // A transaction hash, little-endian.
     bytes hash = 1;
 }
 message GetRawTransactionResponse {
@@ -320,7 +320,6 @@ message GetRawTransactionResponse {
 // This approach will reduce network traffic and response processing
 //   for the client, as well as reduce workload on the node.
 message GetAddressTransactionsRequest {
-
     // The address to query transactions, in lowercase cashaddr format.
     // The network prefix is optional (i.e. "cashaddress:").
     string address = 1;
@@ -334,7 +333,7 @@ message GetAddressTransactionsRequest {
 
     oneof start_block {
         // Recommended. Only get transactions after (or within) a
-        // starting block identified by hash.
+        // starting block identified by hash, little-endian.
         bytes hash = 4;
         // Recommended. Only get transactions after (or within) a
         // starting block identified by block number.
@@ -342,7 +341,6 @@ message GetAddressTransactionsRequest {
     }
 }
 message GetAddressTransactionsResponse {
-
     // Transactions that have been included in a block.
     repeated Transaction confirmed_transactions = 1;
     // Transactions in mempool which have not been included in a block.
@@ -365,7 +363,6 @@ message GetAddressTransactionsResponse {
 // This approach will reduce network traffic and response processing
 //   for the client, as well as reduce workload on the node.
 message GetRawAddressTransactionsRequest {
-
     // The address to query transactions, in lowercase cashaddr format.
     // The network prefix is optional (i.e. "cashaddress:").
     string address = 1;
@@ -378,7 +375,7 @@ message GetRawAddressTransactionsRequest {
 
     oneof start_block {
         // Recommended. Only return transactions after some starting block
-        // identified by hash.
+        // identified by hash, little-endian.
         bytes hash = 4;
         // Recommended. Only return transactions after some starting block
         // identified by block number.
@@ -408,7 +405,7 @@ message GetAddressUnspentOutputsResponse {
 }
 
 message GetUnspentOutputRequest {
-    // The hash of the transaction.
+    // The hash of the transaction, little-endian.
     bytes hash = 1;
     // The number of the output, starting from zero.
     uint32 index = 2;
@@ -418,7 +415,6 @@ message GetUnspentOutputRequest {
     bool include_token_metadata = 4;
 }
 message GetUnspentOutputResponse {
-
     // A reference to the related input.
     Transaction.Input.Outpoint outpoint = 1;
     // Locking script dictating how funds can be spent in the future
@@ -436,7 +432,7 @@ message GetUnspentOutputResponse {
 }
 
 message GetMerkleProofRequest {
-    // A transaction hash.
+    // A transaction hash, little-endian.
     bytes transaction_hash = 1;
 }
 message GetMerkleProofResponse {
@@ -459,6 +455,7 @@ message SubmitTransactionRequest {
     repeated SlpRequiredBurn required_slp_burns = 3;
 }
 message SubmitTransactionResponse {
+    // Transaction hash, little-endian.
     bytes hash = 1;
 }
 
@@ -473,7 +470,6 @@ message CheckSlpTransactionResponse {
 
 // Request to subscribe or unsubscribe from a stream of transactions.
 message SubscribeTransactionsRequest {
-
     // Subscribe to a filter. add items to a filter
     TransactionFilter subscribe = 1;
     // Unsubscribe to a filter, remove items from a filter
@@ -512,7 +508,6 @@ message SubscribeTransactionsRequest {
 //            serialize_block = true
 //        }
 message SubscribeBlocksRequest {
-
     // When full_block is true, a complete marshaled block is sent. See `Block`.
     // Default is false, block metadata is sent. See `BlockInfo`.
     bool full_block = 1;
@@ -558,21 +553,7 @@ message GetTrustedSlpValidationRequest {
         bytes prev_out_hash = 1;
         uint32 prev_out_vout = 2;
     }
-    message Functionary {
-        enum MessageType {
-            STANDARD = 0;
-        }
-        enum SignatureType {
-            SECP256K1_ECDSA = 0;
-            SECP256K1_SCHNORR = 1;
-        }
-        bytes public_key = 1;
-        MessageType type = 2;
-        SignatureType sig_type = 3;
-    }
-
     repeated Query queries = 1;
-    Functionary functionary_info = 2;
 }
 
 message GetTrustedSlpValidationResponse {
@@ -586,12 +567,6 @@ message GetTrustedSlpValidationResponse {
             bool v1_mint_baton = 6;
         }
         bytes slp_txn_opreturn = 7;
-
-        message FunctionarySignature {
-            bytes signature = 1;
-            bytes message = 2;
-        }
-        FunctionarySignature functionary_sig = 8;
     }
 
     // allows server to respond to a request with multiple
@@ -602,7 +577,6 @@ message GetBip44HdAddressRequest {
     string xpub = 1;
     bool change = 2;
     uint32 address_index = 3;
-    bool include_slp_addr = 4;
 }
 
 message GetBip44HdAddressResponse {
@@ -615,7 +589,6 @@ message GetBip44HdAddressResponse {
 
 
 message BlockNotification {
-
     // State of the block in relation to the chain.
     enum Type {
         CONNECTED = 0;
@@ -635,7 +608,6 @@ message BlockNotification {
 }
 
 message TransactionNotification {
-
     // State of the transaction acceptance.
     enum Type {
         // A transaction in mempool.
@@ -661,11 +633,10 @@ message TransactionNotification {
 
 // Metadata for identifying and validating a block
 message BlockInfo {
-
     // Identification.
 
     // The double sha256 hash of the six header fields in the first 80 bytes
-    // of the block, when encoded according the bitcoin protocol.
+    // of the block, when encoded according the bitcoin protocol, little-endian.
     // sha256(sha256(encoded_header))
     bytes hash = 1;
     // The block number, an incremental index for each block mined.
@@ -675,9 +646,9 @@ message BlockInfo {
 
     // A version number to track software/protocol upgrades.
     int32 version = 3;
-    // Hash of the previous block
+    // Hash of the previous block, little-endian.
     bytes previous_block = 4;
-    // The root of the Merkle Tree built from all transactions in the block.
+    // The root of the Merkle Tree built from all transactions in the block, little-endian.
     bytes merkle_root = 5;
     // When mining of the block started, expressed in seconds since 1970-01-01.
     int64 timestamp = 6;
@@ -693,7 +664,7 @@ message BlockInfo {
     int32 confirmations = 9;
     // Difficulty target at time of creation.
     double difficulty = 10;
-    // Hash of the next block in this chain.
+    // Hash of the next block in this chain, little-endian.
     bytes next_block_hash = 11;
     // Size of the block in bytes.
     int32 size = 12;
@@ -704,7 +675,7 @@ message BlockInfo {
 message Block {
     message TransactionData {
         oneof txids_or_txs {
-            // Just the transaction hash.
+            // Just the transaction hash, little-endian.
             bytes transaction_hash = 1;
             // A marshaled transaction.
             Transaction transaction = 2;
@@ -717,17 +688,15 @@ message Block {
 }
 
 message Transaction {
-
     message Input {
         message Outpoint {
-            // The hash of the transaction containing the output to be spent.
+            // The hash of the transaction containing the output to be spent, little-endian
             bytes hash = 1;
             // The index of specific output on the transaction.
             uint32 index = 2;
         }
         // The number of the input, starting from zero.
         uint32 index = 1;
-
         // The related outpoint.
         Outpoint outpoint = 2;
         // An unlocking script asserting a transaction is permitted to spend
@@ -738,7 +707,7 @@ message Transaction {
         uint32 sequence = 4;
         // Amount in satoshi.
         int64 value = 5;
-        // The hash of the transaction containing the output to be spent.
+        // The pubkey_script of the previous output that is being spent.
         bytes previous_script = 6;
         // The bitcoin addresses associated with this input.
         string address = 7;
@@ -761,7 +730,7 @@ message Transaction {
         SlpToken slp_token = 7;
     }
 
-    // The double sha256 hash of the encoded transaction.
+    // The double sha256 hash of the encoded transaction, little-endian.
     // sha256(sha256(encoded_transaction))
     bytes hash = 1;
     // The version of the transaction format.
@@ -786,7 +755,7 @@ message Transaction {
     int32 confirmations = 10;
     // Number of the block containing the transaction.
     int32 block_height = 11;
-    // Hash of the block the transaction was recorded in.
+    // Hash of the block the transaction was recorded in, little-endian.
     bytes block_hash = 12;
 
     SlpTransactionInfo slp_transaction_info = 13;
@@ -794,7 +763,6 @@ message Transaction {
 
 message MempoolTransaction {
     Transaction transaction = 1;
-
     // The time when the transaction was added too the pool.
     int64 added_time = 2;
     // The block height when the transaction was added to the pool.
@@ -808,7 +776,6 @@ message MempoolTransaction {
 }
 
 message UnspentOutput {
-
     // A reference to the output given by transaction hash and index.
     Transaction.Input.Outpoint outpoint = 1;
     // The public key script used to pay coins.
@@ -825,19 +792,14 @@ message UnspentOutput {
 }
 
 message TransactionFilter {
-
     // Filter by address(es)
     repeated string addresses = 1;
 
     // Filter by output hash and index.
     repeated Transaction.Input.Outpoint outpoints = 2;
-    repeated bytes data_elements = 3;
 
-    //TODO: Are these extra filters for data elements relevant?
-    // - scriptPubkey
-    // if so...
-    // Filter by data contained in OP_DATA_1 to OP_PUSHDATA4 in
-    // the public key output script
+    // Filter by data elements contained in pubkey scripts.
+    repeated bytes data_elements = 3;
 
     // Subscribed/Unsubscribe to everything. Other filters
     // will be ignored.    
@@ -864,6 +826,7 @@ message SlpToken {
     bool is_mint_baton = 3;
     string address = 4;
     uint32 decimals = 5;
+    SlpVersionType version_type = 6;
 }
 
 message SlpTransactionInfo {
@@ -983,6 +946,6 @@ message SlpRequiredBurn {
     uint32 token_type = 3;
     oneof burn_intention {
         uint64 amount = 4;
-        bool mint_baton = 5;
+        uint32 mint_baton = 5;
     }
 }
