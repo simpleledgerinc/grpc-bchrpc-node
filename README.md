@@ -48,6 +48,15 @@ Then you can connect using the following `GrpcClient` constructor:
 
 ### Change Log
 
+#### 0.11.2
+
+- update protobuf with new burn request requirements for mint baton
+- removed unused functionary signer options in client
+
+#### 0.11.1
+
+- update protobuf with new burn flags
+
 #### 0.11.0
 - This update includes support for the new SLP index feature currently being tested for BCHD.  When the BCHD SLP index is enabled the full node will prevent accidental SLP token burns by rejecting invalid SLP transactions from connected gRPC clients.  This feature caused a minor change in the usage of the `SubmitTransaction()` method, where `skipSlpValidityChecks: true` needs to be added as a parameter if the BCHD full node does not have SLP indexing enabled.
 
