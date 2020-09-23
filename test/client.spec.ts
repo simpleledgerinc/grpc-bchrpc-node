@@ -1,14 +1,274 @@
 import assert from "assert";
 import Big from "big.js";
+import fs from "fs";
 import { GetParsedSlpScriptResponse, GetTrustedSlpValidationRequest,
-    GetTrustedSlpValidationResponse, GetUnspentOutputResponse } from "../pb/bchrpc_pb";
+    GetTrustedSlpValidationResponse, GetUnspentOutputResponse, SlpRequiredBurn, Transaction } from "../pb/bchrpc_pb";
 import { GrpcClient } from "../src/client";
 
 const scriptUnitTestData: SlpMsgTest[] = require("slp-unit-test-data/script_tests.json");
 
-const grpc = new GrpcClient({ url: "bchd.ny1.simpleledger.io", rootCertPath: "" });
+const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "/Users/jamescramer/localhost.crt" });
+
+const SCAN_KNOWN_BURNS = false;
 
 describe("grpc-bchrpc-node", () => {
+
+    it("prevents BURNED_INPUTS_BAD_OPRETURN", async () => {
+        const txid = "77d3f678e9283043cb59e3a34fb8921e4fa0442611e5508f40328d2f27adcc1b";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        let doesPrevent = false;
+        try {
+            await grpc.checkSlpTransaction({ txnBuf });
+        } catch (err) {
+            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn (error parsing slp op_return message:"), true);
+            doesPrevent = true;
+        }
+        if (! doesPrevent) {
+            throw Error("did not prevent burn");
+        }
+    });
+    it("prevents BURNED_INPUTS_BAD_OPRETURN even with specifying a required burn", async () => {
+        const txid = "77d3f678e9283043cb59e3a34fb8921e4fa0442611e5508f40328d2f27adcc1b";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        const allowedOutpoint = new Transaction.Input.Outpoint();
+        allowedOutpoint.setHash(
+            Buffer.from("b11cac00260aea3647859181ee33f845ab1cc1f698594d69525bbe619d9b94e7", "hex").reverse());
+        allowedOutpoint.setIndex(1);
+        const requiredSlpBurn = new SlpRequiredBurn();
+        requiredSlpBurn.setOutpoint(allowedOutpoint);
+        requiredSlpBurn.setTokenId(
+            Buffer.from("4de69e374a8ed21cbddd47f2338cc0f479dc58daa2bbe11cd604ca488eca0ddf", "hex"));
+        requiredSlpBurn.setTokenType(1);
+        requiredSlpBurn.setAmount("10000000000");
+        let doesPrevent = false;
+        try {
+            await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
+        } catch (err) {
+            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn (error parsing slp op_return message:"), true);
+            doesPrevent = true;
+        }
+        if (! doesPrevent) {
+            throw Error("did not prevent burn");
+        }
+    });
+
+    it("prevents BURNED_INPUTS_GREATER_THAN_OUTPUTS ", async () => {
+        const txid = "e851cdfed152677ea7104526eee44a72653daa7fc1e654547a6056082f588643";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        let doesPrevent = false;
+        try {
+            await grpc.checkSlpTransaction({ txnBuf });
+        } catch (err) {
+            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: inputs greater than outputs"), true);
+            doesPrevent = true;
+        }
+        if (! doesPrevent) {
+            throw Error("did not prevent burn");
+        }
+    });
+    it("allows BURNED_INPUTS_GREATER_THAN_OUTPUTS", async () => {
+        const txid = "e851cdfed152677ea7104526eee44a72653daa7fc1e654547a6056082f588643";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        const requiredSlpBurn = new SlpRequiredBurn();
+        requiredSlpBurn.setTokenId(
+            Buffer.from("263ca75dd8ab35e699808896255212b374f2fb185fb0389297a11f63d8d41f7e", "hex"));
+        requiredSlpBurn.setTokenType(1);
+        requiredSlpBurn.setAmount("999990000000");
+        const res = await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
+        assert.strictEqual(res.getIsValid(), true);
+    });
+
+    it("prevents BURNED_INPUTS_OTHER_TOKEN mint baton when ending mint baton with 0x4c00", async () => {
+        const txid = "62a297501652f333335f2cc6f42b575a56dcf582ff2a857e02c0bd3df67564fd";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        let doesPrevent = false;
+        try {
+            await grpc.checkSlpTransaction({ txnBuf });
+        } catch (err) {
+            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: slp input from wrong token"), true);
+            doesPrevent = true;
+        }
+        if (! doesPrevent) {
+            throw Error("did not prevent burn");
+        }
+    });
+    it("allows BURNED_INPUTS_OTHER_TOKEN, for ending a mint baton", async () => {
+        const txid = "62a297501652f333335f2cc6f42b575a56dcf582ff2a857e02c0bd3df67564fd";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        const requiredSlpBurn = new SlpRequiredBurn();
+        const outpoint = new Transaction.Input.Outpoint();
+        outpoint.setHash(
+            Buffer.from("170147548aad6de7c1df686c56e4846e0936c4573411b604a18d0ec76482dde2", "hex").reverse());
+        outpoint.setIndex(2);
+        requiredSlpBurn.setOutpoint(outpoint);
+        requiredSlpBurn.setTokenId(
+            Buffer.from("170147548aad6de7c1df686c56e4846e0936c4573411b604a18d0ec76482dde2", "hex"));
+        requiredSlpBurn.setTokenType(1);
+        requiredSlpBurn.setMintBatonVout(2);
+        let res: any;
+        res = await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
+        assert.strictEqual(res.getIsValid(), true);
+    });
+
+    it("prevents BURNED_INPUTS_OTHER_TOKEN", async () => {
+        const txid = "6de528ad5cd7e5b704070e27a02a39d08c5c05d5ce1dbb9b0ef76682ff1ea34e";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        let doesPrevent = false;
+        try {
+            await grpc.checkSlpTransaction({ txnBuf });
+        } catch (err) {
+            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: use SlpRequiredBurn to allow burns."), true);
+            doesPrevent = true;
+        }
+        if (! doesPrevent) {
+            throw Error("did not prevent burn");
+        }
+    });
+    it("allows BURNED_INPUTS_OTHER_TOKEN", async () => {
+        const txid = "6de528ad5cd7e5b704070e27a02a39d08c5c05d5ce1dbb9b0ef76682ff1ea34e";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        const allowedOutpoint = new Transaction.Input.Outpoint();
+        allowedOutpoint.setHash(
+            Buffer.from("3f871b410486c0c71531c1ee8aea6744a3ff851577a4cc5a7ee89dee773aeb02", "hex").reverse());
+        allowedOutpoint.setIndex(1);
+        const requiredSlpBurn = new SlpRequiredBurn();
+        requiredSlpBurn.setOutpoint(allowedOutpoint);
+        requiredSlpBurn.setTokenId(
+            Buffer.from("3f871b410486c0c71531c1ee8aea6744a3ff851577a4cc5a7ee89dee773aeb02", "hex"));
+        requiredSlpBurn.setTokenType(1);
+        requiredSlpBurn.setAmount("100000000000000");
+        const res = await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
+        assert.strictEqual(res.getIsValid(), true);
+    });
+
+    it("prevents BURNED_INPUTS_OUTPUTS_TOO_HIGH ", async () => {
+        const txid = "717e47c1edd0fb377a7ae208347ccc31a8a0daa500d477a3c9b8734c92f9e8be";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        let doesPrevent = false;
+        try {
+            await grpc.checkSlpTransaction({ txnBuf });
+        } catch (err) {
+            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: outputs less than inputs"), true);
+            doesPrevent = true;
+        }
+        if (! doesPrevent) {
+            throw Error("did not prevent burn");
+        }
+    });
+    it("prevents BURNED_INPUTS_OUTPUTS_TOO_HIGH even with specifying a required burn", async () => {
+        const txid = "717e47c1edd0fb377a7ae208347ccc31a8a0daa500d477a3c9b8734c92f9e8be";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        const allowedOutpoint = new Transaction.Input.Outpoint();
+        allowedOutpoint.setHash(
+            Buffer.from("8d08297091a32c12e29ae27af16005ea56e1444ef0a858f23b6e5aa6deb02cb2", "hex").reverse());
+        allowedOutpoint.setIndex(1);
+        const requiredSlpBurn = new SlpRequiredBurn();
+        requiredSlpBurn.setOutpoint(allowedOutpoint);
+        requiredSlpBurn.setTokenId(
+            Buffer.from("a5355579085f9476b681ba909689e64c62e849b7142b607ab5cf1ef465caa9b5", "hex"));
+        requiredSlpBurn.setTokenType(1);
+        requiredSlpBurn.setAmount("10");
+        let doesPrevent = false;
+        try {
+            await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
+        } catch (err) {
+            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: outputs less than inputs"), true);
+            doesPrevent = true;
+        }
+        if (! doesPrevent) {
+            throw Error("did not prevent burn");
+        }
+    });
+
+    it("prevents BURNED_OUTPUTS_MISSING_BCH_VOUT missing mint baton vout", async () => {
+        const txid = "42eef73441e2c1f0924652530b161b1d4a86a96aeba62444cd2775596c06c677";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        let doesPrevent = false;
+        try {
+            await grpc.checkSlpTransaction({ txnBuf });
+        } catch (err) {
+            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: transaction is missing mint baton output"), true);
+            doesPrevent = true;
+        }
+        if (! doesPrevent) {
+            throw Error("did not prevent burn");
+        }
+    });
+    it("prevents BURNED_OUTPUTS_MISSING_BCH_VOUT even with specifying a required burn", async () => {
+        const txid = "ab085364157ae90d0f96262c17a522367088b06192494cac05dcbbb4236bafd8";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+
+        const allowedOutpoint = new Transaction.Input.Outpoint();
+        const requiredSlpBurn = new SlpRequiredBurn();
+        requiredSlpBurn.setOutpoint(allowedOutpoint);
+        requiredSlpBurn.setTokenId(
+            Buffer.from("0df768b5485c72645de069b68f66d02205c26f827c608ef5ffa976266d753d50", "hex"));
+        requiredSlpBurn.setTokenType(1);
+        requiredSlpBurn.setAmount("1099000000000000");
+
+        let doesPrevent = false;
+        try {
+            await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
+        } catch (err) {
+            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: missing vout"), true);
+            doesPrevent = true;
+        }
+        if (! doesPrevent) {
+            throw Error("did not prevent burn");
+        }
+    });
+
+    if (SCAN_KNOWN_BURNS) {
+        describe("prevents burns for all transactions since height 654021", async () => {
+
+            const burnTypes = [
+                "BURNED_INPUTS_BAD_OPRETURN",
+                "BURNED_INPUTS_GREATER_THAN_OUTPUTS",
+                "BURNED_INPUTS_OTHER_TOKEN",
+                "BURNED_INPUTS_OUTPUTS_TOO_HIGH",
+                "BURNED_OUTPUTS_MISSING_BCH_VOUT"
+            ];
+
+            for (const burnType of burnTypes) {
+
+                    const filename = `./test/${burnType}.txt`;
+                    const txids = fs.readFileSync(filename, "utf-8")
+                                        .split("\n")
+                                        .map((txid) => Buffer.from(txid, "hex").toString("hex"))
+                                        .filter((txid) => txid.length === 64);
+
+                    for (const txid of txids) {
+
+                        it(txid, async () => {
+                        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+                        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+                        let doesPrevent = false;
+                        try {
+                            await grpc.checkSlpTransaction({ txnBuf });
+                        } catch (err) {
+                            doesPrevent = true;
+                        }
+                        if (! doesPrevent) {
+                            throw Error("did not prevent burn");
+                        }
+
+                    });
+                }
+            }
+        });
+    }
 
     it("getBlockchainInfo", async () => {
         const info = await grpc.getBlockchainInfo();
@@ -359,7 +619,7 @@ describe("grpc-bchrpc-node", () => {
                     }
                 } else {
                     const resp = await grpc.getParsedSlpScript(script);
-                    const parsedType = resp.getType();
+                    const parsedType = resp.getSlpAction();
                     assert.equal(parsedType > 0, true);
                 }
             });
