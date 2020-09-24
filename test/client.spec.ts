@@ -21,7 +21,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf });
         } catch (err) {
-            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn (error parsing slp op_return message:"), true);
+            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -46,7 +46,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
         } catch (err) {
-            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn (error parsing slp op_return message:"), true);
+            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -124,7 +124,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf });
         } catch (err) {
-            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: use SlpRequiredBurn to allow burns."), true);
+            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
