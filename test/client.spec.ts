@@ -819,13 +819,13 @@ expectedParsingErrorsFromGoSlp.set("scriptpubkey too small", [
     "(not SLP): empty op_return",
     "(not SLP): first push is 4-byte '\\x00BET'",
 ]);
-expectedParsingErrorsFromGoSlp.set("lokad id wrong size", [
+expectedParsingErrorsFromGoSlp.set("OP_RETURN magic is wrong size", [
     "(not SLP): first push is 9-byte 'yours.org'",
     "(not SLP): first push is 3-byte 'SLP'",
     "(not SLP): first push is 5-byte 'SLP\\x00\\x00'",
     "(not SLP): first push is 7-byte '\\xef\\xbb\\xbfSLP\\x00' (UTF8 byte order mark + 'SLP\\x00')",
 ]);
-expectedParsingErrorsFromGoSlp.set("SLP not in first chunk", [
+expectedParsingErrorsFromGoSlp.set("OP_RETURN magic is not in first chunk", [
     "(not SLP): first push is 4-byte '\\x00SLP'",
 ]);
 expectedParsingErrorsFromGoSlp.set("token_type not token-type1, nft1-group, or nft1-child", [
