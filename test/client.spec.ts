@@ -243,7 +243,7 @@ describe("grpc-bchrpc-node", () => {
 
             for (const burnType of burnTypes) {
 
-                    const filename = `./test/${burnType}.txt`;
+                    const filename = `./test/burns/${burnType}.txt`;
                     const txids = fs.readFileSync(filename, "utf-8")
                                         .split("\n")
                                         .map((txid) => Buffer.from(txid, "hex").toString("hex"))
