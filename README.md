@@ -6,7 +6,13 @@ This package provides a gRPC client for connecting to BCHD.  SLP support is prov
 
 `$ npm i grpc-bchrpc-node` (for web-browser based projects see [this](https://github.com/jcramer/grpc-bchrpc-web) version)
 
-### Build from source (from `./bchrpc.proto`)
+### Run Unit Tests
+
+`$ git clone https://github.com/simpleledgerinc/grpc-bchrpc-node`
+`$ npm i`
+`$ npm test`
+
+### Optional: Rebuild gRPC generated js & d.ts from source (from `./bchrpc.proto`)
 
 1. Install Protobuf Compiler from: https://github.com/protocolbuffers/protobuf
 2. `$ npm i`
