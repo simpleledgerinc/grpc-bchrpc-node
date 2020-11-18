@@ -1,13 +1,17 @@
 import assert from "assert";
 import Big from "big.js";
 import fs from "fs";
-import { GetParsedSlpScriptResponse, GetTrustedSlpValidationRequest,
-    GetTrustedSlpValidationResponse, GetUnspentOutputResponse, SlpRequiredBurn, Transaction } from "../pb/bchrpc_pb";
+import { GetParsedSlpScriptResponse,
+            GetTrustedSlpValidationResponse,
+            GetUnspentOutputResponse,
+            SlpRequiredBurn,
+            Transaction } from "../pb/bchrpc_pb";
 import { GrpcClient } from "../src/client";
 
 const scriptUnitTestData: SlpMsgTest[] = require("slp-unit-test-data/script_tests.json");
 
-const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "/Users/jamescramer/localhost.crt" });
+const grpc = new GrpcClient({ url: "bchd.ny1.simpleledger.io" });
+//const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "/Users/jamescramer/localhost.crt" });
 
 const SCAN_KNOWN_BURNS = false;
 
@@ -606,7 +610,8 @@ describe("grpc-bchrpc-node", () => {
                     }
                     const parsingError = resp.getParsingError();
                     if (parsingError) {
-
+                        // console.log(parsingError);
+                        // console.log(expectedParsingErrorsFromGoSlp.get(parsingError));
                         if (expectedParsingErrorsFromGoSlp.has(parsingError)) {
                             assert.equal(expectedParsingErrorsFromGoSlp.get(parsingError)!.includes(test.msg), true);
                         } else if (parsingError.includes("Unsupported token type:")) {
@@ -857,7 +862,7 @@ expectedParsingErrorsFromGoSlp.set("decimals string length must be 1", [
     "(must be invalid: wrong size): Genesis with 0-byte decimals",
     "(must be invalid: wrong size): Genesis with 2-byte decimals",
 ]);
-expectedParsingErrorsFromGoSlp.set("documentHash must be size 0 or 32", [
+expectedParsingErrorsFromGoSlp.set("documentHash string length must be 0 or 32", [
     "(must be invalid: wrong size): Genesis with 31-byte dochash",
     "(must be invalid: wrong size): Genesis with 33-byte dochash",
     "(must be invalid: wrong size): Genesis with 64-byte dochash",
@@ -880,7 +885,7 @@ expectedParsingErrorsFromGoSlp.set("amount string size not 8 bytes", [
     "(must be invalid: wrong size): SEND with a 0-byte amount",
     "",
 ]);
-expectedParsingErrorsFromGoSlp.set("decimals biger than 9", [
+expectedParsingErrorsFromGoSlp.set("decimals bigger than 9", [
     "(must be invalid: bad value): Genesis with decimals=10",
 ]);
 expectedParsingErrorsFromGoSlp.set("NFT1 child token must not have a minting baton", [
@@ -892,10 +897,10 @@ expectedParsingErrorsFromGoSlp.set("NFT1 child token must have divisibility set 
 expectedParsingErrorsFromGoSlp.set("NFT1 child token must have quantity of 1", [
     "(must be invalid: bad value): NFT1 Child Genesis with quanitity!==1",
 ]);
-expectedParsingErrorsFromGoSlp.set("NFT1 Child cannot have MINT transaction type.", [
+expectedParsingErrorsFromGoSlp.set("nft1 child cannot have mint transaction type", [
     "(must be invalid: impossible state): typical MINT without baton for token_type=41",
 ]);
-expectedParsingErrorsFromGoSlp.set("mintBatonVout must be at least 2", [
+expectedParsingErrorsFromGoSlp.set("mintBatonVout value must be at least 2", [
     "(must be invalid: bad value): Genesis with mint_baton_vout=1",
     "(must be invalid: bad value): Genesis with mint_baton_vout=0",
     "(must be invalid: bad value): MINT with mint_baton_vout=1",
