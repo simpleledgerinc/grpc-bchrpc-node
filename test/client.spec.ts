@@ -1,6 +1,7 @@
 import assert from "assert";
 import Big from "big.js";
 import fs from "fs";
+import { SlpRequiredBurn as ISlpRequiredBurn } from "grpc-bchrpc";
 import { GetParsedSlpScriptResponse,
             GetTrustedSlpValidationResponse,
             GetUnspentOutputResponse,
@@ -10,7 +11,7 @@ import { GrpcClient } from "../src/client";
 
 const scriptUnitTestData: SlpMsgTest[] = require("slp-unit-test-data/script_tests.json");
 
-const grpc = new GrpcClient({ url: "bchd.ny1.simpleledger.io" });
+const grpc = new GrpcClient();
 //const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "/Users/jamescramer/localhost.crt" });
 
 const SCAN_KNOWN_BURNS = false;
@@ -85,6 +86,18 @@ describe("grpc-bchrpc-node", () => {
         const res = await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
         assert.strictEqual(res.getIsValid(), true);
     });
+    it("allows BURNED_INPUTS_GREATER_THAN_OUTPUTS (using grpc-bchrpc interface)", async () => {
+        const txid = "e851cdfed152677ea7104526eee44a72653daa7fc1e654547a6056082f588643";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        const requiredSlpBurn: ISlpRequiredBurn = {
+            tokenId: Buffer.from("263ca75dd8ab35e699808896255212b374f2fb185fb0389297a11f63d8d41f7e", "hex"),
+            tokenType: 1,
+            amount: "999990000000"
+        };
+        const res = await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
+        assert.strictEqual(res.getIsValid(), true);
+    });
 
     it("prevents BURNED_INPUTS_OTHER_TOKEN mint baton when ending mint baton with 0x4c00", async () => {
         const txid = "62a297501652f333335f2cc6f42b575a56dcf582ff2a857e02c0bd3df67564fd";
@@ -119,6 +132,21 @@ describe("grpc-bchrpc-node", () => {
         res = await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
         assert.strictEqual(res.getIsValid(), true);
     });
+    it("allows BURNED_INPUTS_OTHER_TOKEN, for ending a mint baton (using grpc-bchrpc interface)", async () => {
+        const txid = "62a297501652f333335f2cc6f42b575a56dcf582ff2a857e02c0bd3df67564fd";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        const requiredSlpBurn: ISlpRequiredBurn = {
+            tokenId: Buffer.from("170147548aad6de7c1df686c56e4846e0936c4573411b604a18d0ec76482dde2", "hex"),
+            tokenType: 1,
+            outpointHash: Buffer.from("170147548aad6de7c1df686c56e4846e0936c4573411b604a18d0ec76482dde2", "hex").reverse(),
+            outpointVout: 2,
+            setMintBatonVout: 2
+        };
+        let res: any;
+        res = await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
+        assert.strictEqual(res.getIsValid(), true);
+    });
 
     it("prevents BURNED_INPUTS_OTHER_TOKEN", async () => {
         const txid = "6de528ad5cd7e5b704070e27a02a39d08c5c05d5ce1dbb9b0ef76682ff1ea34e";
@@ -136,6 +164,23 @@ describe("grpc-bchrpc-node", () => {
         }
     });
     it("allows BURNED_INPUTS_OTHER_TOKEN", async () => {
+        const txid = "6de528ad5cd7e5b704070e27a02a39d08c5c05d5ce1dbb9b0ef76682ff1ea34e";
+        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+        const allowedOutpoint = new Transaction.Input.Outpoint();
+        allowedOutpoint.setHash(
+            Buffer.from("3f871b410486c0c71531c1ee8aea6744a3ff851577a4cc5a7ee89dee773aeb02", "hex").reverse());
+        allowedOutpoint.setIndex(1);
+        const requiredSlpBurn = new SlpRequiredBurn();
+        requiredSlpBurn.setOutpoint(allowedOutpoint);
+        requiredSlpBurn.setTokenId(
+            Buffer.from("3f871b410486c0c71531c1ee8aea6744a3ff851577a4cc5a7ee89dee773aeb02", "hex"));
+        requiredSlpBurn.setTokenType(1);
+        requiredSlpBurn.setAmount("100000000000000");
+        const res = await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
+        assert.strictEqual(res.getIsValid(), true);
+    });
+    it("allows BURNED_INPUTS_OTHER_TOKEN (using generic grpc-bchrpc interface", async () => {
         const txid = "6de528ad5cd7e5b704070e27a02a39d08c5c05d5ce1dbb9b0ef76682ff1ea34e";
         const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());

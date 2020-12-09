@@ -1,6 +1,6 @@
 {
   "name": "grpc-bchrpc-node",
-  "version": "0.11.3",
+  "version": "0.11.4",
   "description": "BCHD gRPC interface for node.js clients.",
   "main": "dist/index.js",
   "files": [
@@ -52,6 +52,7 @@
     "@types/google-protobuf": "^3.7.3",
     "google-protobuf": "^3.13.0",
     "grpc": "^1.24.3",
-    "protobufjs": "^6.10.1"
+    "protobufjs": "^6.10.1",
+    "grpc-bchrpc": "0.0.8"
   }
 }

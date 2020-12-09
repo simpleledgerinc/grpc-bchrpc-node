@@ -1,22 +1,25 @@
 import * as fs from "fs";
 import * as grpc from "grpc";
+import { SlpRequiredBurn as ISlpRequiredBurn } from "grpc-bchrpc";
 import * as bchrpc_grpc from "../pb/bchrpc_grpc_pb";
 import * as bchrpc from "../pb/bchrpc_pb";
 
 export class GrpcClient {
     public client: bchrpc_grpc.bchrpcClient;
+    private _testnet?: boolean;
     private _HAS_SLP_INDEX?: boolean;
+    private _NETWORK_HAS_INTEGRITY?: boolean;
 
     constructor({ url, rootCertPath, testnet, options }:
         { url?: string; rootCertPath?: string; testnet?: boolean, options?: object } = {}) {
-        let creds = grpc.credentials.createSsl();
+        let credentials = grpc.credentials.createSsl();
         if (rootCertPath) {
             const rootCert = fs.readFileSync(rootCertPath);
-            creds = grpc.credentials.createSsl(rootCert);
+            credentials = grpc.credentials.createSsl(rootCert);
         }
         if (!url && !testnet) {
-            url = "bchd.greyh.at:8335";
-        } else if (!url) {
+            url = "bchd.ny1.simpleledger.io";
+        } else if (! url) {
             url = "bchd-testnet.greyh.at:18335";
         }
         if (!options) {
@@ -25,7 +28,12 @@ export class GrpcClient {
             };
         }
 
-        this.client = new bchrpc_grpc.bchrpcClient(url, creds, options);
+        this.client = new bchrpc_grpc.bchrpcClient(url, credentials, options);
+        this._testnet = testnet;
+
+        this._checkNetworkIntegrity((ok) => {
+            if (!ok) { this.client = new bchrpc_grpc.bchrpcClient("", credentials, {});
+        }});
     }
 
     public getMempoolInfo(): Promise<bchrpc.GetMempoolInfoResponse> {
@@ -260,7 +268,7 @@ export class GrpcClient {
         txnBuf?: Buffer,
         txnHex?: string,
         txn?: Uint8Array,
-        requiredSlpBurns?: bchrpc.SlpRequiredBurn[],
+        requiredSlpBurns?: Array<ISlpRequiredBurn>|Array<bchrpc.SlpRequiredBurn>,
         skipSlpValidityChecks?: boolean,
     }): Promise<bchrpc.SubmitTransactionResponse> {
         let tx: string|Uint8Array;
@@ -285,10 +293,9 @@ export class GrpcClient {
         }
 
         if (requiredSlpBurns) {
-            for (const burn of requiredSlpBurns) {
-                req.addRequiredSlpBurns(burn);
-            }
+            this.addRequiredSlpBurns(requiredSlpBurns, req);
         }
+
         req.setTransaction(tx);
         return new Promise((resolve, reject) => {
             this.client.submitTransaction(req, (err, data) => {
@@ -392,7 +399,7 @@ export class GrpcClient {
         txnBuf?: Buffer,
         txnHex?: string,
         txn?: Uint8Array,
-        requiredSlpBurns?: bchrpc.SlpRequiredBurn[],
+        requiredSlpBurns?: bchrpc.SlpRequiredBurn[]|ISlpRequiredBurn[],
     } = {}): Promise<bchrpc.CheckSlpTransactionResponse> {
         let tx: string|Uint8Array;
         const req = new bchrpc.CheckSlpTransactionRequest();
@@ -408,9 +415,7 @@ export class GrpcClient {
         }
 
         if (requiredSlpBurns) {
-            for (const burn of requiredSlpBurns) {
-                req.addRequiredSlpBurns(burn);
-            }
+            this.addRequiredSlpBurns(requiredSlpBurns, req);
         }
         req.setTransaction(tx);
         return new Promise((resolve, reject) => {
@@ -499,6 +504,60 @@ export class GrpcClient {
             const info = await this.getBlockchainInfo();
             this._HAS_SLP_INDEX = info.getSlpIndex();
             return this._HAS_SLP_INDEX;
+        }
+    }
+
+    private async _checkNetworkIntegrity(callback: (result: boolean) => any): Promise<boolean> {
+        if (typeof this._NETWORK_HAS_INTEGRITY !== "boolean") {
+            this._NETWORK_HAS_INTEGRITY = false;
+            let res: bchrpc.GetBlockInfoResponse|undefined;
+            if (! this._testnet) {
+                try { res = await this.getBlockInfo({ hash: "000000000000000002ebadda97db6323ebfab5f3dc965b10386794635e760e21", reversedHashOrder: true }); } catch (_) { }
+                if (res) { this._NETWORK_HAS_INTEGRITY = true; }
+            } else {
+                try {
+                    res = await this.getBlockInfo({ hash: "000000008bf44a528a09d203203a6a97c165cf53a92ecc27aed0b49b86a19564", reversedHashOrder: true });
+                } catch (_) { this._NETWORK_HAS_INTEGRITY = true; }
+            }
+        }
+        callback(this._NETWORK_HAS_INTEGRITY);
+        return this._NETWORK_HAS_INTEGRITY;
+    }
+
+    private addRequiredSlpBurns(
+        requiredSlpBurns: Array<bchrpc.SlpRequiredBurn|ISlpRequiredBurn>, req: bchrpc.CheckSlpTransactionRequest) {
+        const burns: bchrpc.SlpRequiredBurn[] = [];
+
+        // convert a generic burn requirements object to pb type
+        requiredSlpBurns.forEach((burn: ISlpRequiredBurn | bchrpc.SlpRequiredBurn, i: number) => {
+            if (!(burn as bchrpc.SlpRequiredBurn).setAmount) {
+                const pbBurn = new bchrpc.SlpRequiredBurn();
+                const genericBurn = burn as ISlpRequiredBurn;
+                pbBurn.setTokenId(genericBurn.tokenId);
+                pbBurn.setTokenType(genericBurn.tokenType);
+                if (genericBurn.amount) {
+                    pbBurn.setAmount(genericBurn.amount);
+                }
+                if (genericBurn.outpointHash) {
+                    if (!genericBurn.outpointVout) {
+                        throw Error("missing value for 'outpointVout'");
+                    }
+                    const op = new bchrpc.Transaction.Input.Outpoint();
+                    op.setHash(genericBurn.outpointHash); // check for reversed hash?
+                    op.setIndex(genericBurn.outpointVout);
+                    pbBurn.setOutpoint(op);
+                }
+                if (genericBurn.setMintBatonVout) {
+                    pbBurn.setMintBatonVout(genericBurn.setMintBatonVout);
+                }
+                burns.push(pbBurn);
+            } else {
+                burns.push(burn as bchrpc.SlpRequiredBurn);
+            }
+        });
+
+        for (const burn of burns) {
+            req.addRequiredSlpBurns(burn);
         }
     }
 }
