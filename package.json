@@ -1,6 +1,6 @@
 {
   "name": "grpc-bchrpc-node",
-  "version": "0.11.4",
+  "version": "0.11.5",
   "description": "BCHD gRPC interface for node.js clients.",
   "main": "dist/index.js",
   "files": [
