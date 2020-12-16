@@ -99,6 +99,11 @@ service bchrpc {
     // **Requires SlpIndex**
     rpc GetTrustedSlpValidation(GetTrustedSlpValidationRequest) returns (GetTrustedSlpValidationResponse) {}
 
+    // GraphSearch returns all the transactions needed for a client to validate an SLP graph
+    //
+    // **Requires SlpIndex and  SlpGraphSearch**
+    rpc GetSlpGraphSearch (GetSlpGraphSearchRequest) returns (GetSlpGraphSearchResponse) {}
+
     // GetBip44HdAddress returns an address associated with a provided xpub, address index, and
     // selecting either internal or external by setting the change boolean.  If SlpIndex is disabled
     // the slpAddress string will be an empty string.
@@ -130,7 +135,6 @@ service bchrpc {
     // grpc-web.
     //
     // **Requires TxIndex to receive input metadata**
-    // TODO: Add slp metadata similar to "SubscribeTransactions"
     rpc SubscribeTransactionStream(stream SubscribeTransactionsRequest) returns (stream TransactionNotification) {}
 
     // SubscribeBlocks creates a subscription for notifications of new blocks being
@@ -204,7 +208,12 @@ message GetBlockchainInfoResponse {
     // When `addr_index` is true, the node has address index enabled and may
     // be used with call related by address.
     bool addr_index =7;
+    // When `slp_index` is true, the node has the slp index enabled and may
+    // be used with slp related rpc methods and also causes slp metadata to be added
+    // in some of the existing rpc methods.
     bool slp_index = 8;
+    // When `slp_graphsearch` is true, the node is able to handle calls to slp graph search
+    bool slp_graphsearch = 9;
 }
 
 message GetBlockInfoRequest {
@@ -553,8 +562,10 @@ message GetTrustedSlpValidationRequest {
     message Query {
         bytes prev_out_hash = 1;
         uint32 prev_out_vout = 2;
+        repeated bytes graphsearch_valid_txids = 3;
     }
     repeated Query queries = 1;
+    bool include_graphsearch_count = 2;
 }
 
 message GetTrustedSlpValidationResponse {
@@ -569,10 +580,19 @@ message GetTrustedSlpValidationResponse {
             bool v1_mint_baton = 7;
         }
         bytes slp_txn_opreturn = 8;
+        uint32 graphsearch_txn_count = 9;
     }
 
-    // allows server to respond to a request with multiple
     repeated ValidityResult results = 1;
+}
+
+message GetSlpGraphSearchRequest {
+    bytes hash = 1;
+    repeated bytes valid_txids = 2;
+}
+
+message GetSlpGraphSearchResponse {
+    repeated bytes txdata = 1;
 }
 
 message GetBip44HdAddressRequest {
@@ -804,7 +824,7 @@ message TransactionFilter {
     repeated bytes data_elements = 3;
 
     // Subscribed/Unsubscribe to everything. Other filters
-    // will be ignored.    
+    // will be ignored.
     bool all_transactions = 4;
 
     // Subscribed/Unsubscribe to everything SLP. Other filters
@@ -815,7 +835,7 @@ message TransactionFilter {
     repeated bytes slp_token_ids = 6;
 }
 
-// SLP token info used in transaction inputs / outputs
+// SlpToken info used in transaction inputs / outputs
 //
 // WARNING: Some languages (e.g., JavaScript) may not properly handle the 'uint64'
 // for large amounts. For this reason, an annotation has been added for JS to
@@ -832,6 +852,7 @@ message SlpToken {
     uint32 token_type = 7;
 }
 
+// SlpTransactionInfo is used inside the Transaction message type.
 message SlpTransactionInfo {
     SlpAction slp_action = 1;
     enum ValidityJudgement {
@@ -858,6 +879,7 @@ message SlpTransactionInfo {
     }
 }
 
+// SlpV1GenesisMetadata is used to marshal type 1 and NFT1 Group GENESIS OP_RETURN scriptPubKey
 message SlpV1GenesisMetadata {
     bytes name = 1;
     bytes ticker = 2;
@@ -868,15 +890,18 @@ message SlpV1GenesisMetadata {
     uint64 mint_amount = 7 [jstype = JS_STRING];
 }
 
+// SlpV1MintMetadata is used to marshal type 1 MINT OP_RETURN scriptPubKey
 message SlpV1MintMetadata {
     uint32 mint_baton_vout = 1;
     uint64 mint_amount = 2 [jstype = JS_STRING];
 }
 
+// SlpV1SendMetadata is used to marshal type 1 and NFT1 Group SEND OP_RETURN scriptPubKey
 message SlpV1SendMetadata {
     repeated uint64 amounts = 1 [jstype = JS_STRING];
 }
 
+// SlpNft1ChildGenesisMetadata is used to marshal NFT1 Child GENESIS OP_RETURN scriptPubKey
 message SlpNft1ChildGenesisMetadata {
     bytes name = 1;
     bytes ticker = 2;
@@ -886,13 +911,18 @@ message SlpNft1ChildGenesisMetadata {
     bytes group_token_id = 6;
 }
 
+// SlpNft1ChildSendMetadata is used to marshal NFT1 Child SEND OP_RETURN scriptPubKey
 message SlpNft1ChildSendMetadata {
     bytes group_token_id = 1;
 }
 
-enum SlpAction {       // everything except "NON_SLP" could be annotated with burn_flags  
-    NON_SLP = 0;            // "NON_SLP" would not be persisted by "--slpindex" option (but would with "--txindex")
-    NON_SLP_BURN = 1;       // same as NON_SLP, except the transaction includes burned SLP inputs                       
+// SlpAction is used to allow clients to identify the type of slp transaction from this single field.
+//
+// NOTE: All enum types except for "NON_SLP" may be annotated with one or more BurnFlags.
+//
+enum SlpAction {
+    NON_SLP = 0;
+    NON_SLP_BURN = 1;
     SLP_PARSE_ERROR = 2;
     SLP_UNSUPPORTED_VERSION = 3;
     SLP_V1_GENESIS = 4;
@@ -905,34 +935,7 @@ enum SlpAction {       // everything except "NON_SLP" could be annotated with bu
     SLP_NFT1_UNIQUE_CHILD_SEND = 11;
 }
 
-message TokenMetadataTokenType1 {
-    bytes token_ticker = 1;
-	bytes token_name = 2;
-	bytes token_document_url = 3;
-	bytes token_document_hash = 4;
-	uint32 decimals = 5;
-    bytes mint_baton_txid = 6;   // txn must be confirmed
-    uint32 mint_baton_vout = 7;
-}
-
-message TokenMetadataNFT1Group {
-    bytes token_ticker = 1;
-	bytes token_name = 2;
-	bytes token_document_url = 3;
-	bytes token_document_hash = 4;
-	uint32 decimals = 5;
-    bytes mint_baton_txid = 6;   // txn must be confirmed
-    uint32 mint_baton_vout = 7;
-}
-
-message TokenMetadataNFT1Child {
-    bytes token_ticker = 1;
-	bytes token_name = 2;
-	bytes token_document_url = 3;
-	bytes token_document_hash = 4;
-    bytes group_id = 5;
-}
-
+// TokenMetadata is used to marshal metadata about a specific TokenID
 message TokenMetadata {
 	bytes token_id = 1;
  	uint32 token_type = 2;
@@ -943,6 +946,44 @@ message TokenMetadata {
     }
 }
 
+// TokenMetadataTokenType1 is used to marshal metadata specific to Type 1 token IDs
+//
+// NOTE: mint baton txid/vout cannot be populated until the transaction has been confirmed
+message TokenMetadataTokenType1 {
+    bytes token_ticker = 1;
+	bytes token_name = 2;
+	bytes token_document_url = 3;
+	bytes token_document_hash = 4;
+	uint32 decimals = 5;
+    bytes mint_baton_txid = 6;
+    uint32 mint_baton_vout = 7;
+}
+
+// TokenMetadataNFT1Group is used to marshal metadata specific to NFT1 Group token IDs
+//
+//  NOTE: mint baton txid/vout cannot be populated until the transaction has been confirmed
+message TokenMetadataNFT1Group {
+    bytes token_ticker = 1;
+	bytes token_name = 2;
+	bytes token_document_url = 3;
+	bytes token_document_hash = 4;
+	uint32 decimals = 5;
+    bytes mint_baton_txid = 6;
+    uint32 mint_baton_vout = 7;
+}
+
+// TokenMetadataNFT1Child is used to marshal metadata specific to NFT1 Child token IDs
+//
+//  NOTE: group id cannot be populated until the transaction has been confirmed
+message TokenMetadataNFT1Child {
+    bytes token_ticker = 1;
+	bytes token_name = 2;
+	bytes token_document_url = 3;
+	bytes token_document_hash = 4;
+    bytes group_id = 5;
+}
+
+// SlpRequiredBurn is used by clients to allow token burning
 message SlpRequiredBurn {
     Transaction.Input.Outpoint outpoint = 1;
     bytes token_id = 2;

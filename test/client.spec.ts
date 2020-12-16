@@ -3,6 +3,7 @@ import Big from "big.js";
 import fs from "fs";
 import { SlpRequiredBurn as ISlpRequiredBurn } from "grpc-bchrpc";
 import { GetParsedSlpScriptResponse,
+    GetSlpGraphSearchResponse,
             GetTrustedSlpValidationResponse,
             GetUnspentOutputResponse,
             SlpRequiredBurn,
@@ -12,12 +13,120 @@ import { GrpcClient } from "../src/client";
 const scriptUnitTestData: SlpMsgTest[] = require("slp-unit-test-data/script_tests.json");
 
 const grpc = new GrpcClient();
-//const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "/Users/jamescramer/localhost.crt" });
+//const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "/home/james/.bchd/rpc.cert" });
 
 const SCAN_KNOWN_BURNS = false;
 
 describe("grpc-bchrpc-node", () => {
 
+    it("graph search without excludes", async () => {
+        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+        const excludeList: string[] = [ ];
+        let res: GetSlpGraphSearchResponse;
+        console.time("GS");
+        try {
+            res = await grpc.getGraphSearchFor({ hash: txid, reversedHashOrder: true });
+        } catch (err) {
+            console.log(err.message);
+            throw err;
+        }
+        console.timeEnd("GS");
+        let graph = res.getTxdataList_asU8();
+        assert.strictEqual(graph.length, 33021);
+    });
+    it("trusted validation skips gs count", async () => {
+        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+
+        // check gs count results is skipped without gsKnownValidHashes
+        let res2 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1}], reversedHashOrder: true });
+        assert.strictEqual(res2.getResultsList()[0].getGraphsearchTxnCount(), 0);
+    });
+    it("trusted validation includes gs count", async () => {
+        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+
+        // check gs count results matches original gs count
+        let res3 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1 }], reversedHashOrder: true, includeGraphSearchCount: true });
+        assert.strictEqual(res3.getResultsList()[0].getGraphsearchTxnCount(), 33021);
+    });
+    it("does graph search with excludes", async () => {
+        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+        const excludeList: string[] = [
+            "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
+            "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
+            "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
+        ];
+        let res: GetSlpGraphSearchResponse;
+        console.time("GS");
+        try {
+            res = await grpc.getGraphSearchFor({ hash: txid, reversedHashOrder: true, knownValidHashes: excludeList });
+        } catch (err) {
+            console.log(err.message);
+            throw err;
+        }
+        console.timeEnd("GS");
+        let graph = res.getTxdataList_asU8();
+        assert.strictEqual(graph.length, 16);
+    });
+    it("trusted validation skips gs count", async () => {
+        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+
+        // check gs count results is skipped without gsKnownValidHashes
+        let res2 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1}], reversedHashOrder: true });
+        assert.strictEqual(res2.getResultsList()[0].getGraphsearchTxnCount(), 0);
+    });
+    it("trusted validation includes gs count", async () => {
+        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+        const excludeList: string[] = [
+            "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
+            "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
+            "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
+        ];
+        // check gs count results matches original gs count
+        let res3 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true });
+        assert.strictEqual(res3.getResultsList()[0].getGraphsearchTxnCount(), 16);
+    });
+    it("graph search returns error when bad validity cache txn (from bad txid id) is provided", async () => {
+        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+        const excludeList: string[] = [
+            "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
+            "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
+            "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
+            "abcd", // extra bad txid
+        ];
+        // check gs count results matches original gs count
+        assert.rejects(
+            grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true }),
+            { message: "13 INTERNAL: graph search validity txid cdab, error: invalid hash length of 2, want 32" }
+        );
+    });
+    it("graph search returns error when bad validity cache txn (from wrong token id) is provided", async () => {
+        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+        const excludeList: string[] = [
+            "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
+            "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
+            "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
+            "f9134cae8682a9bb98ed1949c983b391eceb5bea9744e0c6a538f83383681221", // extra from wrong token ID
+        ];
+        // check gs count results matches original gs count
+        assert.rejects( 
+            grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true }),
+            { message: "13 INTERNAL: client provided validity cache with hash f9134cae8682a9bb98ed1949c983b391eceb5bea9744e0c6a538f83383681221 that is not in the token graph" }
+        );
+    });
+    it("graph search returns error when bad validity cache txn (non-slp txid) is provided", () => {
+        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+        const excludeList: string[] = [
+            "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
+            "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
+            "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
+            "089a032d3e0ba9f883f854edc753e3c6d3ed0eedc42bca7d27c3a0f87113ca06", // extra from non-SLP
+        ];
+        // check gs count results matches original gs count
+        assert.rejects(
+            grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true }), 
+            { message: "13 INTERNAL: client provided validity cache with hash 089a032d3e0ba9f883f854edc753e3c6d3ed0eedc42bca7d27c3a0f87113ca06 that is not in the token graph" }
+        );
+    });
     it("prevents BURNED_INPUTS_BAD_OPRETURN", async () => {
         const txid = "77d3f678e9283043cb59e3a34fb8921e4fa0442611e5508f40328d2f27adcc1b";
         const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
@@ -321,9 +430,10 @@ describe("grpc-bchrpc-node", () => {
 
     it("getBlockchainInfo", async () => {
         const info = await grpc.getBlockchainInfo();
-        assert.equal(info.getSlpIndex(), true);
-        assert.equal(info.getTxIndex(), true);
-        assert.equal(info.getAddrIndex(), true);
+        assert.ok(info.getSlpIndex());
+        assert.ok(info.getSlpGraphsearch());
+        assert.ok(info.getTxIndex());
+        assert.ok(info.getAddrIndex());
         console.log(`Node best block height: ${info.getBestHeight()}`);
     });
 

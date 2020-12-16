@@ -367,6 +367,28 @@ function deserialize_pb_GetRawTransactionResponse(buffer_arg) {
   return pb_bchrpc_pb.GetRawTransactionResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_pb_GetSlpGraphSearchRequest(arg) {
+  if (!(arg instanceof pb_bchrpc_pb.GetSlpGraphSearchRequest)) {
+    throw new Error('Expected argument of type pb.GetSlpGraphSearchRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_pb_GetSlpGraphSearchRequest(buffer_arg) {
+  return pb_bchrpc_pb.GetSlpGraphSearchRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_pb_GetSlpGraphSearchResponse(arg) {
+  if (!(arg instanceof pb_bchrpc_pb.GetSlpGraphSearchResponse)) {
+    throw new Error('Expected argument of type pb.GetSlpGraphSearchResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_pb_GetSlpGraphSearchResponse(buffer_arg) {
+  return pb_bchrpc_pb.GetSlpGraphSearchResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_pb_GetTokenMetadataRequest(arg) {
   if (!(arg instanceof pb_bchrpc_pb.GetTokenMetadataRequest)) {
     throw new Error('Expected argument of type pb.GetTokenMetadataRequest');
@@ -767,6 +789,20 @@ getTrustedSlpValidation: {
     responseSerialize: serialize_pb_GetTrustedSlpValidationResponse,
     responseDeserialize: deserialize_pb_GetTrustedSlpValidationResponse,
   },
+  // GraphSearch returns all the transactions needed for a client to validate an SLP graph
+//
+// **Requires SlpIndex and  SlpGraphSearch**
+getSlpGraphSearch: {
+    path: '/pb.bchrpc/GetSlpGraphSearch',
+    requestStream: false,
+    responseStream: false,
+    requestType: pb_bchrpc_pb.GetSlpGraphSearchRequest,
+    responseType: pb_bchrpc_pb.GetSlpGraphSearchResponse,
+    requestSerialize: serialize_pb_GetSlpGraphSearchRequest,
+    requestDeserialize: deserialize_pb_GetSlpGraphSearchRequest,
+    responseSerialize: serialize_pb_GetSlpGraphSearchResponse,
+    responseDeserialize: deserialize_pb_GetSlpGraphSearchResponse,
+  },
   // GetBip44HdAddress returns an address associated with a provided xpub, address index, and
 // selecting either internal or external by setting the change boolean.  If SlpIndex is disabled
 // the slpAddress string will be an empty string.
@@ -834,7 +870,6 @@ subscribeTransactions: {
 // grpc-web.
 //
 // **Requires TxIndex to receive input metadata**
-// TODO: Add slp metadata similar to "SubscribeTransactions"
 subscribeTransactionStream: {
     path: '/pb.bchrpc/SubscribeTransactionStream',
     requestStream: true,

@@ -26,6 +26,7 @@ interface IbchrpcService extends grpc.ServiceDefinition<grpc.UntypedServiceImple
     getTokenMetadata: IbchrpcService_IGetTokenMetadata;
     getParsedSlpScript: IbchrpcService_IGetParsedSlpScript;
     getTrustedSlpValidation: IbchrpcService_IGetTrustedSlpValidation;
+    getSlpGraphSearch: IbchrpcService_IGetSlpGraphSearch;
     getBip44HdAddress: IbchrpcService_IGetBip44HdAddress;
     checkSlpTransaction: IbchrpcService_ICheckSlpTransaction;
     submitTransaction: IbchrpcService_ISubmitTransaction;
@@ -35,7 +36,7 @@ interface IbchrpcService extends grpc.ServiceDefinition<grpc.UntypedServiceImple
 }
 
 interface IbchrpcService_IGetMempoolInfo extends grpc.MethodDefinition<pb_bchrpc_pb.GetMempoolInfoRequest, pb_bchrpc_pb.GetMempoolInfoResponse> {
-    path: string; // "/pb.bchrpc/GetMempoolInfo"
+    path: "/pb.bchrpc/GetMempoolInfo";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetMempoolInfoRequest>;
@@ -44,7 +45,7 @@ interface IbchrpcService_IGetMempoolInfo extends grpc.MethodDefinition<pb_bchrpc
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetMempoolInfoResponse>;
 }
 interface IbchrpcService_IGetMempool extends grpc.MethodDefinition<pb_bchrpc_pb.GetMempoolRequest, pb_bchrpc_pb.GetMempoolResponse> {
-    path: string; // "/pb.bchrpc/GetMempool"
+    path: "/pb.bchrpc/GetMempool";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetMempoolRequest>;
@@ -53,7 +54,7 @@ interface IbchrpcService_IGetMempool extends grpc.MethodDefinition<pb_bchrpc_pb.
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetMempoolResponse>;
 }
 interface IbchrpcService_IGetBlockchainInfo extends grpc.MethodDefinition<pb_bchrpc_pb.GetBlockchainInfoRequest, pb_bchrpc_pb.GetBlockchainInfoResponse> {
-    path: string; // "/pb.bchrpc/GetBlockchainInfo"
+    path: "/pb.bchrpc/GetBlockchainInfo";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetBlockchainInfoRequest>;
@@ -62,7 +63,7 @@ interface IbchrpcService_IGetBlockchainInfo extends grpc.MethodDefinition<pb_bch
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetBlockchainInfoResponse>;
 }
 interface IbchrpcService_IGetBlockInfo extends grpc.MethodDefinition<pb_bchrpc_pb.GetBlockInfoRequest, pb_bchrpc_pb.GetBlockInfoResponse> {
-    path: string; // "/pb.bchrpc/GetBlockInfo"
+    path: "/pb.bchrpc/GetBlockInfo";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetBlockInfoRequest>;
@@ -71,7 +72,7 @@ interface IbchrpcService_IGetBlockInfo extends grpc.MethodDefinition<pb_bchrpc_p
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetBlockInfoResponse>;
 }
 interface IbchrpcService_IGetBlock extends grpc.MethodDefinition<pb_bchrpc_pb.GetBlockRequest, pb_bchrpc_pb.GetBlockResponse> {
-    path: string; // "/pb.bchrpc/GetBlock"
+    path: "/pb.bchrpc/GetBlock";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetBlockRequest>;
@@ -80,7 +81,7 @@ interface IbchrpcService_IGetBlock extends grpc.MethodDefinition<pb_bchrpc_pb.Ge
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetBlockResponse>;
 }
 interface IbchrpcService_IGetRawBlock extends grpc.MethodDefinition<pb_bchrpc_pb.GetRawBlockRequest, pb_bchrpc_pb.GetRawBlockResponse> {
-    path: string; // "/pb.bchrpc/GetRawBlock"
+    path: "/pb.bchrpc/GetRawBlock";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetRawBlockRequest>;
@@ -89,7 +90,7 @@ interface IbchrpcService_IGetRawBlock extends grpc.MethodDefinition<pb_bchrpc_pb
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetRawBlockResponse>;
 }
 interface IbchrpcService_IGetBlockFilter extends grpc.MethodDefinition<pb_bchrpc_pb.GetBlockFilterRequest, pb_bchrpc_pb.GetBlockFilterResponse> {
-    path: string; // "/pb.bchrpc/GetBlockFilter"
+    path: "/pb.bchrpc/GetBlockFilter";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetBlockFilterRequest>;
@@ -98,7 +99,7 @@ interface IbchrpcService_IGetBlockFilter extends grpc.MethodDefinition<pb_bchrpc
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetBlockFilterResponse>;
 }
 interface IbchrpcService_IGetHeaders extends grpc.MethodDefinition<pb_bchrpc_pb.GetHeadersRequest, pb_bchrpc_pb.GetHeadersResponse> {
-    path: string; // "/pb.bchrpc/GetHeaders"
+    path: "/pb.bchrpc/GetHeaders";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetHeadersRequest>;
@@ -107,7 +108,7 @@ interface IbchrpcService_IGetHeaders extends grpc.MethodDefinition<pb_bchrpc_pb.
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetHeadersResponse>;
 }
 interface IbchrpcService_IGetTransaction extends grpc.MethodDefinition<pb_bchrpc_pb.GetTransactionRequest, pb_bchrpc_pb.GetTransactionResponse> {
-    path: string; // "/pb.bchrpc/GetTransaction"
+    path: "/pb.bchrpc/GetTransaction";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetTransactionRequest>;
@@ -116,7 +117,7 @@ interface IbchrpcService_IGetTransaction extends grpc.MethodDefinition<pb_bchrpc
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetTransactionResponse>;
 }
 interface IbchrpcService_IGetRawTransaction extends grpc.MethodDefinition<pb_bchrpc_pb.GetRawTransactionRequest, pb_bchrpc_pb.GetRawTransactionResponse> {
-    path: string; // "/pb.bchrpc/GetRawTransaction"
+    path: "/pb.bchrpc/GetRawTransaction";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetRawTransactionRequest>;
@@ -125,7 +126,7 @@ interface IbchrpcService_IGetRawTransaction extends grpc.MethodDefinition<pb_bch
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetRawTransactionResponse>;
 }
 interface IbchrpcService_IGetAddressTransactions extends grpc.MethodDefinition<pb_bchrpc_pb.GetAddressTransactionsRequest, pb_bchrpc_pb.GetAddressTransactionsResponse> {
-    path: string; // "/pb.bchrpc/GetAddressTransactions"
+    path: "/pb.bchrpc/GetAddressTransactions";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetAddressTransactionsRequest>;
@@ -134,7 +135,7 @@ interface IbchrpcService_IGetAddressTransactions extends grpc.MethodDefinition<p
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetAddressTransactionsResponse>;
 }
 interface IbchrpcService_IGetRawAddressTransactions extends grpc.MethodDefinition<pb_bchrpc_pb.GetRawAddressTransactionsRequest, pb_bchrpc_pb.GetRawAddressTransactionsResponse> {
-    path: string; // "/pb.bchrpc/GetRawAddressTransactions"
+    path: "/pb.bchrpc/GetRawAddressTransactions";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetRawAddressTransactionsRequest>;
@@ -143,7 +144,7 @@ interface IbchrpcService_IGetRawAddressTransactions extends grpc.MethodDefinitio
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetRawAddressTransactionsResponse>;
 }
 interface IbchrpcService_IGetAddressUnspentOutputs extends grpc.MethodDefinition<pb_bchrpc_pb.GetAddressUnspentOutputsRequest, pb_bchrpc_pb.GetAddressUnspentOutputsResponse> {
-    path: string; // "/pb.bchrpc/GetAddressUnspentOutputs"
+    path: "/pb.bchrpc/GetAddressUnspentOutputs";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetAddressUnspentOutputsRequest>;
@@ -152,7 +153,7 @@ interface IbchrpcService_IGetAddressUnspentOutputs extends grpc.MethodDefinition
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetAddressUnspentOutputsResponse>;
 }
 interface IbchrpcService_IGetUnspentOutput extends grpc.MethodDefinition<pb_bchrpc_pb.GetUnspentOutputRequest, pb_bchrpc_pb.GetUnspentOutputResponse> {
-    path: string; // "/pb.bchrpc/GetUnspentOutput"
+    path: "/pb.bchrpc/GetUnspentOutput";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetUnspentOutputRequest>;
@@ -161,7 +162,7 @@ interface IbchrpcService_IGetUnspentOutput extends grpc.MethodDefinition<pb_bchr
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetUnspentOutputResponse>;
 }
 interface IbchrpcService_IGetMerkleProof extends grpc.MethodDefinition<pb_bchrpc_pb.GetMerkleProofRequest, pb_bchrpc_pb.GetMerkleProofResponse> {
-    path: string; // "/pb.bchrpc/GetMerkleProof"
+    path: "/pb.bchrpc/GetMerkleProof";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetMerkleProofRequest>;
@@ -170,7 +171,7 @@ interface IbchrpcService_IGetMerkleProof extends grpc.MethodDefinition<pb_bchrpc
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetMerkleProofResponse>;
 }
 interface IbchrpcService_IGetTokenMetadata extends grpc.MethodDefinition<pb_bchrpc_pb.GetTokenMetadataRequest, pb_bchrpc_pb.GetTokenMetadataResponse> {
-    path: string; // "/pb.bchrpc/GetTokenMetadata"
+    path: "/pb.bchrpc/GetTokenMetadata";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetTokenMetadataRequest>;
@@ -179,7 +180,7 @@ interface IbchrpcService_IGetTokenMetadata extends grpc.MethodDefinition<pb_bchr
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetTokenMetadataResponse>;
 }
 interface IbchrpcService_IGetParsedSlpScript extends grpc.MethodDefinition<pb_bchrpc_pb.GetParsedSlpScriptRequest, pb_bchrpc_pb.GetParsedSlpScriptResponse> {
-    path: string; // "/pb.bchrpc/GetParsedSlpScript"
+    path: "/pb.bchrpc/GetParsedSlpScript";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetParsedSlpScriptRequest>;
@@ -188,7 +189,7 @@ interface IbchrpcService_IGetParsedSlpScript extends grpc.MethodDefinition<pb_bc
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetParsedSlpScriptResponse>;
 }
 interface IbchrpcService_IGetTrustedSlpValidation extends grpc.MethodDefinition<pb_bchrpc_pb.GetTrustedSlpValidationRequest, pb_bchrpc_pb.GetTrustedSlpValidationResponse> {
-    path: string; // "/pb.bchrpc/GetTrustedSlpValidation"
+    path: "/pb.bchrpc/GetTrustedSlpValidation";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetTrustedSlpValidationRequest>;
@@ -196,8 +197,17 @@ interface IbchrpcService_IGetTrustedSlpValidation extends grpc.MethodDefinition<
     responseSerialize: grpc.serialize<pb_bchrpc_pb.GetTrustedSlpValidationResponse>;
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetTrustedSlpValidationResponse>;
 }
+interface IbchrpcService_IGetSlpGraphSearch extends grpc.MethodDefinition<pb_bchrpc_pb.GetSlpGraphSearchRequest, pb_bchrpc_pb.GetSlpGraphSearchResponse> {
+    path: "/pb.bchrpc/GetSlpGraphSearch";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<pb_bchrpc_pb.GetSlpGraphSearchRequest>;
+    requestDeserialize: grpc.deserialize<pb_bchrpc_pb.GetSlpGraphSearchRequest>;
+    responseSerialize: grpc.serialize<pb_bchrpc_pb.GetSlpGraphSearchResponse>;
+    responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetSlpGraphSearchResponse>;
+}
 interface IbchrpcService_IGetBip44HdAddress extends grpc.MethodDefinition<pb_bchrpc_pb.GetBip44HdAddressRequest, pb_bchrpc_pb.GetBip44HdAddressResponse> {
-    path: string; // "/pb.bchrpc/GetBip44HdAddress"
+    path: "/pb.bchrpc/GetBip44HdAddress";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.GetBip44HdAddressRequest>;
@@ -206,7 +216,7 @@ interface IbchrpcService_IGetBip44HdAddress extends grpc.MethodDefinition<pb_bch
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetBip44HdAddressResponse>;
 }
 interface IbchrpcService_ICheckSlpTransaction extends grpc.MethodDefinition<pb_bchrpc_pb.CheckSlpTransactionRequest, pb_bchrpc_pb.CheckSlpTransactionResponse> {
-    path: string; // "/pb.bchrpc/CheckSlpTransaction"
+    path: "/pb.bchrpc/CheckSlpTransaction";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.CheckSlpTransactionRequest>;
@@ -215,7 +225,7 @@ interface IbchrpcService_ICheckSlpTransaction extends grpc.MethodDefinition<pb_b
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.CheckSlpTransactionResponse>;
 }
 interface IbchrpcService_ISubmitTransaction extends grpc.MethodDefinition<pb_bchrpc_pb.SubmitTransactionRequest, pb_bchrpc_pb.SubmitTransactionResponse> {
-    path: string; // "/pb.bchrpc/SubmitTransaction"
+    path: "/pb.bchrpc/SubmitTransaction";
     requestStream: false;
     responseStream: false;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.SubmitTransactionRequest>;
@@ -224,7 +234,7 @@ interface IbchrpcService_ISubmitTransaction extends grpc.MethodDefinition<pb_bch
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.SubmitTransactionResponse>;
 }
 interface IbchrpcService_ISubscribeTransactions extends grpc.MethodDefinition<pb_bchrpc_pb.SubscribeTransactionsRequest, pb_bchrpc_pb.TransactionNotification> {
-    path: string; // "/pb.bchrpc/SubscribeTransactions"
+    path: "/pb.bchrpc/SubscribeTransactions";
     requestStream: false;
     responseStream: true;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.SubscribeTransactionsRequest>;
@@ -233,7 +243,7 @@ interface IbchrpcService_ISubscribeTransactions extends grpc.MethodDefinition<pb
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.TransactionNotification>;
 }
 interface IbchrpcService_ISubscribeTransactionStream extends grpc.MethodDefinition<pb_bchrpc_pb.SubscribeTransactionsRequest, pb_bchrpc_pb.TransactionNotification> {
-    path: string; // "/pb.bchrpc/SubscribeTransactionStream"
+    path: "/pb.bchrpc/SubscribeTransactionStream";
     requestStream: true;
     responseStream: true;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.SubscribeTransactionsRequest>;
@@ -242,7 +252,7 @@ interface IbchrpcService_ISubscribeTransactionStream extends grpc.MethodDefiniti
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.TransactionNotification>;
 }
 interface IbchrpcService_ISubscribeBlocks extends grpc.MethodDefinition<pb_bchrpc_pb.SubscribeBlocksRequest, pb_bchrpc_pb.BlockNotification> {
-    path: string; // "/pb.bchrpc/SubscribeBlocks"
+    path: "/pb.bchrpc/SubscribeBlocks";
     requestStream: false;
     responseStream: true;
     requestSerialize: grpc.serialize<pb_bchrpc_pb.SubscribeBlocksRequest>;
@@ -272,6 +282,7 @@ export interface IbchrpcServer {
     getTokenMetadata: grpc.handleUnaryCall<pb_bchrpc_pb.GetTokenMetadataRequest, pb_bchrpc_pb.GetTokenMetadataResponse>;
     getParsedSlpScript: grpc.handleUnaryCall<pb_bchrpc_pb.GetParsedSlpScriptRequest, pb_bchrpc_pb.GetParsedSlpScriptResponse>;
     getTrustedSlpValidation: grpc.handleUnaryCall<pb_bchrpc_pb.GetTrustedSlpValidationRequest, pb_bchrpc_pb.GetTrustedSlpValidationResponse>;
+    getSlpGraphSearch: grpc.handleUnaryCall<pb_bchrpc_pb.GetSlpGraphSearchRequest, pb_bchrpc_pb.GetSlpGraphSearchResponse>;
     getBip44HdAddress: grpc.handleUnaryCall<pb_bchrpc_pb.GetBip44HdAddressRequest, pb_bchrpc_pb.GetBip44HdAddressResponse>;
     checkSlpTransaction: grpc.handleUnaryCall<pb_bchrpc_pb.CheckSlpTransactionRequest, pb_bchrpc_pb.CheckSlpTransactionResponse>;
     submitTransaction: grpc.handleUnaryCall<pb_bchrpc_pb.SubmitTransactionRequest, pb_bchrpc_pb.SubmitTransactionResponse>;
@@ -335,6 +346,9 @@ export interface IbchrpcClient {
     getTrustedSlpValidation(request: pb_bchrpc_pb.GetTrustedSlpValidationRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTrustedSlpValidationResponse) => void): grpc.ClientUnaryCall;
     getTrustedSlpValidation(request: pb_bchrpc_pb.GetTrustedSlpValidationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTrustedSlpValidationResponse) => void): grpc.ClientUnaryCall;
     getTrustedSlpValidation(request: pb_bchrpc_pb.GetTrustedSlpValidationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTrustedSlpValidationResponse) => void): grpc.ClientUnaryCall;
+    getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
+    getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
+    getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
     getBip44HdAddress(request: pb_bchrpc_pb.GetBip44HdAddressRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetBip44HdAddressResponse) => void): grpc.ClientUnaryCall;
     getBip44HdAddress(request: pb_bchrpc_pb.GetBip44HdAddressRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetBip44HdAddressResponse) => void): grpc.ClientUnaryCall;
     getBip44HdAddress(request: pb_bchrpc_pb.GetBip44HdAddressRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetBip44HdAddressResponse) => void): grpc.ClientUnaryCall;
@@ -409,6 +423,9 @@ export class bchrpcClient extends grpc.Client implements IbchrpcClient {
     public getTrustedSlpValidation(request: pb_bchrpc_pb.GetTrustedSlpValidationRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTrustedSlpValidationResponse) => void): grpc.ClientUnaryCall;
     public getTrustedSlpValidation(request: pb_bchrpc_pb.GetTrustedSlpValidationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTrustedSlpValidationResponse) => void): grpc.ClientUnaryCall;
     public getTrustedSlpValidation(request: pb_bchrpc_pb.GetTrustedSlpValidationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTrustedSlpValidationResponse) => void): grpc.ClientUnaryCall;
+    public getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
+    public getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
+    public getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
     public getBip44HdAddress(request: pb_bchrpc_pb.GetBip44HdAddressRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetBip44HdAddressResponse) => void): grpc.ClientUnaryCall;
     public getBip44HdAddress(request: pb_bchrpc_pb.GetBip44HdAddressRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetBip44HdAddressResponse) => void): grpc.ClientUnaryCall;
     public getBip44HdAddress(request: pb_bchrpc_pb.GetBip44HdAddressRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetBip44HdAddressResponse) => void): grpc.ClientUnaryCall;

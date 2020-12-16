@@ -1,3 +1,4 @@
+import { reverse } from "dns";
 import * as fs from "fs";
 import * as grpc from "grpc";
 import { SlpRequiredBurn as ISlpRequiredBurn } from "grpc-bchrpc";
@@ -443,9 +444,11 @@ export class GrpcClient {
     public getTrustedSlpValidation({
         txos,
         reversedHashOrder,
+        includeGraphSearchCount,
     }: {
-        txos: Array<{ hash: string; vout: number; }>,
-        reversedHashOrder?: boolean
+        txos: Array<{ hash: string; vout: number; gsKnownValidHashes?: string[]}>,
+        reversedHashOrder?: boolean,
+        includeGraphSearchCount?: boolean,
     }): Promise<bchrpc.GetTrustedSlpValidationResponse> {
         return new Promise((resolve, reject) => {
             const req = new bchrpc.GetTrustedSlpValidationRequest();
@@ -457,9 +460,23 @@ export class GrpcClient {
                 if (reversedHashOrder) {
                     hash = hash.slice().reverse();
                 }
+                if (txo.gsKnownValidHashes) {
+                    req.setIncludeGraphsearchCount(true);
+                    txo.gsKnownValidHashes.forEach((hash) => {
+                        let hashBuf = Buffer.from(hash, "hex");
+                        if (reversedHashOrder) {
+                            hashBuf = hashBuf.slice().reverse();
+                        }
+                        query.addGraphsearchValidTxids(hashBuf);
+                    });
+                }
                 query.setPrevOutHash(hash);
                 query.setPrevOutVout(txo.vout);
                 req.addQueries(query);
+            }
+
+            if (includeGraphSearchCount) {
+                req.setIncludeGraphsearchCount(true);
             }
 
             this.client.getTrustedSlpValidation(req, (err, data) => {
@@ -492,6 +509,32 @@ export class GrpcClient {
                 req.setSlpOpreturnScript(script);
             }
             this.client.getParsedSlpScript(req, (err, data) => {
+                if (err !== null) { reject(err); } else { resolve(data!); }
+            });
+        });
+    }
+
+    public getGraphSearchFor({ hash, reversedHashOrder, knownValidHashes }:
+        { hash: string, reversedHashOrder: boolean, knownValidHashes?: string[] }): Promise<bchrpc.GetSlpGraphSearchResponse> {
+        const req = new bchrpc.GetSlpGraphSearchRequest();
+        if (reversedHashOrder) {
+            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
+        } else {
+            req.setHash(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))));
+        }
+        if (knownValidHashes) {
+            if (reversedHashOrder) {
+                knownValidHashes.forEach((hash) => {
+                    req.addValidTxids(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
+                });
+            } else {
+                knownValidHashes.forEach((hash) => {
+                    req.addValidTxids(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))));
+                });
+            }
+        }
+        return new Promise((resolve, reject) => {
+            this.client.getSlpGraphSearch(req, (err, data) => {
                 if (err !== null) { reject(err); } else { resolve(data!); }
             });
         });
