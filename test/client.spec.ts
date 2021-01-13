@@ -16,116 +16,148 @@ const grpc = new GrpcClient();
 //const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "/home/james/.bchd/rpc.cert" });
 
 const SCAN_KNOWN_BURNS = false;
+const CHECK_GRAPH_SEARCH = false;
 
 describe("grpc-bchrpc-node", () => {
 
-    it("graph search without excludes", async () => {
-        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
-        const excludeList: string[] = [ ];
-        let res: GetSlpGraphSearchResponse;
-        console.time("GS");
-        try {
-            res = await grpc.getGraphSearchFor({ hash: txid, reversedHashOrder: true });
-        } catch (err) {
-            console.log(err.message);
-            throw err;
+    it("graph search without excludes", async function() {
+        if (CHECK_GRAPH_SEARCH) {
+            this.timeout(5000);
+            const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+            const excludeList: string[] = [ ];
+            let res: GetSlpGraphSearchResponse;
+            console.time("GS");
+            try {
+                res = await grpc.getGraphSearchFor({ hash: txid, reversedHashOrder: true });
+            } catch (err) {
+                console.log(err.message);
+                throw err;
+            }
+            console.timeEnd("GS");
+            let graph = res.getTxdataList_asU8();
+            assert.strictEqual(graph.length, 33021);
         }
-        console.timeEnd("GS");
-        let graph = res.getTxdataList_asU8();
-        assert.strictEqual(graph.length, 33021);
     });
     it("trusted validation skips gs count", async () => {
-        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+        if (CHECK_GRAPH_SEARCH) {
+            const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
 
-        // check gs count results is skipped without gsKnownValidHashes
-        let res2 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1}], reversedHashOrder: true });
-        assert.strictEqual(res2.getResultsList()[0].getGraphsearchTxnCount(), 0);
+            // check gs count results is skipped without gsKnownValidHashes
+            let res2 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1}], reversedHashOrder: true });
+            assert.strictEqual(res2.getResultsList()[0].getGraphsearchTxnCount(), 0);
+        }
     });
     it("trusted validation includes gs count", async () => {
-        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+        if (CHECK_GRAPH_SEARCH) {
+            const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
 
-        // check gs count results matches original gs count
-        let res3 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1 }], reversedHashOrder: true, includeGraphSearchCount: true });
-        assert.strictEqual(res3.getResultsList()[0].getGraphsearchTxnCount(), 33021);
+            // check gs count results matches original gs count
+            let res3 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1 }], reversedHashOrder: true, includeGraphSearchCount: true });
+            assert.strictEqual(res3.getResultsList()[0].getGraphsearchTxnCount(), 33021);
+        }
     });
     it("does graph search with excludes", async () => {
-        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
-        const excludeList: string[] = [
-            "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
-            "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
-            "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
-        ];
-        let res: GetSlpGraphSearchResponse;
-        console.time("GS");
-        try {
-            res = await grpc.getGraphSearchFor({ hash: txid, reversedHashOrder: true, knownValidHashes: excludeList });
-        } catch (err) {
-            console.log(err.message);
-            throw err;
+        if (CHECK_GRAPH_SEARCH) {
+            const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+            const excludeList: string[] = [
+                "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
+                "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
+                "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
+            ];
+            let res: GetSlpGraphSearchResponse;
+            console.time("GS");
+            try {
+                res = await grpc.getGraphSearchFor({ hash: txid, reversedHashOrder: true, knownValidHashes: excludeList });
+            } catch (err) {
+                console.log(err.message);
+                throw err;
+            }
+            console.timeEnd("GS");
+            let graph = res.getTxdataList_asU8();
+            assert.strictEqual(graph.length, 16);
         }
-        console.timeEnd("GS");
-        let graph = res.getTxdataList_asU8();
-        assert.strictEqual(graph.length, 16);
     });
     it("trusted validation skips gs count", async () => {
-        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+        if (CHECK_GRAPH_SEARCH) {
+            const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
 
-        // check gs count results is skipped without gsKnownValidHashes
-        let res2 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1}], reversedHashOrder: true });
-        assert.strictEqual(res2.getResultsList()[0].getGraphsearchTxnCount(), 0);
+            // check gs count results is skipped without gsKnownValidHashes
+            let res2 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1}], reversedHashOrder: true });
+            assert.strictEqual(res2.getResultsList()[0].getGraphsearchTxnCount(), 0);
+        }
     });
+    // it("test nyc1", async () => {
+    //     const txid = "880b268d3268d4639ba39948aa40e882a6847843c9b8a7da1d0d9d0f2c9dac13";
+    //     const grpc = new GrpcClient({url: "bchd.ny1.simpleledger.io"});
+    //     let res = await grpc.getTrustedSlpValidation({txos: [{hash: txid, vout:1}], reversedHashOrder: true, includeGraphSearchCount: true });
+    //     console.log(`NY1 ${res.getResultsList()[0].getGraphsearchTxnCount()}`);
+    // });
+    // it("test nl1", async () => {
+    //     const txid = "880b268d3268d4639ba39948aa40e882a6847843c9b8a7da1d0d9d0f2c9dac13";
+    //     const grpc = new GrpcClient({url: "bchd.nl1.simpleledger.io"});
+    //     let res = await grpc.getTrustedSlpValidation({txos: [{hash: txid, vout:1}], reversedHashOrder: true, includeGraphSearchCount: true });
+    //     console.log(`NL1 ${res.getResultsList()[0].getGraphsearchTxnCount()}`);
+    // });
     it("trusted validation includes gs count", async () => {
-        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
-        const excludeList: string[] = [
-            "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
-            "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
-            "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
-        ];
-        // check gs count results matches original gs count
-        let res3 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true });
-        assert.strictEqual(res3.getResultsList()[0].getGraphsearchTxnCount(), 16);
+        if (CHECK_GRAPH_SEARCH) {
+            const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+            const excludeList: string[] = [
+                "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
+                "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
+                "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
+            ];
+            // check gs count results matches original gs count
+            let res3 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true });
+            assert.strictEqual(res3.getResultsList()[0].getGraphsearchTxnCount(), 16);
+        }
     });
     it("graph search returns error when bad validity cache txn (from bad txid id) is provided", async () => {
-        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
-        const excludeList: string[] = [
-            "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
-            "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
-            "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
-            "abcd", // extra bad txid
-        ];
-        // check gs count results matches original gs count
-        assert.rejects(
-            grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true }),
-            { message: "13 INTERNAL: graph search validity txid cdab, error: invalid hash length of 2, want 32" }
-        );
+        if (CHECK_GRAPH_SEARCH) {
+            const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+            const excludeList: string[] = [
+                "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
+                "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
+                "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
+                "abcd", // extra bad txid
+            ];
+            // check gs count results matches original gs count
+            assert.rejects(
+                grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true }),
+                { message: "13 INTERNAL: graph search validity txid cdab, error: invalid hash length of 2, want 32" }
+            );
+        }
     });
     it("graph search returns error when bad validity cache txn (from wrong token id) is provided", async () => {
-        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
-        const excludeList: string[] = [
-            "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
-            "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
-            "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
-            "f9134cae8682a9bb98ed1949c983b391eceb5bea9744e0c6a538f83383681221", // extra from wrong token ID
-        ];
-        // check gs count results matches original gs count
-        assert.rejects( 
-            grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true }),
-            { message: "13 INTERNAL: client provided validity cache with hash f9134cae8682a9bb98ed1949c983b391eceb5bea9744e0c6a538f83383681221 that is not in the token graph" }
-        );
+        if (CHECK_GRAPH_SEARCH) {
+            const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+            const excludeList: string[] = [
+                "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
+                "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
+                "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
+                "f9134cae8682a9bb98ed1949c983b391eceb5bea9744e0c6a538f83383681221", // extra from wrong token ID
+            ];
+            // check gs count results matches original gs count
+            assert.rejects( 
+                grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true }),
+                { message: "13 INTERNAL: client provided validity cache with hash f9134cae8682a9bb98ed1949c983b391eceb5bea9744e0c6a538f83383681221 that is not in the token graph" }
+            );
+        }
     });
     it("graph search returns error when bad validity cache txn (non-slp txid) is provided", () => {
-        const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
-        const excludeList: string[] = [
-            "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
-            "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
-            "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
-            "089a032d3e0ba9f883f854edc753e3c6d3ed0eedc42bca7d27c3a0f87113ca06", // extra from non-SLP
-        ];
-        // check gs count results matches original gs count
-        assert.rejects(
-            grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true }), 
-            { message: "13 INTERNAL: client provided validity cache with hash 089a032d3e0ba9f883f854edc753e3c6d3ed0eedc42bca7d27c3a0f87113ca06 that is not in the token graph" }
-        );
+        if (CHECK_GRAPH_SEARCH) {
+            const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+            const excludeList: string[] = [
+                "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
+                "56c2ddcaf9ebb3785f3ca0a1c136c793bd33dd7e019a77bf1193bc8ef77eb38f",
+                "9a64336b6f11235b415b278c5690b6538ff14197af00ebc5abf93e318b1debae",
+                "089a032d3e0ba9f883f854edc753e3c6d3ed0eedc42bca7d27c3a0f87113ca06", // extra from non-SLP
+            ];
+            // check gs count results matches original gs count
+            assert.rejects(
+                grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true }), 
+                { message: "13 INTERNAL: client provided validity cache with hash 089a032d3e0ba9f883f854edc753e3c6d3ed0eedc42bca7d27c3a0f87113ca06 that is not in the token graph" }
+            );
+        }
     });
     it("prevents BURNED_INPUTS_BAD_OPRETURN", async () => {
         const txid = "77d3f678e9283043cb59e3a34fb8921e4fa0442611e5508f40328d2f27adcc1b";
@@ -431,7 +463,9 @@ describe("grpc-bchrpc-node", () => {
     it("getBlockchainInfo", async () => {
         const info = await grpc.getBlockchainInfo();
         assert.ok(info.getSlpIndex());
-        assert.ok(info.getSlpGraphsearch());
+        if (CHECK_GRAPH_SEARCH) {
+            assert.ok(info.getSlpGraphsearch());
+        }
         assert.ok(info.getTxIndex());
         assert.ok(info.getAddrIndex());
         console.log(`Node best block height: ${info.getBestHeight()}`);
@@ -447,13 +481,13 @@ describe("grpc-bchrpc-node", () => {
         for (const out of outputs) {
             if (out.getSlpToken()) {
                 const slpToken = out.getSlpToken()!;
-                const amt = BigInt(slpToken.getAmount()!);
-                assert.equal([139200347639, 433852691149408].includes(parseInt(slpToken.getAmount(), 10)), true);
-                assert.equal(slpToken.getDecimals(), 8);
+                //const amt = BigInt(slpToken.getAmount()!);
+                assert.strictEqual([139200347639, 433852691149408].includes(parseInt(slpToken.getAmount(), 10)), true);
+                assert.strictEqual(slpToken.getDecimals(), 8);
                 totalAmtOut = totalAmtOut.add(slpToken.getAmount());
 
                 // check slp addresses
-                assert.equal([
+                assert.strictEqual([
                     "qprqzzhhve7sgysgf8h29tumywnaeyqm7ykzvpsuxy",
                     "qpluak66akyaz38tsz87teyuma5rf6cqhq664ple3v",
                 ].includes(slpToken.getAddress()), true);
@@ -466,25 +500,25 @@ describe("grpc-bchrpc-node", () => {
         for (const ins of inputs) {
             if (ins.getSlpToken()) {
                 const slpToken = ins.getSlpToken()!;
-                assert.equal(slpToken.getDecimals(), 8);
+                assert.strictEqual(slpToken.getDecimals(), 8);
                 totalAmtIn = totalAmtIn.add(slpToken.getAmount());
             }
         }
 
         // check inputs == output amount
-        assert.equal(totalAmtIn.gt(0), true);
-        assert.equal(totalAmtIn.cmp(totalAmtOut), 0);
+        assert.strictEqual(totalAmtIn.gt(0), true);
+        assert.strictEqual(totalAmtIn.cmp(totalAmtOut), 0);
 
         // check token metadata
-        assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenName()!).toString("utf8"), "Spice");
-        assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenTicker()).toString("utf8"), "SPICE");
-        assert.equal(res.getTokenMetadata()!.getType1()!.getDecimals()!, 8);
-        assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenDocumentUrl()).toString("utf8"), "spiceslp@gmail.com");
-        assert.equal(Buffer.from(res.getTokenMetadata()!.getTokenId_asU8()!).toString("hex"), "4de69e374a8ed21cbddd47f2338cc0f479dc58daa2bbe11cd604ca488eca0ddf");
+        assert.strictEqual(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenName()!).toString("utf8"), "Spice");
+        assert.strictEqual(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenTicker()).toString("utf8"), "SPICE");
+        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getDecimals()!, 8);
+        assert.strictEqual(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenDocumentUrl()).toString("utf8"), "spiceslp@gmail.com");
+        assert.strictEqual(Buffer.from(res.getTokenMetadata()!.getTokenId_asU8()!).toString("hex"), "4de69e374a8ed21cbddd47f2338cc0f479dc58daa2bbe11cd604ca488eca0ddf");
 
         // verify current Mint baton txid / vout
-        assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonTxid(), "");
-        assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 0);
+        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonTxid(), "");
+        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 0);
     });
 
     it("getTransaction - max uint64 SlpToken", async () => {
@@ -496,16 +530,16 @@ describe("grpc-bchrpc-node", () => {
         let totalOut = Big(0);
         for (const out of outputs) {
             if (out.getSlpToken()) {
-                assert.equal(Big(out.getSlpToken()!.getAmount()).cmp("18446744073709551615"), 0);
+                assert.strictEqual(Big(out.getSlpToken()!.getAmount()).cmp("18446744073709551615"), 0);
                 totalOut = totalOut.add(out.getSlpToken()!.getAmount());
             }
         }
 
-        assert.equal(totalOut.cmp(Big("18446744073709551615")), 0);
+        assert.strictEqual(totalOut.cmp(Big("18446744073709551615")), 0);
 
         // verify Mint baton txid / vout
-        assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonTxid(), "");
-        assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 0);
+        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonTxid(), "");
+        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 0);
     });
 
     it("getTransaction - mint transaction", async () => {
@@ -519,12 +553,12 @@ describe("grpc-bchrpc-node", () => {
             if (out.getSlpToken()) {
                 const slpToken = out.getSlpToken()!;
                 const amt = BigInt(slpToken.getAmount()!);
-                assert.equal([133333333, 0].includes(parseInt(slpToken.getAmount(), 10)), true);
-                assert.equal(slpToken.getDecimals(), 6);
+                assert.strictEqual([133333333, 0].includes(parseInt(slpToken.getAmount(), 10)), true);
+                assert.strictEqual(slpToken.getDecimals(), 6);
                 totalAmtOut = totalAmtOut.add(slpToken.getAmount());
 
                 // check slp addresses
-                assert.equal([
+                assert.strictEqual([
                     "qrzuvtyqs7f843natt3cvl2lenme2tcl3qvvl8ydjj",
                     "pz0n40tkppxq7nq7vewvjtfe2dwre0k2z580r6u7df",
                 ].includes(slpToken.getAddress()), true);
@@ -537,25 +571,25 @@ describe("grpc-bchrpc-node", () => {
         for (const ins of inputs) {
             if (ins.getSlpToken()) {
                 const slpToken = ins.getSlpToken()!;
-                assert.equal(slpToken.getDecimals(), 6);
+                assert.strictEqual(slpToken.getDecimals(), 6);
                 totalAmtIn = totalAmtIn.add(slpToken.getAmount());
             }
         }
 
         // check inputs == output amount
-        assert.equal(totalAmtIn.eq(0), true);
-        assert.equal(totalAmtIn.lt(totalAmtOut), true);
+        assert.strictEqual(totalAmtIn.eq(0), true);
+        assert.strictEqual(totalAmtIn.lt(totalAmtOut), true);
 
         // check token metadata
-        assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenName()!).toString("utf8"), "Mistcoin");
-        assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenTicker()).toString("utf8"), "MIST");
-        assert.equal(res.getTokenMetadata()!.getType1()!.getDecimals()!, 6);
-        assert.equal(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenDocumentUrl()).toString("utf8"), "https://mistcoin.org");
-        assert.equal(Buffer.from(res.getTokenMetadata()!.getTokenId_asU8()!).toString("hex"), "d6876f0fce603be43f15d34348bb1de1a8d688e1152596543da033a060cff798");
+        assert.strictEqual(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenName()!).toString("utf8"), "Mistcoin");
+        assert.strictEqual(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenTicker()).toString("utf8"), "MIST");
+        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getDecimals()!, 6);
+        assert.strictEqual(Buffer.from(res.getTokenMetadata()!.getType1()!.getTokenDocumentUrl()).toString("utf8"), "https://mistcoin.org");
+        assert.strictEqual(Buffer.from(res.getTokenMetadata()!.getTokenId_asU8()!).toString("hex"), "d6876f0fce603be43f15d34348bb1de1a8d688e1152596543da033a060cff798");
 
         // verify current Mint baton txid / vout
-        assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonTxid().length === 32, true);
-        assert.equal(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 2);
+        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonTxid().length === 32, true);
+        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 2);
     });
 
     it("checkSlpTransaction - returns error on missing inputs or outputs", async () => {
@@ -563,7 +597,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({txnBuf});
         } catch (err) {
-            assert.equal(err.message.includes("transaction is missing inputs or outputs"), true);
+            assert.strictEqual(err.message.includes("transaction is missing inputs or outputs"), true);
             return;
         }
         throw Error("transaction was not rejected");
@@ -575,13 +609,13 @@ describe("grpc-bchrpc-node", () => {
         const tm = res.getTokenMetadataList()![0];
 
         // check minting baton txid & vout
-        assert.equal(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8().slice().reverse()).toString("hex"),
+        assert.strictEqual(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8().slice().reverse()).toString("hex"),
             "33e504ca8d11d4d928f6439729a05074cd50ac8ba8d43570d452eff203d840e4");
-        assert.equal(tm.getType1()!.getMintBatonVout(), 2);
+        assert.strictEqual(tm.getType1()!.getMintBatonVout(), 2);
 
         // check genesis properties
-        assert.equal(Buffer.from(tm.getType1()!.getTokenName()).toString("utf8"), "Fake USD");
-        assert.equal(Buffer.from(tm.getType1()!.getTokenTicker()).toString("utf8"), "USDF");
+        assert.strictEqual(Buffer.from(tm.getType1()!.getTokenName()).toString("utf8"), "Fake USD");
+        assert.strictEqual(Buffer.from(tm.getType1()!.getTokenTicker()).toString("utf8"), "USDF");
     });
 
     it("getTokenMetadata for NFT child token w/ group ID", async () => {
@@ -590,12 +624,12 @@ describe("grpc-bchrpc-node", () => {
         const tm = res.getTokenMetadataList()![0];
 
         // check minting baton txid & vout
-        assert.equal(Buffer.from(tm.getNft1Child()!.getGroupId()).toString("hex"),
+        assert.strictEqual(Buffer.from(tm.getNft1Child()!.getGroupId()).toString("hex"),
             "8501a019953ba16a20807a08a02d49a3441235132e4b2a14546c0bc2421a131e");
 
         // check genesis properties
-        assert.equal(Buffer.from(tm.getNft1Child()!.getTokenName()).toString("utf8"), "sharp pointy sword");
-        assert.equal(Buffer.from(tm.getNft1Child()!.getTokenTicker()).toString("utf8"), "");
+        assert.strictEqual(Buffer.from(tm.getNft1Child()!.getTokenName()).toString("utf8"), "sharp pointy sword");
+        assert.strictEqual(Buffer.from(tm.getNft1Child()!.getTokenTicker()).toString("utf8"), "");
     });
 
     it("getTokenMetadata for token with burned minting baton after Genesis", async () => {
@@ -603,7 +637,7 @@ describe("grpc-bchrpc-node", () => {
         const res = await grpc.getTokenMetadata([ tokenID ]);
         const tm = res.getTokenMetadataList()![0];
 
-        assert.equal(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8()).toString("hex"), "");
+        assert.strictEqual(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8()).toString("hex"), "");
     });
 
     it("getTokenMetadata for token with burned minting baton after Mint", async () => {
@@ -611,7 +645,7 @@ describe("grpc-bchrpc-node", () => {
         const res = await grpc.getTokenMetadata([ tokenID ]);
         const tm = res.getTokenMetadataList()![0];
 
-        assert.equal(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8()).toString("hex"), "");
+        assert.strictEqual(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8()).toString("hex"), "");
     });
 
     it("getTokenMetadata for token with burned", async () => {
@@ -619,7 +653,7 @@ describe("grpc-bchrpc-node", () => {
         const res = await grpc.getTokenMetadata([ tokenID ]);
         const tm = res.getTokenMetadataList()![0];
 
-        assert.equal(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8()).toString("hex"), "");
+        assert.strictEqual(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8()).toString("hex"), "");
     });
 
     it("getAddressUnspentOutputs", async () => {
@@ -631,29 +665,30 @@ describe("grpc-bchrpc-node", () => {
         for (const out of outs) {
             if (out.getSlpToken()) {
                 tokenIDs.add(Buffer.from(out.getSlpToken()!.getTokenId_asU8()).toString("hex"));
-                const _token = tokens.find((t) =>
+                const _tokenMetadata = tokens.find((t) =>
                     Buffer.from(t.getTokenId_asU8()).toString("hex") === Buffer.from(out.getSlpToken()!.getTokenId_asU8()).toString("hex"));
-                if (! _token) {
+                if (! _tokenMetadata) {
                     throw Error("missing token id");
                 }
                 //console.log(`token id: ${Buffer.from(_token.getTokenId_asU8()).toString("hex")}`);
                 let divisibility: number;
-                if (_token.hasType1()) {
-                    divisibility = _token.getType1()!.getDecimals();
-                } else if (_token.hasNft1Group()) {
-                    divisibility = _token.getNft1Group()!.getDecimals();
-                } else if (_token.hasNft1Child()) {
+                if (_tokenMetadata.hasType1()) {
+                    divisibility = _tokenMetadata.getType1()!.getDecimals();
+                } else if (_tokenMetadata.hasNft1Group()) {
+                    divisibility = _tokenMetadata.getNft1Group()!.getDecimals();
+                } else if (_tokenMetadata.hasNft1Child()) {
                     divisibility = 0;
                 } else {
                     throw Error("unknown error");
                 }
 
-                //console.log(`token amt: ${Big(out.getSlpToken()!.getAmount()).div(10 ** divisibility)}`);
+                const _token = out.getSlpToken()!;
+                assert.ok(_token.getAddress() === address);
             }
         }
 
         // check all token IDs are represented in "TokenMetadataList"
-        assert.equal(tokenIDs.size, tokens.length);
+        assert.strictEqual(tokenIDs.size, tokens.length);
         
     });
 
@@ -673,7 +708,7 @@ describe("grpc-bchrpc-node", () => {
             error = err;
         }
         if (error) {
-            assert.equal(["5 NOT_FOUND: utxo spent in mempool", "5 NOT_FOUND: utxo not found"].includes(error.message), true);
+            assert.strictEqual(["5 NOT_FOUND: utxo spent in mempool", "5 NOT_FOUND: utxo not found"].includes(error.message), true);
         } else {
             throw Error("did not throw and expected error.");
         }
@@ -682,14 +717,14 @@ describe("grpc-bchrpc-node", () => {
     it("getRawTransaction returns the transaction (README example)", async () => {
         const txid = "11556da6ee3cb1d14727b3a8f4b37093b6fecd2bc7d577a02b4e98b7be58a7e8";
         const res = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
-        assert.equal(res.getTransaction_asU8().length, 441);
+        assert.strictEqual(res.getTransaction_asU8().length, 441);
     });
 
     it("getBlockInfo for index 0", async () => {
         const info = await grpc.getBlockInfo({index: 0});
-        assert.equal(info.getInfo()!.getHeight(), 0);
+        assert.strictEqual(info.getInfo()!.getHeight(), 0);
         const hash = Buffer.from(info.getInfo()!.getHash_asU8().reverse()).toString("hex");
-        assert.equal(hash, "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
+        assert.strictEqual(hash, "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
     });
 
     it("getAddressTransactions for and example address", async () => {
@@ -697,19 +732,19 @@ describe("grpc-bchrpc-node", () => {
         const firstTxid = "5248906d6ac8425f287727797307d7305291f57d30406cb627e6573bbb77a344";
         const res = await grpc.getAddressTransactions({address: exampleAddress, height: 0});
         const txns = res.getConfirmedTransactionsList();
-        assert.equal(txns.length >= 3, true);
+        assert.strictEqual(txns.length >= 3, true);
         const tx1 = txns.filter((t) => Buffer.from(t.getHash_asU8().reverse()).toString("hex") === firstTxid)[0];
-        assert.equal(Buffer.from(tx1.getHash() as Uint8Array).toString("hex"), firstTxid);
+        assert.strictEqual(Buffer.from(tx1.getHash() as Uint8Array).toString("hex"), firstTxid);
 
         // check input values
-        assert.equal(tx1.getInputsList()[0].getAddress(), "qpesnqmhls2c8gz2fyqpczx4xy0weu6765p2sp2zfc");
-        assert.equal(tx1.getInputsList()[0].getValue(), 0.00013961 * 10 ** 8);
-        assert.equal(tx1.getInputsList()[1].getAddress(), "qr0e8sue6xynzucysjjjq6ms5vpj0zpgnyqhalegx4");
-        assert.equal(tx1.getInputsList()[2].getAddress(), "qq3af8yet2vrdl562mt499f28pm3f3x0t5s5ekgv20");
+        assert.strictEqual(tx1.getInputsList()[0].getAddress(), "qpesnqmhls2c8gz2fyqpczx4xy0weu6765p2sp2zfc");
+        assert.strictEqual(tx1.getInputsList()[0].getValue(), 0.00013961 * 10 ** 8);
+        assert.strictEqual(tx1.getInputsList()[1].getAddress(), "qr0e8sue6xynzucysjjjq6ms5vpj0zpgnyqhalegx4");
+        assert.strictEqual(tx1.getInputsList()[2].getAddress(), "qq3af8yet2vrdl562mt499f28pm3f3x0t5s5ekgv20");
 
         // check output value
-        assert.equal(tx1.getOutputsList()[0].getValue(), 0.00035283 * 10 ** 8);
-        assert.equal(tx1.getOutputsList()[0].getAddress(), "qregyd3kcklc58fd6r8epfwulpvd9f4mr5gxg8n8y7");
+        assert.strictEqual(tx1.getOutputsList()[0].getValue(), 0.00035283 * 10 ** 8);
+        assert.strictEqual(tx1.getOutputsList()[0].getAddress(), "qregyd3kcklc58fd6r8epfwulpvd9f4mr5gxg8n8y7");
     });
 
     it("submitTransaction should broadcast", async () => {
@@ -721,7 +756,7 @@ describe("grpc-bchrpc-node", () => {
             error = err;
         }
         if (error) {
-            assert.equal(error.message, "3 INVALID_ARGUMENT: tx rejected: transaction already exists");
+            assert.strictEqual(error.message, "3 INVALID_ARGUMENT: tx rejected: transaction already exists");
         } else {
             throw Error("did not throw and expected error.");
         }
@@ -736,7 +771,7 @@ describe("grpc-bchrpc-node", () => {
             error = err;
         }
         if (error) {
-            assert.equal(["5 NOT_FOUND: utxo spent in mempool", "5 NOT_FOUND: utxo not found"].includes(error.message), true);
+            assert.strictEqual(["5 NOT_FOUND: utxo spent in mempool", "5 NOT_FOUND: utxo not found"].includes(error.message), true);
         } else {
             throw Error("did not throw and expected error.");
         }
@@ -746,8 +781,8 @@ describe("grpc-bchrpc-node", () => {
         const script = Buffer.from("6a04534c50000101044d494e5420ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff4c00080000000000000064", "hex");
         const resp = await grpc.getParsedSlpScript(script);
         const tokenID = Buffer.from(resp.getTokenId());
-        assert.equal(resp.getV1Mint()!.getMintAmount(), 100);
-        assert.equal(tokenID.toString("hex"), "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        assert.strictEqual(resp.getV1Mint()!.getMintAmount(), "100");
+        assert.strictEqual(tokenID.toString("hex"), "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     });
 
     describe("getParsedSlpScript - SLP Message Unit Tests", () => {
@@ -768,9 +803,9 @@ describe("grpc-bchrpc-node", () => {
                         // console.log(parsingError);
                         // console.log(expectedParsingErrorsFromGoSlp.get(parsingError));
                         if (expectedParsingErrorsFromGoSlp.has(parsingError)) {
-                            assert.equal(expectedParsingErrorsFromGoSlp.get(parsingError)!.includes(test.msg), true);
+                            assert.strictEqual(expectedParsingErrorsFromGoSlp.get(parsingError)!.includes(test.msg), true);
                         } else if (parsingError.includes("Unsupported token type:")) {
-                            assert.equal(parsingError.includes("Unsupported token type:"), true);
+                            assert.strictEqual(parsingError.includes("Unsupported token type:"), true);
                         } else {
                             throw Error("Test is missing error type: " + parsingError);
                         }
@@ -780,7 +815,7 @@ describe("grpc-bchrpc-node", () => {
                 } else {
                     const resp = await grpc.getParsedSlpScript(script);
                     const parsedType = resp.getSlpAction();
-                    assert.equal(parsedType > 0, true);
+                    assert.strictEqual(parsedType > 0, true);
                 }
             });
         }
@@ -813,15 +848,15 @@ describe("grpc-bchrpc-node", () => {
             if (! exp) {
                 throw Error("cannot find an expected result for the returned response!");
             }
-            assert.equal(exp.tokenIDHex, Buffer.from(res.getTokenId_asU8()).toString("hex"));
+            assert.strictEqual(exp.tokenIDHex, Buffer.from(res.getTokenId_asU8()).toString("hex"));
             const resultType = res.getValidityResultTypeCase();
             switch (resultType) {
                 case GetTrustedSlpValidationResponse.ValidityResult.ValidityResultTypeCase.V1_MINT_BATON:
-                    assert.equal(res.getV1TokenAmount(), 0);
-                    assert.equal(res.getV1MintBaton(), exp.validAmt === "MINT_BATON");
+                    assert.strictEqual(res.getV1TokenAmount(), "0");
+                    assert.strictEqual(res.getV1MintBaton(), exp.validAmt === "MINT_BATON");
                     break;
                 case GetTrustedSlpValidationResponse.ValidityResult.ValidityResultTypeCase.V1_TOKEN_AMOUNT:
-                    assert.equal(res.getV1TokenAmount(), exp.validAmt);
+                    assert.strictEqual(res.getV1TokenAmount(), exp.validAmt.toString());
                     break;
                 default:
                     throw Error("result type is unknown");
@@ -837,7 +872,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
-            assert.equal(err.message.includes("invalid txn hash"), true);
+            assert.strictEqual(err.message.includes("invalid txn hash"), true);
             return;
         }
         throw Error("test did not throw");
@@ -851,7 +886,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
-            assert.equal(err.message.includes("txid is missing from slp validity set"), true);
+            assert.strictEqual(err.message.includes("txid is missing from slp validity set"), true);
             return;
         }
         throw Error("test did not throw");
@@ -865,7 +900,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
-            assert.equal(err.message.includes("slp output index cannot be 0 or > 19"), true);
+            assert.strictEqual(err.message.includes("slp output index cannot be 0 or > 19"), true);
             return;
         }
         throw Error("test did not throw");
@@ -880,7 +915,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
-            assert.equal(err.message.includes("vout is not a valid SLP output"), true);
+            assert.strictEqual(err.message.includes("vout is not a valid SLP output"), true);
             return;
         }
         throw Error("test did not throw");
@@ -895,7 +930,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
-            assert.equal(err.message.includes("vout is not a valid SLP output"), true);
+            assert.strictEqual(err.message.includes("vout is not a valid SLP output"), true);
             return;
         }
         throw Error("test did not throw");
@@ -910,7 +945,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
-            assert.equal(err.message.includes("vout is not a valid SLP output"), true);
+            assert.strictEqual(err.message.includes("vout is not a valid SLP output"), true);
             return;
         }
         throw Error("test did not throw");
@@ -923,9 +958,9 @@ describe("grpc-bchrpc-node", () => {
             addressIndex: 0,
         });
 
-        assert.equal(res.getCashAddr(), "bitcoincash:qrlk9amfej0dj8n4pm58uf7awl2c5lsd5uf2n9muex");
-        assert.equal(res.getSlpAddr(), "simpleledger:qrlk9amfej0dj8n4pm58uf7awl2c5lsd5u93c7wu8c");
-        assert.equal(Buffer.from(res.getPubKey_asU8()).toString("hex"), "02990538a53c000f1da9d34634746765eb3fa6ca450cfbea13300f0df1aef8e00e");
+        assert.strictEqual(res.getCashAddr(), "bitcoincash:qrlk9amfej0dj8n4pm58uf7awl2c5lsd5uf2n9muex");
+        assert.strictEqual(res.getSlpAddr(), "simpleledger:qrlk9amfej0dj8n4pm58uf7awl2c5lsd5u93c7wu8c");
+        assert.strictEqual(Buffer.from(res.getPubKey_asU8()).toString("hex"), "02990538a53c000f1da9d34634746765eb3fa6ca450cfbea13300f0df1aef8e00e");
     });
 
     it("getBip44Address", async () => {
@@ -935,9 +970,9 @@ describe("grpc-bchrpc-node", () => {
             addressIndex: 1,
         });
 
-        assert.equal(res.getCashAddr(), "bitcoincash:qq29mq80662z00gss7tmrt8y2nfawfmx45gj3yqfqy");
-        assert.equal(res.getSlpAddr(), "simpleledger:qq29mq80662z00gss7tmrt8y2nfawfmx45yf6l4f76");
-        assert.equal(Buffer.from(res.getPubKey_asU8()).toString("hex"), "023f62244d3e050eb8018fcf73f4ea7c8a6b7a8f01e0afaa585b9c1c3d5cdf6775");
+        assert.strictEqual(res.getCashAddr(), "bitcoincash:qq29mq80662z00gss7tmrt8y2nfawfmx45gj3yqfqy");
+        assert.strictEqual(res.getSlpAddr(), "simpleledger:qq29mq80662z00gss7tmrt8y2nfawfmx45yf6l4f76");
+        assert.strictEqual(Buffer.from(res.getPubKey_asU8()).toString("hex"), "023f62244d3e050eb8018fcf73f4ea7c8a6b7a8f01e0afaa585b9c1c3d5cdf6775");
     });
 
     it("getBip44Address", async () => {
@@ -947,9 +982,9 @@ describe("grpc-bchrpc-node", () => {
             addressIndex: 1,
         });
 
-        assert.equal(res.getCashAddr(), "bitcoincash:qz0s5gngtrmwcp9pwfpp4dzzr5a7e6pt9ypmvpvrlf");
-        assert.equal(res.getSlpAddr(), "simpleledger:qz0s5gngtrmwcp9pwfpp4dzzr5a7e6pt9ydq86erph");
-        assert.equal(Buffer.from(res.getPubKey_asU8()).toString("hex"), "0289e06414948c7d044ed7b3f09cb8a9a2709f629d9fdbd642033ca3725731a2a2");
+        assert.strictEqual(res.getCashAddr(), "bitcoincash:qz0s5gngtrmwcp9pwfpp4dzzr5a7e6pt9ypmvpvrlf");
+        assert.strictEqual(res.getSlpAddr(), "simpleledger:qz0s5gngtrmwcp9pwfpp4dzzr5a7e6pt9ydq86erph");
+        assert.strictEqual(Buffer.from(res.getPubKey_asU8()).toString("hex"), "0289e06414948c7d044ed7b3f09cb8a9a2709f629d9fdbd642033ca3725731a2a2");
     });
 });
 
