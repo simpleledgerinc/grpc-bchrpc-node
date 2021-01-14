@@ -21,8 +21,8 @@ const CHECK_GRAPH_SEARCH = false;
 describe("grpc-bchrpc-node", () => {
 
     it("graph search without excludes", async function() {
+        this.timeout(5000);
         if (CHECK_GRAPH_SEARCH) {
-            this.timeout(5000);
             const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
             const excludeList: string[] = [ ];
             let res: GetSlpGraphSearchResponse;
@@ -573,6 +573,7 @@ describe("grpc-bchrpc-node", () => {
                 const slpToken = ins.getSlpToken()!;
                 assert.strictEqual(slpToken.getDecimals(), 6);
                 totalAmtIn = totalAmtIn.add(slpToken.getAmount());
+                assert.strictEqual(ins.getSlpToken()!.getAddress()!, "pzxda47vant8zcnawh28xf2jgnhap894552ds8rdjr");
             }
         }
 
@@ -657,8 +658,9 @@ describe("grpc-bchrpc-node", () => {
     });
 
     it("getAddressUnspentOutputs", async () => {
-        const address = "simpleledger:qz5x4wy6vtkuc0z4m9yxf6lfej4sx44wdvxytgwfgp";
+        const address = "qz5x4wy6vtkuc0z4m9yxf6lfej4sx44wdvxytgwfgp"; // "simpleledger:qz5x4wy6vtkuc0z4m9yxf6lfej4sx44wdvxytgwfgp"
         const res = await grpc.getAddressUtxos({address, includeMempool: true, includeTokenMetadata: true });
+        res.getTokenMetadataList()
         const outs = res.getOutputsList()!;
         const tokens = res.getTokenMetadataList()!;
         const tokenIDs = new Set<string>();
@@ -689,7 +691,6 @@ describe("grpc-bchrpc-node", () => {
 
         // check all token IDs are represented in "TokenMetadataList"
         assert.strictEqual(tokenIDs.size, tokens.length);
-        
     });
 
     it("getUnspentOutput returns slp mempool item", async () => {
@@ -727,7 +728,8 @@ describe("grpc-bchrpc-node", () => {
         assert.strictEqual(hash, "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f");
     });
 
-    it("getAddressTransactions for and example address", async () => {
+    it("getAddressTransactions for an example address", async function() {
+        this.timeout(5000);
         const exampleAddress = "simpleledger:qregyd3kcklc58fd6r8epfwulpvd9f4mr5yarux86q";
         const firstTxid = "5248906d6ac8425f287727797307d7305291f57d30406cb627e6573bbb77a344";
         const res = await grpc.getAddressTransactions({address: exampleAddress, height: 0});
@@ -745,6 +747,29 @@ describe("grpc-bchrpc-node", () => {
         // check output value
         assert.strictEqual(tx1.getOutputsList()[0].getValue(), 0.00035283 * 10 ** 8);
         assert.strictEqual(tx1.getOutputsList()[0].getAddress(), "qregyd3kcklc58fd6r8epfwulpvd9f4mr5gxg8n8y7");
+    });
+
+    it("getAddressTransactions for an example address with slp", async function() {
+        this.timeout(30000);
+        const exampleAddress = "simpleledger:qzlvewdrrv2as4naam7wd8nxzlfp5ra0lsg9qp52ha";
+        const firstTxid = "06d1bfcbd9832eafff1d448072f835242a8f1ae442189effe86abe6884c59f2b";
+        const res = await grpc.getAddressTransactions({address: exampleAddress, height: 0});
+        const txns = res.getConfirmedTransactionsList();
+        assert.strictEqual(txns.length >= 3, true);
+        const tx1 = txns.filter((t) => Buffer.from(t.getHash_asU8().reverse()).toString("hex") === firstTxid)[0];
+        assert.strictEqual(Buffer.from(tx1.getHash() as Uint8Array).toString("hex"), firstTxid);
+
+        // check input values
+        assert.strictEqual(tx1.getInputsList()[0].getAddress(), "qrd24p8lh6w8tpcddedwwhafammhtrn6tskhn8cp6x");
+        assert.strictEqual(tx1.getInputsList()[0].getValue(), 546);
+        assert.strictEqual(tx1.getInputsList()[0].getSlpToken()!.getAddress(), "qrd24p8lh6w8tpcddedwwhafammhtrn6ts6vcudpyc");
+
+        // check output value
+        assert.strictEqual(tx1.getOutputsList()[0].getValue(), 0);
+        assert.strictEqual(tx1.getOutputsList()[0].getAddress(), "");
+        assert.strictEqual(tx1.getOutputsList()[1].getValue(), 0.00000546 * 10 ** 8);
+        assert.strictEqual(tx1.getOutputsList()[1].getAddress(), "qzlvewdrrv2as4naam7wd8nxzlfp5ra0lsy7t6p2fr");
+        assert.strictEqual(tx1.getOutputsList()[1].getSlpToken()!.getAddress(), "qzlvewdrrv2as4naam7wd8nxzlfp5ra0lsg9qp52ha");
     });
 
     it("submitTransaction should broadcast", async () => {
