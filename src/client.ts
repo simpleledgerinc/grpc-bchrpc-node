@@ -396,11 +396,13 @@ export class GrpcClient {
         txnHex,
         txn,
         requiredSlpBurns,
+        disableSlpErrors,
     }: {
         txnBuf?: Buffer,
         txnHex?: string,
         txn?: Uint8Array,
         requiredSlpBurns?: bchrpc.SlpRequiredBurn[]|ISlpRequiredBurn[],
+        disableSlpErrors?: boolean,
     } = {}): Promise<bchrpc.CheckSlpTransactionResponse> {
         let tx: string|Uint8Array;
         const req = new bchrpc.CheckSlpTransactionRequest();
@@ -415,7 +417,9 @@ export class GrpcClient {
             throw Error("Most provide either Hex string, Buffer, or Uint8Array");
         }
 
-        if (requiredSlpBurns) {
+        if (disableSlpErrors) {
+            req.setDisableSlpBurnErrors(true);
+        } else if (requiredSlpBurns) {
             GrpcClient.addRequiredSlpBurns(requiredSlpBurns, req);
         }
         req.setTransaction(tx);
