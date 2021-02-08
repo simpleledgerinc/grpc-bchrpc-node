@@ -8718,7 +8718,8 @@ proto.pb.CheckSlpTransactionRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     transaction: msg.getTransaction_asB64(),
     requiredSlpBurnsList: jspb.Message.toObjectList(msg.getRequiredSlpBurnsList(),
-    proto.pb.SlpRequiredBurn.toObject, includeInstance)
+    proto.pb.SlpRequiredBurn.toObject, includeInstance),
+    disableSlpBurnErrors: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
   };
 
   if (includeInstance) {
@@ -8764,6 +8765,10 @@ proto.pb.CheckSlpTransactionRequest.deserializeBinaryFromReader = function(msg, 
       reader.readMessage(value,proto.pb.SlpRequiredBurn.deserializeBinaryFromReader);
       msg.addRequiredSlpBurns(value);
       break;
+    case 3:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setDisableSlpBurnErrors(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -8806,6 +8811,13 @@ proto.pb.CheckSlpTransactionRequest.serializeBinaryToWriter = function(message, 
       2,
       f,
       proto.pb.SlpRequiredBurn.serializeBinaryToWriter
+    );
+  }
+  f = message.getDisableSlpBurnErrors();
+  if (f) {
+    writer.writeBool(
+      3,
+      f
     );
   }
 };
@@ -8891,6 +8903,24 @@ proto.pb.CheckSlpTransactionRequest.prototype.clearRequiredSlpBurnsList = functi
 };
 
 
+/**
+ * optional bool disable_slp_burn_errors = 3;
+ * @return {boolean}
+ */
+proto.pb.CheckSlpTransactionRequest.prototype.getDisableSlpBurnErrors = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 3, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.pb.CheckSlpTransactionRequest} returns this
+ */
+proto.pb.CheckSlpTransactionRequest.prototype.setDisableSlpBurnErrors = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 3, value);
+};
+
+
 
 
 
@@ -8923,7 +8953,8 @@ proto.pb.CheckSlpTransactionResponse.prototype.toObject = function(opt_includeIn
  */
 proto.pb.CheckSlpTransactionResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    isValid: jspb.Message.getBooleanFieldWithDefault(msg, 1, false)
+    isValid: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
+    invalidReason: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -8964,6 +8995,10 @@ proto.pb.CheckSlpTransactionResponse.deserializeBinaryFromReader = function(msg,
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setIsValid(value);
       break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setInvalidReason(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -9000,6 +9035,13 @@ proto.pb.CheckSlpTransactionResponse.serializeBinaryToWriter = function(message,
       f
     );
   }
+  f = message.getInvalidReason();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
 };
 
 
@@ -9018,6 +9060,24 @@ proto.pb.CheckSlpTransactionResponse.prototype.getIsValid = function() {
  */
 proto.pb.CheckSlpTransactionResponse.prototype.setIsValid = function(value) {
   return jspb.Message.setProto3BooleanField(this, 1, value);
+};
+
+
+/**
+ * optional string invalid_reason = 2;
+ * @return {string}
+ */
+proto.pb.CheckSlpTransactionResponse.prototype.getInvalidReason = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.pb.CheckSlpTransactionResponse} returns this
+ */
+proto.pb.CheckSlpTransactionResponse.prototype.setInvalidReason = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -10700,7 +10760,7 @@ proto.pb.GetTrustedSlpValidationRequest.Query.toObject = function(includeInstanc
   var f, obj = {
     prevOutHash: msg.getPrevOutHash_asB64(),
     prevOutVout: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    graphsearchValidTxidsList: msg.getGraphsearchValidTxidsList_asB64()
+    graphsearchValidHashesList: msg.getGraphsearchValidHashesList_asB64()
   };
 
   if (includeInstance) {
@@ -10747,7 +10807,7 @@ proto.pb.GetTrustedSlpValidationRequest.Query.deserializeBinaryFromReader = func
       break;
     case 3:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.addGraphsearchValidTxids(value);
+      msg.addGraphsearchValidHashes(value);
       break;
     default:
       reader.skipField();
@@ -10792,7 +10852,7 @@ proto.pb.GetTrustedSlpValidationRequest.Query.serializeBinaryToWriter = function
       f
     );
   }
-  f = message.getGraphsearchValidTxidsList_asU8();
+  f = message.getGraphsearchValidHashesList_asU8();
   if (f.length > 0) {
     writer.writeRepeatedBytes(
       3,
@@ -10863,35 +10923,35 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.setPrevOutVout = functio
 
 
 /**
- * repeated bytes graphsearch_valid_txids = 3;
+ * repeated bytes graphsearch_valid_hashes = 3;
  * @return {!(Array<!Uint8Array>|Array<string>)}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidTxidsList = function() {
+proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidHashesList = function() {
   return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 3));
 };
 
 
 /**
- * repeated bytes graphsearch_valid_txids = 3;
- * This is a type-conversion wrapper around `getGraphsearchValidTxidsList()`
+ * repeated bytes graphsearch_valid_hashes = 3;
+ * This is a type-conversion wrapper around `getGraphsearchValidHashesList()`
  * @return {!Array<string>}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidTxidsList_asB64 = function() {
+proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidHashesList_asB64 = function() {
   return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
-      this.getGraphsearchValidTxidsList()));
+      this.getGraphsearchValidHashesList()));
 };
 
 
 /**
- * repeated bytes graphsearch_valid_txids = 3;
+ * repeated bytes graphsearch_valid_hashes = 3;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getGraphsearchValidTxidsList()`
+ * This is a type-conversion wrapper around `getGraphsearchValidHashesList()`
  * @return {!Array<!Uint8Array>}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidTxidsList_asU8 = function() {
+proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidHashesList_asU8 = function() {
   return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
-      this.getGraphsearchValidTxidsList()));
+      this.getGraphsearchValidHashesList()));
 };
 
 
@@ -10899,7 +10959,7 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidTxids
  * @param {!(Array<!Uint8Array>|Array<string>)} value
  * @return {!proto.pb.GetTrustedSlpValidationRequest.Query} returns this
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.setGraphsearchValidTxidsList = function(value) {
+proto.pb.GetTrustedSlpValidationRequest.Query.prototype.setGraphsearchValidHashesList = function(value) {
   return jspb.Message.setField(this, 3, value || []);
 };
 
@@ -10909,7 +10969,7 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.setGraphsearchValidTxids
  * @param {number=} opt_index
  * @return {!proto.pb.GetTrustedSlpValidationRequest.Query} returns this
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.addGraphsearchValidTxids = function(value, opt_index) {
+proto.pb.GetTrustedSlpValidationRequest.Query.prototype.addGraphsearchValidHashes = function(value, opt_index) {
   return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
 };
 
@@ -10918,8 +10978,8 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.addGraphsearchValidTxids
  * Clears the list making it empty but non-null.
  * @return {!proto.pb.GetTrustedSlpValidationRequest.Query} returns this
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.clearGraphsearchValidTxidsList = function() {
-  return this.setGraphsearchValidTxidsList([]);
+proto.pb.GetTrustedSlpValidationRequest.Query.prototype.clearGraphsearchValidHashesList = function() {
+  return this.setGraphsearchValidHashesList([]);
 };
 
 
@@ -11683,7 +11743,7 @@ proto.pb.GetSlpGraphSearchRequest.prototype.toObject = function(opt_includeInsta
 proto.pb.GetSlpGraphSearchRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     hash: msg.getHash_asB64(),
-    validTxidsList: msg.getValidTxidsList_asB64()
+    validHashesList: msg.getValidHashesList_asB64()
   };
 
   if (includeInstance) {
@@ -11726,7 +11786,7 @@ proto.pb.GetSlpGraphSearchRequest.deserializeBinaryFromReader = function(msg, re
       break;
     case 2:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.addValidTxids(value);
+      msg.addValidHashes(value);
       break;
     default:
       reader.skipField();
@@ -11764,7 +11824,7 @@ proto.pb.GetSlpGraphSearchRequest.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getValidTxidsList_asU8();
+  f = message.getValidHashesList_asU8();
   if (f.length > 0) {
     writer.writeRepeatedBytes(
       2,
@@ -11817,35 +11877,35 @@ proto.pb.GetSlpGraphSearchRequest.prototype.setHash = function(value) {
 
 
 /**
- * repeated bytes valid_txids = 2;
+ * repeated bytes valid_hashes = 2;
  * @return {!(Array<!Uint8Array>|Array<string>)}
  */
-proto.pb.GetSlpGraphSearchRequest.prototype.getValidTxidsList = function() {
+proto.pb.GetSlpGraphSearchRequest.prototype.getValidHashesList = function() {
   return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 2));
 };
 
 
 /**
- * repeated bytes valid_txids = 2;
- * This is a type-conversion wrapper around `getValidTxidsList()`
+ * repeated bytes valid_hashes = 2;
+ * This is a type-conversion wrapper around `getValidHashesList()`
  * @return {!Array<string>}
  */
-proto.pb.GetSlpGraphSearchRequest.prototype.getValidTxidsList_asB64 = function() {
+proto.pb.GetSlpGraphSearchRequest.prototype.getValidHashesList_asB64 = function() {
   return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
-      this.getValidTxidsList()));
+      this.getValidHashesList()));
 };
 
 
 /**
- * repeated bytes valid_txids = 2;
+ * repeated bytes valid_hashes = 2;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getValidTxidsList()`
+ * This is a type-conversion wrapper around `getValidHashesList()`
  * @return {!Array<!Uint8Array>}
  */
-proto.pb.GetSlpGraphSearchRequest.prototype.getValidTxidsList_asU8 = function() {
+proto.pb.GetSlpGraphSearchRequest.prototype.getValidHashesList_asU8 = function() {
   return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
-      this.getValidTxidsList()));
+      this.getValidHashesList()));
 };
 
 
@@ -11853,7 +11913,7 @@ proto.pb.GetSlpGraphSearchRequest.prototype.getValidTxidsList_asU8 = function() 
  * @param {!(Array<!Uint8Array>|Array<string>)} value
  * @return {!proto.pb.GetSlpGraphSearchRequest} returns this
  */
-proto.pb.GetSlpGraphSearchRequest.prototype.setValidTxidsList = function(value) {
+proto.pb.GetSlpGraphSearchRequest.prototype.setValidHashesList = function(value) {
   return jspb.Message.setField(this, 2, value || []);
 };
 
@@ -11863,7 +11923,7 @@ proto.pb.GetSlpGraphSearchRequest.prototype.setValidTxidsList = function(value) 
  * @param {number=} opt_index
  * @return {!proto.pb.GetSlpGraphSearchRequest} returns this
  */
-proto.pb.GetSlpGraphSearchRequest.prototype.addValidTxids = function(value, opt_index) {
+proto.pb.GetSlpGraphSearchRequest.prototype.addValidHashes = function(value, opt_index) {
   return jspb.Message.addToRepeatedField(this, 2, value, opt_index);
 };
 
@@ -11872,8 +11932,8 @@ proto.pb.GetSlpGraphSearchRequest.prototype.addValidTxids = function(value, opt_
  * Clears the list making it empty but non-null.
  * @return {!proto.pb.GetSlpGraphSearchRequest} returns this
  */
-proto.pb.GetSlpGraphSearchRequest.prototype.clearValidTxidsList = function() {
-  return this.setValidTxidsList([]);
+proto.pb.GetSlpGraphSearchRequest.prototype.clearValidHashesList = function() {
+  return this.setValidHashesList([]);
 };
 
 

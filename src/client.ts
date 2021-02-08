@@ -294,7 +294,7 @@ export class GrpcClient {
         }
 
         if (requiredSlpBurns) {
-            this.addRequiredSlpBurns(requiredSlpBurns, req);
+            GrpcClient.addRequiredSlpBurns(requiredSlpBurns, req);
         }
 
         req.setTransaction(tx);
@@ -416,7 +416,7 @@ export class GrpcClient {
         }
 
         if (requiredSlpBurns) {
-            this.addRequiredSlpBurns(requiredSlpBurns, req);
+            GrpcClient.addRequiredSlpBurns(requiredSlpBurns, req);
         }
         req.setTransaction(tx);
         return new Promise((resolve, reject) => {
@@ -467,7 +467,7 @@ export class GrpcClient {
                         if (reversedHashOrder) {
                             hashBuf = hashBuf.slice().reverse();
                         }
-                        query.addGraphsearchValidTxids(hashBuf);
+                        query.addGraphsearchValidHashes(hashBuf);
                     });
                 }
                 query.setPrevOutHash(hash);
@@ -480,21 +480,6 @@ export class GrpcClient {
             }
 
             this.client.getTrustedSlpValidation(req, (err, data) => {
-                if (err !== null) { reject(err); } else { resolve(data!); }
-            });
-        });
-    }
-
-    public getBip44HdAddress({ xpub, isChange, addressIndex }:
-        {xpub: string, isChange: boolean, addressIndex: number }): Promise<bchrpc.GetBip44HdAddressResponse> {
-
-        return new Promise((resolve, reject) => {
-            const req = new bchrpc.GetBip44HdAddressRequest();
-            req.setXpub(xpub);
-            req.setChange(isChange);
-            req.setAddressIndex(addressIndex);
-
-            this.client.getBip44HdAddress(req, (err, data) => {
                 if (err !== null) { reject(err); } else { resolve(data!); }
             });
         });
@@ -525,11 +510,11 @@ export class GrpcClient {
         if (knownValidHashes) {
             if (reversedHashOrder) {
                 knownValidHashes.forEach((hash) => {
-                    req.addValidTxids(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
+                    req.addValidHashes(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))).reverse());
                 });
             } else {
                 knownValidHashes.forEach((hash) => {
-                    req.addValidTxids(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))));
+                    req.addValidHashes(new Uint8Array(hash.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16))));
                 });
             }
         }
@@ -567,8 +552,8 @@ export class GrpcClient {
         return this._NETWORK_HAS_INTEGRITY;
     }
 
-    private addRequiredSlpBurns(
-        requiredSlpBurns: Array<bchrpc.SlpRequiredBurn|ISlpRequiredBurn>, req: bchrpc.CheckSlpTransactionRequest) {
+    private static addRequiredSlpBurns(
+        requiredSlpBurns: Array<bchrpc.SlpRequiredBurn|ISlpRequiredBurn>, req: bchrpc.CheckSlpTransactionRequest|bchrpc.SubmitTransactionRequest) {
         const burns: bchrpc.SlpRequiredBurn[] = [];
 
         // convert a generic burn requirements object to pb type

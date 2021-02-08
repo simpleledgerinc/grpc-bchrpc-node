@@ -1108,6 +1108,9 @@ export class CheckSlpTransactionRequest extends jspb.Message {
     setRequiredSlpBurnsList(value: Array<SlpRequiredBurn>): CheckSlpTransactionRequest;
     addRequiredSlpBurns(value?: SlpRequiredBurn, index?: number): SlpRequiredBurn;
 
+    getDisableSlpBurnErrors(): boolean;
+    setDisableSlpBurnErrors(value: boolean): CheckSlpTransactionRequest;
+
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): CheckSlpTransactionRequest.AsObject;
@@ -1123,12 +1126,16 @@ export namespace CheckSlpTransactionRequest {
     export type AsObject = {
         transaction: Uint8Array | string,
         requiredSlpBurnsList: Array<SlpRequiredBurn.AsObject>,
+        disableSlpBurnErrors: boolean,
     }
 }
 
 export class CheckSlpTransactionResponse extends jspb.Message { 
     getIsValid(): boolean;
     setIsValid(value: boolean): CheckSlpTransactionResponse;
+
+    getInvalidReason(): string;
+    setInvalidReason(value: string): CheckSlpTransactionResponse;
 
 
     serializeBinary(): Uint8Array;
@@ -1144,6 +1151,7 @@ export class CheckSlpTransactionResponse extends jspb.Message {
 export namespace CheckSlpTransactionResponse {
     export type AsObject = {
         isValid: boolean,
+        invalidReason: string,
     }
 }
 
@@ -1414,12 +1422,12 @@ export namespace GetTrustedSlpValidationRequest {
         getPrevOutVout(): number;
         setPrevOutVout(value: number): Query;
 
-        clearGraphsearchValidTxidsList(): void;
-        getGraphsearchValidTxidsList(): Array<Uint8Array | string>;
-        getGraphsearchValidTxidsList_asU8(): Array<Uint8Array>;
-        getGraphsearchValidTxidsList_asB64(): Array<string>;
-        setGraphsearchValidTxidsList(value: Array<Uint8Array | string>): Query;
-        addGraphsearchValidTxids(value: Uint8Array | string, index?: number): Uint8Array | string;
+        clearGraphsearchValidHashesList(): void;
+        getGraphsearchValidHashesList(): Array<Uint8Array | string>;
+        getGraphsearchValidHashesList_asU8(): Array<Uint8Array>;
+        getGraphsearchValidHashesList_asB64(): Array<string>;
+        setGraphsearchValidHashesList(value: Array<Uint8Array | string>): Query;
+        addGraphsearchValidHashes(value: Uint8Array | string, index?: number): Uint8Array | string;
 
 
         serializeBinary(): Uint8Array;
@@ -1436,7 +1444,7 @@ export namespace GetTrustedSlpValidationRequest {
         export type AsObject = {
             prevOutHash: Uint8Array | string,
             prevOutVout: number,
-            graphsearchValidTxidsList: Array<Uint8Array | string>,
+            graphsearchValidHashesList: Array<Uint8Array | string>,
         }
     }
 
@@ -1550,12 +1558,12 @@ export class GetSlpGraphSearchRequest extends jspb.Message {
     getHash_asB64(): string;
     setHash(value: Uint8Array | string): GetSlpGraphSearchRequest;
 
-    clearValidTxidsList(): void;
-    getValidTxidsList(): Array<Uint8Array | string>;
-    getValidTxidsList_asU8(): Array<Uint8Array>;
-    getValidTxidsList_asB64(): Array<string>;
-    setValidTxidsList(value: Array<Uint8Array | string>): GetSlpGraphSearchRequest;
-    addValidTxids(value: Uint8Array | string, index?: number): Uint8Array | string;
+    clearValidHashesList(): void;
+    getValidHashesList(): Array<Uint8Array | string>;
+    getValidHashesList_asU8(): Array<Uint8Array>;
+    getValidHashesList_asB64(): Array<string>;
+    setValidHashesList(value: Array<Uint8Array | string>): GetSlpGraphSearchRequest;
+    addValidHashes(value: Uint8Array | string, index?: number): Uint8Array | string;
 
 
     serializeBinary(): Uint8Array;
@@ -1571,7 +1579,7 @@ export class GetSlpGraphSearchRequest extends jspb.Message {
 export namespace GetSlpGraphSearchRequest {
     export type AsObject = {
         hash: Uint8Array | string,
-        validTxidsList: Array<Uint8Array | string>,
+        validHashesList: Array<Uint8Array | string>,
     }
 }
 
