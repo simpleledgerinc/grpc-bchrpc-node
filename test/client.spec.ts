@@ -1,19 +1,20 @@
 import assert from "assert";
 import Big from "big.js";
 import fs from "fs";
-import { SlpRequiredBurn as ISlpRequiredBurn } from "grpc-bchrpc";
+import { SlpRequiredBurn as ISlpRequiredBurn, SlpV1GenesisMetadata, SlpV1MintMetadata } from "grpc-bchrpc";
 import { GetParsedSlpScriptResponse,
-    GetSlpGraphSearchResponse,
+            GetSlpGraphSearchResponse,
             GetTrustedSlpValidationResponse,
             GetUnspentOutputResponse,
             SlpRequiredBurn,
+            SlpTransactionInfo,
+            TokenMetadata,
             Transaction } from "../pb/bchrpc_pb";
 import { GrpcClient } from "../src/client";
 
 const scriptUnitTestData: SlpMsgTest[] = require("slp-unit-test-data/script_tests.json");
 
-const grpc = new GrpcClient();
-//const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "/home/james/.bchd/rpc.cert" });
+const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "" });
 
 const SCAN_KNOWN_BURNS = false;
 const CHECK_GRAPH_SEARCH = false;
@@ -159,6 +160,95 @@ describe("grpc-bchrpc-node", () => {
             );
         }
     });
+    it("getMempool", async () => {
+        const res1 = await grpc.getMempoolInfo();
+        assert.ok(res1.getSize());
+        const res2 = await grpc.getRawMempool({fullTransactions: true});
+        assert.ok(res2.getTransactionDataList().length);
+
+        // check for child NFTs with no group id
+        const txns = res2.getTransactionDataList();
+        const mintBatonTokenIds = new Set<string>();
+        console.log(`Looking through ${txns.length} mempool transactions`);
+        for (const txn of txns) {
+            const txid = Buffer.from(txn.getTransaction()!.getHash_asU8().reverse()).toString("hex");
+            const slpInfo = txn.getTransaction()!.getSlpTransactionInfo()!;
+            switch (slpInfo.getTxMetadataCase()!) {
+            case SlpTransactionInfo.TxMetadataCase.NFT1_CHILD_GENESIS:
+                console.log(`Mint (NFT1 Child Genesis): ${txid}`);
+                if (slpInfo.getNft1ChildGenesis()!.getGroupTokenId_asU8().length === 0) {
+                    console.log(`Missing NFT Group ID for txid: ${txid}`);
+                    assert.ok(false);
+                } else {
+                    const groupId = Buffer.from(slpInfo.getNft1ChildGenesis()!.getGroupTokenId_asU8()).toString("hex")
+                    console.log(`${txid} has group id ${groupId}`);
+                }
+                break;
+            case SlpTransactionInfo.TxMetadataCase.NFT1_CHILD_SEND:
+                console.log(`Mint (NFT1 Child Send): ${txid}`);
+                if (slpInfo.getNft1ChildSend()!.getGroupTokenId_asU8().length === 0) {
+                    console.log(`Missing NFT Group ID for txid: ${txid}`);
+                    assert.ok(false);
+                } else {
+                    const groupId = Buffer.from(slpInfo.getNft1ChildSend()!.getGroupTokenId_asU8()).toString("hex")
+                    console.log(`${txid} has group id ${groupId}`);
+                }
+                break;
+            case SlpTransactionInfo.TxMetadataCase.V1_MINT:
+            case SlpTransactionInfo.TxMetadataCase.V1_GENESIS:
+                var mintInfo: SlpV1GenesisMetadata|SlpV1MintMetadata;
+                switch (slpInfo.getTxMetadataCase()) {
+                case SlpTransactionInfo.TxMetadataCase.V1_GENESIS:
+                    //@ts-ignore
+                    mintInfo = slpInfo.getV1Genesis()!;
+                    break;
+                case SlpTransactionInfo.TxMetadataCase.V1_MINT:
+                    //@ts-ignore
+                    mintInfo = slpInfo.getV1Mint()!;
+                    break;
+                default:
+                    assert.ok(false);
+                }
+
+                if (mintInfo!.getMintBatonVout() > 1) {
+                    const tokenId = Buffer.from(slpInfo.getTokenId_asU8()).toString("hex");
+                    const tmRes = await grpc.getTokenMetadata([tokenId]);
+                    const t = tmRes.getTokenMetadataList()[0];
+
+                    let batonTxid: string;
+                    let batonVout: number;
+                    switch (t.getTypeMetadataCase()) {
+                    case TokenMetadata.TypeMetadataCase.TYPE1:
+                        console.log(`Mint (Type 1): ${txid}`);
+                        batonTxid = Buffer.from(tmRes.getTokenMetadataList()[0].getType1()!.getMintBatonTxid_asU8().reverse()).toString("hex");
+                        batonVout = tmRes.getTokenMetadataList()[0].getType1()!.getMintBatonVout();
+                        break;
+                    case TokenMetadata.TypeMetadataCase.NFT1_GROUP:
+                        console.log(`Mint (NFT1 Group): ${txid}`);
+                        batonTxid = Buffer.from(tmRes.getTokenMetadataList()[0].getNft1Group()!.getMintBatonTxid_asU8().reverse()).toString("hex");
+                        batonVout = tmRes.getTokenMetadataList()[0].getNft1Group()!.getMintBatonVout();
+                        break;
+                    default:
+                        assert.ok(false);    
+                    }
+
+                    if (txid !== batonTxid) {
+                        console.log(`Warn: Mismatch baton txid ${txid} tm has baton txid: ${batonTxid}`);
+                        mintBatonTokenIds.add(tokenId);
+                    } else {
+                        mintBatonTokenIds.delete(tokenId);
+                        assert.strictEqual(txid, batonTxid);
+                        assert.strictEqual(batonVout, mintInfo.getMintBatonVout());
+                    }
+                }
+            }
+        }
+        if (mintBatonTokenIds.size > 0) {
+            console.log(`Warn token ids: ${Array.from(mintBatonTokenIds.keys())}`);
+            // assert.ok(mintBatonTokenIds.size === 0);
+        }
+    });
+
     it("prevents BURNED_INPUTS_BAD_OPRETURN", async () => {
         const txid = "77d3f678e9283043cb59e3a34fb8921e4fa0442611e5508f40328d2f27adcc1b";
         const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
@@ -167,7 +257,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf });
         } catch (err) {
-            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn"), true);
+            assert.strictEqual(err.message.includes("OP_RETURN magic is wrong size"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -192,7 +282,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
         } catch (err) {
-            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn"), true);
+            assert.strictEqual(err.message.includes("OP_RETURN magic is wrong size"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -208,7 +298,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf });
         } catch (err) {
-            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: inputs greater than outputs"), true);
+            assert.strictEqual(err.message.includes("transaction includes slp token burn: inputs greater than outputs"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -248,7 +338,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf });
         } catch (err) {
-            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: slp input from wrong token"), true);
+            assert.strictEqual(err.message.includes("includes slp token burn: slp input from wrong token"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -295,13 +385,14 @@ describe("grpc-bchrpc-node", () => {
         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
         let doesPrevent = false;
         try {
-            await grpc.checkSlpTransaction({ txnBuf });
+            let res = await grpc.checkSlpTransaction({ txnBuf });
+            console.log(res);
         } catch (err) {
-            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn"), true);
+            assert.strictEqual(err.message.includes("transaction includes slp token burn: slp input from wrong token"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
-            throw Error("did not prevent burn");
+            throw Error(`did not prevent burn for: ${txid}`);
         }
     });
     it("allows BURNED_INPUTS_OTHER_TOKEN", async () => {
@@ -347,7 +438,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf });
         } catch (err) {
-            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: outputs less than inputs"), true);
+            assert.strictEqual(err.message.includes("invalid slp: outputs less than inputs"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -372,7 +463,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
         } catch (err) {
-            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: outputs less than inputs"), true);
+            assert.strictEqual(err.message.includes("invalid slp: outputs less than inputs"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -388,7 +479,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf });
         } catch (err) {
-            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: transaction is missing mint baton output"), true);
+            assert.strictEqual(err.message.includes("transaction includes slp token burn: transaction is missing mint baton output"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -412,7 +503,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
         } catch (err) {
-            assert.strictEqual(err.message.includes("submitted transaction rejected to prevent token burn: missing vout"), true);
+            assert.strictEqual(err.message.includes("transaction includes slp token burn: transaction is missing outputs"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -421,7 +512,7 @@ describe("grpc-bchrpc-node", () => {
     });
 
     if (SCAN_KNOWN_BURNS) {
-        describe("prevents burns for all transactions since height 654021", async () => {
+        describe("prevents burns for all transactions", async () => {
 
             const burnTypes = [
                 "BURNED_INPUTS_BAD_OPRETURN",
@@ -433,15 +524,15 @@ describe("grpc-bchrpc-node", () => {
 
             for (const burnType of burnTypes) {
 
-                    const filename = `./test/burns/${burnType}.txt`;
-                    const txids = fs.readFileSync(filename, "utf-8")
-                                        .split("\n")
-                                        .map((txid) => Buffer.from(txid, "hex").toString("hex"))
-                                        .filter((txid) => txid.length === 64);
+                const filename = `./test/burns/${burnType}.txt`;
+                const txids = fs.readFileSync(filename, "utf-8")
+                                    .split("\n")
+                                    .map((txid) => Buffer.from(txid, "hex").toString("hex"))
+                                    .filter((txid) => txid.length === 64);
 
-                    for (const txid of txids) {
+                for (const txid of txids) {
 
-                        it(txid, async () => {
+                    it(txid, async () => {
                         const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
                         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
                         let doesPrevent = false;
@@ -454,6 +545,48 @@ describe("grpc-bchrpc-node", () => {
                             throw Error("did not prevent burn");
                         }
 
+                    });
+                }
+            }
+        });
+
+        describe("does not prevents burns for any transactions, contains invalidReason", async () => {
+
+            const burnTypes = [
+                "BURNED_INPUTS_BAD_OPRETURN",
+                "BURNED_INPUTS_GREATER_THAN_OUTPUTS",
+                "BURNED_INPUTS_OTHER_TOKEN",
+                "BURNED_INPUTS_OUTPUTS_TOO_HIGH",
+                "BURNED_OUTPUTS_MISSING_BCH_VOUT"
+            ];
+
+            for (const burnType of burnTypes) {
+
+                const filename = `./test/burns/${burnType}.txt`;
+                const txids = fs.readFileSync(filename, "utf-8")
+                                    .split("\n")
+                                    .map((txid) => Buffer.from(txid, "hex").toString("hex"))
+                                    .filter((txid) => txid.length === 64);
+
+                for (const txid of txids) {
+
+                    it(txid, async () => {
+                        const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
+                        const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
+                        let doesPrevent = false;
+                        try {
+                            const res = await grpc.checkSlpTransaction({ txnBuf, disableSlpErrors: true });
+                            if (!res.getIsValid()) {
+                                assert.ok(res.getInvalidReason() !== "");
+                            } else {
+                                assert.ok(res.getInvalidReason() === "");
+                            }
+                        } catch (err) {
+                            doesPrevent = true;
+                        }
+                        if (doesPrevent) {
+                            throw Error("prevented burn");
+                        }
                     });
                 }
             }
@@ -542,6 +675,29 @@ describe("grpc-bchrpc-node", () => {
         assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 0);
     });
 
+    it("getTransaction - NFT1 child genesis", async () => {
+        const txidHex = "700f4bfc3e4c744ac12b4de07e2afddec8264e496c4b26c3a2b07567318d6c2b";
+        const res = await grpc.getTransaction({ hash: txidHex, reversedHashOrder: true, includeTokenMetadata: true });
+
+        const groupIdExpected = "a2987562a405648a6c5622ed6c205fca6169faa8afeb96a994b48010bd186a66";
+        let groupid_1 = Buffer.from(res.getTransaction()!.getSlpTransactionInfo()!.getNft1ChildGenesis()!.getGroupTokenId_asU8()).toString("hex");
+        let name = res.getTransaction()!.getSlpTransactionInfo()!.getNft1ChildGenesis()!.getName_asU8();
+        let groupid_2 = Buffer.from(res.getTokenMetadata()!.getNft1Child()!.getGroupId_asU8()).toString("hex");
+        //assert.strictEqual(groupid_1, groupIdExpected);
+        assert.strictEqual(groupid_2, groupIdExpected);
+    });
+
+    it("getTransaction - NFT1 child send", async () => {
+        const txidHex = "b8fed3e8f768c091329962b4b9785ba802752e270776d1e6446091c8b979b317";
+        const res = await grpc.getTransaction({ hash: txidHex, reversedHashOrder: true, includeTokenMetadata: true });
+
+        const groupIdExpected = "a2987562a405648a6c5622ed6c205fca6169faa8afeb96a994b48010bd186a66";
+        let groupid_1 = Buffer.from(res.getTransaction()!.getSlpTransactionInfo()!.getNft1ChildSend()!.getGroupTokenId_asU8()).toString("hex");
+        let groupid_2 = Buffer.from(res.getTokenMetadata()!.getNft1Child()!.getGroupId_asU8()).toString("hex");
+        assert.strictEqual(groupid_1, groupIdExpected);
+        assert.strictEqual(groupid_2, groupIdExpected);
+    });
+
     it("getTransaction - mint transaction", async () => {
         const txidHex = "59c30c1e6854a830632fa5486e39fd9243108a7534c3f0918e56aa2bf9f943f5";
         const res = await grpc.getTransaction({ hash: txidHex, reversedHashOrder: true, includeTokenMetadata: true });
@@ -591,6 +747,12 @@ describe("grpc-bchrpc-node", () => {
         // verify current Mint baton txid / vout
         assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonTxid().length === 32, true);
         assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 2);
+    });
+
+    it("checkSlpTransaction - passes on non-slp transaction with no slp inputs", async () => {
+        const txnBuf = Buffer.from("010000000159d32fbfac980633707f0ba1dd31bc2afca9883951555c71fb47ade981b23e2d000000006441865b06b787af0ad800c6a08f7e3527d63e882204da956af6adb701c618377fe19e2b8024e4a20a1d2c3a70d9adda3c4738ae4ae74a54f350752fb4c0b035eb18412102e5e692f3944761f33f2c83a8956a6cbf00ba263a2f345204f781d634a3d73497feffffff02a0860100000000001976a914a0d7b78ef706572ed79ad9d7d1af4f68ccbe9ede88ac101c3800000000001976a9146cdabebe0346f033a86408facf4ea07d552ba45188acd2280a00", "hex");
+        const res = await grpc.checkSlpTransaction({txnBuf});
+        assert.strictEqual(res.getIsValid(), false);        
     });
 
     it("checkSlpTransaction - returns error on missing inputs or outputs", async () => {

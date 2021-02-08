@@ -1,4 +1,3 @@
-import { reverse } from "dns";
 import * as fs from "fs";
 import * as grpc from "grpc";
 import { SlpRequiredBurn as ISlpRequiredBurn } from "grpc-bchrpc";
