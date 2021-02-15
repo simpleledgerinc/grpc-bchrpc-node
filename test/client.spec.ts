@@ -298,7 +298,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf });
         } catch (err) {
-            assert.strictEqual(err.message.includes("transaction includes slp token burn: inputs greater than outputs"), true);
+            assert.strictEqual(err.message.includes("inputs greater than outputs"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -438,7 +438,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf });
         } catch (err) {
-            assert.strictEqual(err.message.includes("invalid slp: outputs less than inputs"), true);
+            assert.strictEqual(err.message.includes("outputs greater than inputs"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -463,7 +463,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
         } catch (err) {
-            assert.strictEqual(err.message.includes("invalid slp: outputs less than inputs"), true);
+            assert.strictEqual(err.message.includes("invalid slp: outputs greater than inputs"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
