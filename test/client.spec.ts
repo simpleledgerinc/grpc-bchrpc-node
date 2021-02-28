@@ -338,7 +338,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             await grpc.checkSlpTransaction({ txnBuf });
         } catch (err) {
-            assert.strictEqual(err.message.includes("includes slp token burn: slp input from wrong token"), true);
+            assert.strictEqual(err.message.includes("input from the wrong token"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
@@ -388,7 +388,7 @@ describe("grpc-bchrpc-node", () => {
             let res = await grpc.checkSlpTransaction({ txnBuf });
             console.log(res);
         } catch (err) {
-            assert.strictEqual(err.message.includes("transaction includes slp token burn: slp input from wrong token"), true);
+            assert.strictEqual(err.message.includes("input from the wrong token"), true);
             doesPrevent = true;
         }
         if (! doesPrevent) {
