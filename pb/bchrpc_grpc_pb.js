@@ -81,28 +81,6 @@ function deserialize_pb_GetAddressUnspentOutputsResponse(buffer_arg) {
   return pb_bchrpc_pb.GetAddressUnspentOutputsResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_pb_GetBip44HdAddressRequest(arg) {
-  if (!(arg instanceof pb_bchrpc_pb.GetBip44HdAddressRequest)) {
-    throw new Error('Expected argument of type pb.GetBip44HdAddressRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_pb_GetBip44HdAddressRequest(buffer_arg) {
-  return pb_bchrpc_pb.GetBip44HdAddressRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_pb_GetBip44HdAddressResponse(arg) {
-  if (!(arg instanceof pb_bchrpc_pb.GetBip44HdAddressResponse)) {
-    throw new Error('Expected argument of type pb.GetBip44HdAddressResponse');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_pb_GetBip44HdAddressResponse(buffer_arg) {
-  return pb_bchrpc_pb.GetBip44HdAddressResponse.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
 function serialize_pb_GetBlockFilterRequest(arg) {
   if (!(arg instanceof pb_bchrpc_pb.GetBlockFilterRequest)) {
     throw new Error('Expected argument of type pb.GetBlockFilterRequest');
@@ -748,7 +726,7 @@ getMerkleProof: {
     responseSerialize: serialize_pb_GetMerkleProofResponse,
     responseDeserialize: deserialize_pb_GetMerkleProofResponse,
   },
-  // GetTokenMetadata return SLP token metadata for one or more tokens.
+  // GetTokenMetadata return slp token metadata for one or more tokens.
 //
 // **Requires SlpIndex**
 getTokenMetadata: {
@@ -762,7 +740,7 @@ getTokenMetadata: {
     responseSerialize: serialize_pb_GetTokenMetadataResponse,
     responseDeserialize: deserialize_pb_GetTokenMetadataResponse,
   },
-  // GetParsedSlpScript returns marshalled object from parsing an SLP pubKeyScript 
+  // GetParsedSlpScript returns marshalled object from parsing an slp pubKeyScript 
 // using goslp package.  This endpoint does not require SlpIndex.
 getParsedSlpScript: {
     path: '/pb.bchrpc/GetParsedSlpScript',
@@ -775,7 +753,7 @@ getParsedSlpScript: {
     responseSerialize: serialize_pb_GetParsedSlpScriptResponse,
     responseDeserialize: deserialize_pb_GetParsedSlpScriptResponse,
   },
-  // GetTrustedValidation returns SLP validity related information for one or more transactions.
+  // GetTrustedValidation returns slp validity related information for one or more transactions.
 //
 // **Requires SlpIndex**
 getTrustedSlpValidation: {
@@ -803,21 +781,7 @@ getSlpGraphSearch: {
     responseSerialize: serialize_pb_GetSlpGraphSearchResponse,
     responseDeserialize: deserialize_pb_GetSlpGraphSearchResponse,
   },
-  // GetBip44HdAddress returns an address associated with a provided xpub, address index, and
-// selecting either internal or external by setting the change boolean.  If SlpIndex is disabled
-// the slpAddress string will be an empty string.
-getBip44HdAddress: {
-    path: '/pb.bchrpc/GetBip44HdAddress',
-    requestStream: false,
-    responseStream: false,
-    requestType: pb_bchrpc_pb.GetBip44HdAddressRequest,
-    responseType: pb_bchrpc_pb.GetBip44HdAddressResponse,
-    requestSerialize: serialize_pb_GetBip44HdAddressRequest,
-    requestDeserialize: deserialize_pb_GetBip44HdAddressRequest,
-    responseSerialize: serialize_pb_GetBip44HdAddressResponse,
-    responseDeserialize: deserialize_pb_GetBip44HdAddressResponse,
-  },
-  // CheckSlpTransaction checks the SLP validity of an unbroadcasted transaction.
+  // CheckSlpTransaction checks the validity of a supposed slp transaction before it is broadcasted.
 checkSlpTransaction: {
     path: '/pb.bchrpc/CheckSlpTransaction',
     requestStream: false,

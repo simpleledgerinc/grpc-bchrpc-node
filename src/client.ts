@@ -8,7 +8,7 @@ export class GrpcClient {
     public client: bchrpc_grpc.bchrpcClient;
     private _testnet?: boolean;
     private _HAS_SLP_INDEX?: boolean;
-    private _NETWORK_HAS_INTEGRITY?: boolean;
+    private _HAS_NETWORK_INTEGRITY?: boolean;
 
     constructor({ url, rootCertPath, testnet, options }:
         { url?: string; rootCertPath?: string; testnet?: boolean, options?: object } = {}) {
@@ -32,8 +32,11 @@ export class GrpcClient {
         this._testnet = testnet;
 
         this._checkNetworkIntegrity((ok) => {
-            if (!ok) { this.client = new bchrpc_grpc.bchrpcClient("", credentials, {});
-        }});
+            if (!ok) {
+                console.log("grpc-bchrpc-node: failed network integrity check")
+                this.client = new bchrpc_grpc.bchrpcClient("", credentials, {});
+            }
+        });
     }
 
     public getMempoolInfo(): Promise<bchrpc.GetMempoolInfoResponse> {
@@ -395,13 +398,13 @@ export class GrpcClient {
         txnHex,
         txn,
         requiredSlpBurns,
-        disableSlpErrors,
+        useSpecValidityJudgement,
     }: {
         txnBuf?: Buffer,
         txnHex?: string,
         txn?: Uint8Array,
         requiredSlpBurns?: bchrpc.SlpRequiredBurn[]|ISlpRequiredBurn[],
-        disableSlpErrors?: boolean,
+        useSpecValidityJudgement?: boolean,
     } = {}): Promise<bchrpc.CheckSlpTransactionResponse> {
         let tx: string|Uint8Array;
         const req = new bchrpc.CheckSlpTransactionRequest();
@@ -416,8 +419,8 @@ export class GrpcClient {
             throw Error("Most provide either Hex string, Buffer, or Uint8Array");
         }
 
-        if (disableSlpErrors) {
-            req.setDisableSlpBurnErrors(true);
+        if (useSpecValidityJudgement) {
+            req.setUseSpecValidityJudgement(true);
         } else if (requiredSlpBurns) {
             GrpcClient.addRequiredSlpBurns(requiredSlpBurns, req);
         }
@@ -539,20 +542,20 @@ export class GrpcClient {
     }
 
     private async _checkNetworkIntegrity(callback: (result: boolean) => any): Promise<boolean> {
-        if (typeof this._NETWORK_HAS_INTEGRITY !== "boolean") {
-            this._NETWORK_HAS_INTEGRITY = false;
+        if (typeof this._HAS_NETWORK_INTEGRITY !== "boolean") {
+            this._HAS_NETWORK_INTEGRITY = false;
             let res: bchrpc.GetBlockInfoResponse|undefined;
             if (! this._testnet) {
                 try { res = await this.getBlockInfo({ hash: "000000000000000002ebadda97db6323ebfab5f3dc965b10386794635e760e21", reversedHashOrder: true }); } catch (_) { }
-                if (res) { this._NETWORK_HAS_INTEGRITY = true; }
+                if (res) { this._HAS_NETWORK_INTEGRITY = true; }
             } else {
                 try {
                     res = await this.getBlockInfo({ hash: "000000008bf44a528a09d203203a6a97c165cf53a92ecc27aed0b49b86a19564", reversedHashOrder: true });
-                } catch (_) { this._NETWORK_HAS_INTEGRITY = true; }
+                } catch (_) { this._HAS_NETWORK_INTEGRITY = true; }
             }
         }
-        callback(this._NETWORK_HAS_INTEGRITY);
-        return this._NETWORK_HAS_INTEGRITY;
+        callback(this._HAS_NETWORK_INTEGRITY);
+        return this._HAS_NETWORK_INTEGRITY;
     }
 
     private static addRequiredSlpBurns(

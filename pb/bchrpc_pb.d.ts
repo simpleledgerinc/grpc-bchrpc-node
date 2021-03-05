@@ -1108,8 +1108,8 @@ export class CheckSlpTransactionRequest extends jspb.Message {
     setRequiredSlpBurnsList(value: Array<SlpRequiredBurn>): CheckSlpTransactionRequest;
     addRequiredSlpBurns(value?: SlpRequiredBurn, index?: number): SlpRequiredBurn;
 
-    getDisableSlpBurnErrors(): boolean;
-    setDisableSlpBurnErrors(value: boolean): CheckSlpTransactionRequest;
+    getUseSpecValidityJudgement(): boolean;
+    setUseSpecValidityJudgement(value: boolean): CheckSlpTransactionRequest;
 
 
     serializeBinary(): Uint8Array;
@@ -1126,7 +1126,7 @@ export namespace CheckSlpTransactionRequest {
     export type AsObject = {
         transaction: Uint8Array | string,
         requiredSlpBurnsList: Array<SlpRequiredBurn.AsObject>,
-        disableSlpBurnErrors: boolean,
+        useSpecValidityJudgement: boolean,
     }
 }
 
@@ -1605,66 +1605,6 @@ export class GetSlpGraphSearchResponse extends jspb.Message {
 export namespace GetSlpGraphSearchResponse {
     export type AsObject = {
         txdataList: Array<Uint8Array | string>,
-    }
-}
-
-export class GetBip44HdAddressRequest extends jspb.Message { 
-    getXpub(): string;
-    setXpub(value: string): GetBip44HdAddressRequest;
-
-    getChange(): boolean;
-    setChange(value: boolean): GetBip44HdAddressRequest;
-
-    getAddressIndex(): number;
-    setAddressIndex(value: number): GetBip44HdAddressRequest;
-
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): GetBip44HdAddressRequest.AsObject;
-    static toObject(includeInstance: boolean, msg: GetBip44HdAddressRequest): GetBip44HdAddressRequest.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: GetBip44HdAddressRequest, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): GetBip44HdAddressRequest;
-    static deserializeBinaryFromReader(message: GetBip44HdAddressRequest, reader: jspb.BinaryReader): GetBip44HdAddressRequest;
-}
-
-export namespace GetBip44HdAddressRequest {
-    export type AsObject = {
-        xpub: string,
-        change: boolean,
-        addressIndex: number,
-    }
-}
-
-export class GetBip44HdAddressResponse extends jspb.Message { 
-    getPubKey(): Uint8Array | string;
-    getPubKey_asU8(): Uint8Array;
-    getPubKey_asB64(): string;
-    setPubKey(value: Uint8Array | string): GetBip44HdAddressResponse;
-
-    getCashAddr(): string;
-    setCashAddr(value: string): GetBip44HdAddressResponse;
-
-    getSlpAddr(): string;
-    setSlpAddr(value: string): GetBip44HdAddressResponse;
-
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): GetBip44HdAddressResponse.AsObject;
-    static toObject(includeInstance: boolean, msg: GetBip44HdAddressResponse): GetBip44HdAddressResponse.AsObject;
-    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: GetBip44HdAddressResponse, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): GetBip44HdAddressResponse;
-    static deserializeBinaryFromReader(message: GetBip44HdAddressResponse, reader: jspb.BinaryReader): GetBip44HdAddressResponse;
-}
-
-export namespace GetBip44HdAddressResponse {
-    export type AsObject = {
-        pubKey: Uint8Array | string,
-        cashAddr: string,
-        slpAddr: string,
     }
 }
 
@@ -2724,10 +2664,10 @@ export class TokenMetadataTokenType1 extends jspb.Message {
     getDecimals(): number;
     setDecimals(value: number): TokenMetadataTokenType1;
 
-    getMintBatonTxid(): Uint8Array | string;
-    getMintBatonTxid_asU8(): Uint8Array;
-    getMintBatonTxid_asB64(): string;
-    setMintBatonTxid(value: Uint8Array | string): TokenMetadataTokenType1;
+    getMintBatonHash(): Uint8Array | string;
+    getMintBatonHash_asU8(): Uint8Array;
+    getMintBatonHash_asB64(): string;
+    setMintBatonHash(value: Uint8Array | string): TokenMetadataTokenType1;
 
     getMintBatonVout(): number;
     setMintBatonVout(value: number): TokenMetadataTokenType1;
@@ -2750,7 +2690,7 @@ export namespace TokenMetadataTokenType1 {
         tokenDocumentUrl: Uint8Array | string,
         tokenDocumentHash: Uint8Array | string,
         decimals: number,
-        mintBatonTxid: Uint8Array | string,
+        mintBatonHash: Uint8Array | string,
         mintBatonVout: number,
     }
 }
@@ -2779,10 +2719,10 @@ export class TokenMetadataNFT1Group extends jspb.Message {
     getDecimals(): number;
     setDecimals(value: number): TokenMetadataNFT1Group;
 
-    getMintBatonTxid(): Uint8Array | string;
-    getMintBatonTxid_asU8(): Uint8Array;
-    getMintBatonTxid_asB64(): string;
-    setMintBatonTxid(value: Uint8Array | string): TokenMetadataNFT1Group;
+    getMintBatonHash(): Uint8Array | string;
+    getMintBatonHash_asU8(): Uint8Array;
+    getMintBatonHash_asB64(): string;
+    setMintBatonHash(value: Uint8Array | string): TokenMetadataNFT1Group;
 
     getMintBatonVout(): number;
     setMintBatonVout(value: number): TokenMetadataNFT1Group;
@@ -2805,7 +2745,7 @@ export namespace TokenMetadataNFT1Group {
         tokenDocumentUrl: Uint8Array | string,
         tokenDocumentHash: Uint8Array | string,
         decimals: number,
-        mintBatonTxid: Uint8Array | string,
+        mintBatonHash: Uint8Array | string,
         mintBatonVout: number,
     }
 }

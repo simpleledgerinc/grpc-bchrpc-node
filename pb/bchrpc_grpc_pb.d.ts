@@ -27,7 +27,6 @@ interface IbchrpcService extends grpc.ServiceDefinition<grpc.UntypedServiceImple
     getParsedSlpScript: IbchrpcService_IGetParsedSlpScript;
     getTrustedSlpValidation: IbchrpcService_IGetTrustedSlpValidation;
     getSlpGraphSearch: IbchrpcService_IGetSlpGraphSearch;
-    getBip44HdAddress: IbchrpcService_IGetBip44HdAddress;
     checkSlpTransaction: IbchrpcService_ICheckSlpTransaction;
     submitTransaction: IbchrpcService_ISubmitTransaction;
     subscribeTransactions: IbchrpcService_ISubscribeTransactions;
@@ -206,15 +205,6 @@ interface IbchrpcService_IGetSlpGraphSearch extends grpc.MethodDefinition<pb_bch
     responseSerialize: grpc.serialize<pb_bchrpc_pb.GetSlpGraphSearchResponse>;
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetSlpGraphSearchResponse>;
 }
-interface IbchrpcService_IGetBip44HdAddress extends grpc.MethodDefinition<pb_bchrpc_pb.GetBip44HdAddressRequest, pb_bchrpc_pb.GetBip44HdAddressResponse> {
-    path: "/pb.bchrpc/GetBip44HdAddress";
-    requestStream: false;
-    responseStream: false;
-    requestSerialize: grpc.serialize<pb_bchrpc_pb.GetBip44HdAddressRequest>;
-    requestDeserialize: grpc.deserialize<pb_bchrpc_pb.GetBip44HdAddressRequest>;
-    responseSerialize: grpc.serialize<pb_bchrpc_pb.GetBip44HdAddressResponse>;
-    responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetBip44HdAddressResponse>;
-}
 interface IbchrpcService_ICheckSlpTransaction extends grpc.MethodDefinition<pb_bchrpc_pb.CheckSlpTransactionRequest, pb_bchrpc_pb.CheckSlpTransactionResponse> {
     path: "/pb.bchrpc/CheckSlpTransaction";
     requestStream: false;
@@ -283,7 +273,6 @@ export interface IbchrpcServer {
     getParsedSlpScript: grpc.handleUnaryCall<pb_bchrpc_pb.GetParsedSlpScriptRequest, pb_bchrpc_pb.GetParsedSlpScriptResponse>;
     getTrustedSlpValidation: grpc.handleUnaryCall<pb_bchrpc_pb.GetTrustedSlpValidationRequest, pb_bchrpc_pb.GetTrustedSlpValidationResponse>;
     getSlpGraphSearch: grpc.handleUnaryCall<pb_bchrpc_pb.GetSlpGraphSearchRequest, pb_bchrpc_pb.GetSlpGraphSearchResponse>;
-    getBip44HdAddress: grpc.handleUnaryCall<pb_bchrpc_pb.GetBip44HdAddressRequest, pb_bchrpc_pb.GetBip44HdAddressResponse>;
     checkSlpTransaction: grpc.handleUnaryCall<pb_bchrpc_pb.CheckSlpTransactionRequest, pb_bchrpc_pb.CheckSlpTransactionResponse>;
     submitTransaction: grpc.handleUnaryCall<pb_bchrpc_pb.SubmitTransactionRequest, pb_bchrpc_pb.SubmitTransactionResponse>;
     subscribeTransactions: grpc.handleServerStreamingCall<pb_bchrpc_pb.SubscribeTransactionsRequest, pb_bchrpc_pb.TransactionNotification>;
@@ -349,9 +338,6 @@ export interface IbchrpcClient {
     getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
     getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
     getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
-    getBip44HdAddress(request: pb_bchrpc_pb.GetBip44HdAddressRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetBip44HdAddressResponse) => void): grpc.ClientUnaryCall;
-    getBip44HdAddress(request: pb_bchrpc_pb.GetBip44HdAddressRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetBip44HdAddressResponse) => void): grpc.ClientUnaryCall;
-    getBip44HdAddress(request: pb_bchrpc_pb.GetBip44HdAddressRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetBip44HdAddressResponse) => void): grpc.ClientUnaryCall;
     checkSlpTransaction(request: pb_bchrpc_pb.CheckSlpTransactionRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.CheckSlpTransactionResponse) => void): grpc.ClientUnaryCall;
     checkSlpTransaction(request: pb_bchrpc_pb.CheckSlpTransactionRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.CheckSlpTransactionResponse) => void): grpc.ClientUnaryCall;
     checkSlpTransaction(request: pb_bchrpc_pb.CheckSlpTransactionRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.CheckSlpTransactionResponse) => void): grpc.ClientUnaryCall;
@@ -426,9 +412,6 @@ export class bchrpcClient extends grpc.Client implements IbchrpcClient {
     public getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
     public getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
     public getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
-    public getBip44HdAddress(request: pb_bchrpc_pb.GetBip44HdAddressRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetBip44HdAddressResponse) => void): grpc.ClientUnaryCall;
-    public getBip44HdAddress(request: pb_bchrpc_pb.GetBip44HdAddressRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetBip44HdAddressResponse) => void): grpc.ClientUnaryCall;
-    public getBip44HdAddress(request: pb_bchrpc_pb.GetBip44HdAddressRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetBip44HdAddressResponse) => void): grpc.ClientUnaryCall;
     public checkSlpTransaction(request: pb_bchrpc_pb.CheckSlpTransactionRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.CheckSlpTransactionResponse) => void): grpc.ClientUnaryCall;
     public checkSlpTransaction(request: pb_bchrpc_pb.CheckSlpTransactionRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.CheckSlpTransactionResponse) => void): grpc.ClientUnaryCall;
     public checkSlpTransaction(request: pb_bchrpc_pb.CheckSlpTransactionRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.CheckSlpTransactionResponse) => void): grpc.ClientUnaryCall;

@@ -7,7 +7,6 @@
         {
             "type": "node",
             "request": "launch",
-            //"preLaunchTask": "tsc",
             "name": "Run Mocha",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "args": ["${workspaceRoot}/test/**/*.ts"],

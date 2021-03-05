@@ -16,49 +16,43 @@ const scriptUnitTestData: SlpMsgTest[] = require("slp-unit-test-data/script_test
 
 const grpc = new GrpcClient({ url: "localhost:8335", rootCertPath: "" });
 
-const SCAN_KNOWN_BURNS = false;
-const CHECK_GRAPH_SEARCH = false;
+const INCLUDE_KNOWN_BURNS_CHECKS = false;
+const INCLUDE_GRAPH_SEARCH_TESTS = false;
 
 describe("grpc-bchrpc-node", () => {
 
-    it("graph search without excludes", async function() {
-        this.timeout(5000);
-        if (CHECK_GRAPH_SEARCH) {
-            const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
-            const excludeList: string[] = [ ];
-            let res: GetSlpGraphSearchResponse;
-            console.time("GS");
-            try {
-                res = await grpc.getGraphSearchFor({ hash: txid, reversedHashOrder: true });
-            } catch (err) {
-                console.log(err.message);
-                throw err;
-            }
-            console.timeEnd("GS");
-            let graph = res.getTxdataList_asU8();
-            assert.strictEqual(graph.length, 33021);
-        }
-    });
-    it("trusted validation skips gs count", async () => {
-        if (CHECK_GRAPH_SEARCH) {
+    if (INCLUDE_GRAPH_SEARCH_TESTS) {
+        it("graph search without excludes", async function() {
+            this.timeout(5000);
+                const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
+                const excludeList: string[] = [ ];
+                let res: GetSlpGraphSearchResponse;
+                console.time("GS");
+                try {
+                    res = await grpc.getGraphSearchFor({ hash: txid, reversedHashOrder: true });
+                } catch (err) {
+                    console.log(err.message);
+                    throw err;
+                }
+                console.timeEnd("GS");
+                let graph = res.getTxdataList_asU8();
+                assert.strictEqual(graph.length, 33021);
+        });
+        it("trusted validation skips gs count", async () => {
             const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
 
             // check gs count results is skipped without gsKnownValidHashes
             let res2 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1}], reversedHashOrder: true });
             assert.strictEqual(res2.getResultsList()[0].getGraphsearchTxnCount(), 0);
-        }
-    });
-    it("trusted validation includes gs count", async () => {
-        if (CHECK_GRAPH_SEARCH) {
+        });
+        it("trusted validation includes gs count", async () => {
             const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
 
             // check gs count results matches original gs count
             let res3 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1 }], reversedHashOrder: true, includeGraphSearchCount: true });
             assert.strictEqual(res3.getResultsList()[0].getGraphsearchTxnCount(), 33021);
-        }
-    });
-    it("does graph search with excludes", async () => {
-        if (CHECK_GRAPH_SEARCH) {
+        });
+        it("does graph search with excludes", async () => {
             const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
             const excludeList: string[] = [
                 "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
@@ -76,31 +70,15 @@ describe("grpc-bchrpc-node", () => {
             console.timeEnd("GS");
             let graph = res.getTxdataList_asU8();
             assert.strictEqual(graph.length, 16);
-        }
-    });
-    it("trusted validation skips gs count", async () => {
-        if (CHECK_GRAPH_SEARCH) {
+        });
+        it("trusted validation skips gs count", async () => {
             const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
 
             // check gs count results is skipped without gsKnownValidHashes
             let res2 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1}], reversedHashOrder: true });
             assert.strictEqual(res2.getResultsList()[0].getGraphsearchTxnCount(), 0);
-        }
-    });
-    // it("test nyc1", async () => {
-    //     const txid = "880b268d3268d4639ba39948aa40e882a6847843c9b8a7da1d0d9d0f2c9dac13";
-    //     const grpc = new GrpcClient({url: "bchd.ny1.simpleledger.io"});
-    //     let res = await grpc.getTrustedSlpValidation({txos: [{hash: txid, vout:1}], reversedHashOrder: true, includeGraphSearchCount: true });
-    //     console.log(`NY1 ${res.getResultsList()[0].getGraphsearchTxnCount()}`);
-    // });
-    // it("test nl1", async () => {
-    //     const txid = "880b268d3268d4639ba39948aa40e882a6847843c9b8a7da1d0d9d0f2c9dac13";
-    //     const grpc = new GrpcClient({url: "bchd.nl1.simpleledger.io"});
-    //     let res = await grpc.getTrustedSlpValidation({txos: [{hash: txid, vout:1}], reversedHashOrder: true, includeGraphSearchCount: true });
-    //     console.log(`NL1 ${res.getResultsList()[0].getGraphsearchTxnCount()}`);
-    // });
-    it("trusted validation includes gs count", async () => {
-        if (CHECK_GRAPH_SEARCH) {
+        });
+        it("trusted validation includes gs count", async () => {
             const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
             const excludeList: string[] = [
                 "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
@@ -110,10 +88,8 @@ describe("grpc-bchrpc-node", () => {
             // check gs count results matches original gs count
             let res3 = await grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true });
             assert.strictEqual(res3.getResultsList()[0].getGraphsearchTxnCount(), 16);
-        }
-    });
-    it("graph search returns error when bad validity cache txn (from bad txid id) is provided", async () => {
-        if (CHECK_GRAPH_SEARCH) {
+        });
+        it("graph search returns error when bad validity cache txn (from bad txid id) is provided", async () => {
             const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
             const excludeList: string[] = [
                 "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
@@ -126,10 +102,8 @@ describe("grpc-bchrpc-node", () => {
                 grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true }),
                 { message: "13 INTERNAL: graph search validity txid cdab, error: invalid hash length of 2, want 32" }
             );
-        }
-    });
-    it("graph search returns error when bad validity cache txn (from wrong token id) is provided", async () => {
-        if (CHECK_GRAPH_SEARCH) {
+        });
+        it("graph search returns error when bad validity cache txn (from wrong token id) is provided", async () => {
             const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
             const excludeList: string[] = [
                 "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
@@ -142,10 +116,8 @@ describe("grpc-bchrpc-node", () => {
                 grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true }),
                 { message: "13 INTERNAL: client provided validity cache with hash f9134cae8682a9bb98ed1949c983b391eceb5bea9744e0c6a538f83383681221 that is not in the token graph" }
             );
-        }
-    });
-    it("graph search returns error when bad validity cache txn (non-slp txid) is provided", () => {
-        if (CHECK_GRAPH_SEARCH) {
+        });
+        it("graph search returns error when bad validity cache txn (non-slp txid) is provided", () => {
             const txid = "3ff425384539519e815507f7f6739d9c12a44af84ff895601606b85157e0fb19";
             const excludeList: string[] = [
                 "daaac179106abf8ca2946ee7415d9cca1c6648ce1ba1f5ce3dd4e7ad090482a7",
@@ -158,8 +130,8 @@ describe("grpc-bchrpc-node", () => {
                 grpc.getTrustedSlpValidation({ txos: [{hash: txid, vout: 1, gsKnownValidHashes: excludeList }], reversedHashOrder: true, includeGraphSearchCount: true }), 
                 { message: "13 INTERNAL: client provided validity cache with hash 089a032d3e0ba9f883f854edc753e3c6d3ed0eedc42bca7d27c3a0f87113ca06 that is not in the token graph" }
             );
-        }
-    });
+        });
+    }
     it("getMempool", async () => {
         const res1 = await grpc.getMempoolInfo();
         assert.ok(res1.getSize());
@@ -220,12 +192,12 @@ describe("grpc-bchrpc-node", () => {
                     switch (t.getTypeMetadataCase()) {
                     case TokenMetadata.TypeMetadataCase.TYPE1:
                         console.log(`Mint (Type 1): ${txid}`);
-                        batonTxid = Buffer.from(tmRes.getTokenMetadataList()[0].getType1()!.getMintBatonTxid_asU8().reverse()).toString("hex");
+                        batonTxid = Buffer.from(tmRes.getTokenMetadataList()[0].getType1()!.getMintBatonHash_asU8().reverse()).toString("hex");
                         batonVout = tmRes.getTokenMetadataList()[0].getType1()!.getMintBatonVout();
                         break;
                     case TokenMetadata.TypeMetadataCase.NFT1_GROUP:
                         console.log(`Mint (NFT1 Group): ${txid}`);
-                        batonTxid = Buffer.from(tmRes.getTokenMetadataList()[0].getNft1Group()!.getMintBatonTxid_asU8().reverse()).toString("hex");
+                        batonTxid = Buffer.from(tmRes.getTokenMetadataList()[0].getNft1Group()!.getMintBatonHash_asU8().reverse()).toString("hex");
                         batonVout = tmRes.getTokenMetadataList()[0].getNft1Group()!.getMintBatonVout();
                         break;
                     default:
@@ -253,16 +225,11 @@ describe("grpc-bchrpc-node", () => {
         const txid = "77d3f678e9283043cb59e3a34fb8921e4fa0442611e5508f40328d2f27adcc1b";
         const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
-        let doesPrevent = false;
-        try {
-            await grpc.checkSlpTransaction({ txnBuf });
-        } catch (err) {
-            assert.strictEqual(err.message.includes("OP_RETURN magic is wrong size"), true);
-            doesPrevent = true;
+        const res = await grpc.checkSlpTransaction({ txnBuf });
+        if (res.getIsValid()) {
+            throw Error("bad validity judgement");
         }
-        if (! doesPrevent) {
-            throw Error("did not prevent burn");
-        }
+        assert.strictEqual(res.getInvalidReason().includes("OP_RETURN magic is wrong size"), true);
     });
     it("prevents BURNED_INPUTS_BAD_OPRETURN even with specifying a required burn", async () => {
         const txid = "77d3f678e9283043cb59e3a34fb8921e4fa0442611e5508f40328d2f27adcc1b";
@@ -278,32 +245,22 @@ describe("grpc-bchrpc-node", () => {
             Buffer.from("4de69e374a8ed21cbddd47f2338cc0f479dc58daa2bbe11cd604ca488eca0ddf", "hex"));
         requiredSlpBurn.setTokenType(1);
         requiredSlpBurn.setAmount("10000000000");
-        let doesPrevent = false;
-        try {
-            await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
-        } catch (err) {
-            assert.strictEqual(err.message.includes("OP_RETURN magic is wrong size"), true);
-            doesPrevent = true;
+        let res = await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
+        if (res.getIsValid()) {
+            throw Error("bad validity judgement");
         }
-        if (! doesPrevent) {
-            throw Error("did not prevent burn");
-        }
+        assert.strictEqual(res.getInvalidReason().includes("OP_RETURN magic is wrong size"), true);
     });
 
     it("prevents BURNED_INPUTS_GREATER_THAN_OUTPUTS ", async () => {
         const txid = "e851cdfed152677ea7104526eee44a72653daa7fc1e654547a6056082f588643";
         const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
-        let doesPrevent = false;
-        try {
-            await grpc.checkSlpTransaction({ txnBuf });
-        } catch (err) {
-            assert.strictEqual(err.message.includes("inputs greater than outputs"), true);
-            doesPrevent = true;
+        let res = await grpc.checkSlpTransaction({ txnBuf });
+        if (res.getIsValid()) {
+            throw Error("bad validity judgement");
         }
-        if (! doesPrevent) {
-            throw Error("did not prevent burn");
-        }
+        assert.strictEqual(res.getInvalidReason().includes("inputs are greater than outputs"), true);
     });
     it("allows BURNED_INPUTS_GREATER_THAN_OUTPUTS", async () => {
         const txid = "e851cdfed152677ea7104526eee44a72653daa7fc1e654547a6056082f588643";
@@ -334,16 +291,11 @@ describe("grpc-bchrpc-node", () => {
         const txid = "62a297501652f333335f2cc6f42b575a56dcf582ff2a857e02c0bd3df67564fd";
         const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
-        let doesPrevent = false;
-        try {
-            await grpc.checkSlpTransaction({ txnBuf });
-        } catch (err) {
-            assert.strictEqual(err.message.includes("input from the wrong token"), true);
-            doesPrevent = true;
+        let res = await grpc.checkSlpTransaction({ txnBuf });
+        if (res.getIsValid()) {
+            throw Error("bad validity judgement");
         }
-        if (! doesPrevent) {
-            throw Error("did not prevent burn");
-        }
+        assert.strictEqual(res.getInvalidReason().includes("input from the wrong token"), true);
     });
     it("allows BURNED_INPUTS_OTHER_TOKEN, for ending a mint baton", async () => {
         const txid = "62a297501652f333335f2cc6f42b575a56dcf582ff2a857e02c0bd3df67564fd";
@@ -383,17 +335,11 @@ describe("grpc-bchrpc-node", () => {
         const txid = "6de528ad5cd7e5b704070e27a02a39d08c5c05d5ce1dbb9b0ef76682ff1ea34e";
         const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
-        let doesPrevent = false;
-        try {
-            let res = await grpc.checkSlpTransaction({ txnBuf });
-            console.log(res);
-        } catch (err) {
-            assert.strictEqual(err.message.includes("input from the wrong token"), true);
-            doesPrevent = true;
+        let res = await grpc.checkSlpTransaction({ txnBuf });
+        if (res.getIsValid()) {
+            throw Error(`bad validity judgement for: ${txid}`);
         }
-        if (! doesPrevent) {
-            throw Error(`did not prevent burn for: ${txid}`);
-        }
+        assert.strictEqual(res.getInvalidReason().includes("input from the wrong token"), true);
     });
     it("allows BURNED_INPUTS_OTHER_TOKEN", async () => {
         const txid = "6de528ad5cd7e5b704070e27a02a39d08c5c05d5ce1dbb9b0ef76682ff1ea34e";
@@ -434,16 +380,11 @@ describe("grpc-bchrpc-node", () => {
         const txid = "717e47c1edd0fb377a7ae208347ccc31a8a0daa500d477a3c9b8734c92f9e8be";
         const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
-        let doesPrevent = false;
-        try {
-            await grpc.checkSlpTransaction({ txnBuf });
-        } catch (err) {
-            assert.strictEqual(err.message.includes("outputs greater than inputs"), true);
-            doesPrevent = true;
+        let res = await grpc.checkSlpTransaction({ txnBuf });
+        if (res.getIsValid()) {
+            throw Error("bad validity judgement");
         }
-        if (! doesPrevent) {
-            throw Error("did not prevent burn");
-        }
+        assert.strictEqual(res.getInvalidReason().includes("outputs greater than inputs"), true);
     });
     it("prevents BURNED_INPUTS_OUTPUTS_TOO_HIGH even with specifying a required burn", async () => {
         const txid = "717e47c1edd0fb377a7ae208347ccc31a8a0daa500d477a3c9b8734c92f9e8be";
@@ -459,16 +400,11 @@ describe("grpc-bchrpc-node", () => {
             Buffer.from("a5355579085f9476b681ba909689e64c62e849b7142b607ab5cf1ef465caa9b5", "hex"));
         requiredSlpBurn.setTokenType(1);
         requiredSlpBurn.setAmount("10");
-        let doesPrevent = false;
-        try {
-            await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
-        } catch (err) {
-            assert.strictEqual(err.message.includes("invalid slp: outputs greater than inputs"), true);
-            doesPrevent = true;
+        let res = await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
+        if (res.getIsValid()) {
+            throw Error("bad validity judgement");
         }
-        if (! doesPrevent) {
-            throw Error("did not prevent burn");
-        }
+        assert.strictEqual(res.getInvalidReason().includes("outputs greater than inputs"), true);
     });
 
     it("prevents BURNED_OUTPUTS_MISSING_BCH_VOUT missing mint baton vout", async () => {
@@ -476,15 +412,11 @@ describe("grpc-bchrpc-node", () => {
         const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
         let doesPrevent = false;
-        try {
-            await grpc.checkSlpTransaction({ txnBuf });
-        } catch (err) {
-            assert.strictEqual(err.message.includes("transaction includes slp token burn: transaction is missing mint baton output"), true);
-            doesPrevent = true;
+        let res = await grpc.checkSlpTransaction({ txnBuf });
+        if (res.getIsValid()) {
+            throw Error("bad validity judgement");
         }
-        if (! doesPrevent) {
-            throw Error("did not prevent burn");
-        }
+        assert.strictEqual(res.getInvalidReason().includes("transaction includes slp token burn: transaction is missing mint baton output"), true);
     });
     it("prevents BURNED_OUTPUTS_MISSING_BCH_VOUT even with specifying a required burn", async () => {
         const txid = "ab085364157ae90d0f96262c17a522367088b06192494cac05dcbbb4236bafd8";
@@ -498,20 +430,14 @@ describe("grpc-bchrpc-node", () => {
             Buffer.from("0df768b5485c72645de069b68f66d02205c26f827c608ef5ffa976266d753d50", "hex"));
         requiredSlpBurn.setTokenType(1);
         requiredSlpBurn.setAmount("1099000000000000");
-
-        let doesPrevent = false;
-        try {
-            await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
-        } catch (err) {
-            assert.strictEqual(err.message.includes("transaction includes slp token burn: transaction is missing outputs"), true);
-            doesPrevent = true;
+        let res = await grpc.checkSlpTransaction({ txnBuf, requiredSlpBurns: [requiredSlpBurn] });
+        if (res.getIsValid()) {
+            throw Error("bad validity judgement");
         }
-        if (! doesPrevent) {
-            throw Error("did not prevent burn");
-        }
+        assert.strictEqual(res.getInvalidReason().includes("transaction includes slp token burn: transaction is missing outputs"), true);
     });
 
-    if (SCAN_KNOWN_BURNS) {
+    if (INCLUDE_KNOWN_BURNS_CHECKS) {
         describe("prevents burns for all transactions", async () => {
 
             const burnTypes = [
@@ -542,7 +468,7 @@ describe("grpc-bchrpc-node", () => {
                             doesPrevent = true;
                         }
                         if (! doesPrevent) {
-                            throw Error("did not prevent burn");
+                            throw Error("bad validity judgement");
                         }
 
                     });
@@ -575,7 +501,7 @@ describe("grpc-bchrpc-node", () => {
                         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
                         let doesPrevent = false;
                         try {
-                            const res = await grpc.checkSlpTransaction({ txnBuf, disableSlpErrors: true });
+                            const res = await grpc.checkSlpTransaction({ txnBuf, useSpecValidityJudgement: true });
                             if (!res.getIsValid()) {
                                 assert.ok(res.getInvalidReason() !== "");
                             } else {
@@ -596,7 +522,7 @@ describe("grpc-bchrpc-node", () => {
     it("getBlockchainInfo", async () => {
         const info = await grpc.getBlockchainInfo();
         assert.ok(info.getSlpIndex());
-        if (CHECK_GRAPH_SEARCH) {
+        if (INCLUDE_GRAPH_SEARCH_TESTS) {
             assert.ok(info.getSlpGraphsearch());
         }
         assert.ok(info.getTxIndex());
@@ -650,7 +576,7 @@ describe("grpc-bchrpc-node", () => {
         assert.strictEqual(Buffer.from(res.getTokenMetadata()!.getTokenId_asU8()!).toString("hex"), "4de69e374a8ed21cbddd47f2338cc0f479dc58daa2bbe11cd604ca488eca0ddf");
 
         // verify current Mint baton txid / vout
-        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonTxid(), "");
+        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonHash(), "");
         assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 0);
     });
 
@@ -671,7 +597,7 @@ describe("grpc-bchrpc-node", () => {
         assert.strictEqual(totalOut.cmp(Big("18446744073709551615")), 0);
 
         // verify Mint baton txid / vout
-        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonTxid(), "");
+        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonHash(), "");
         assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 0);
     });
 
@@ -745,7 +671,7 @@ describe("grpc-bchrpc-node", () => {
         assert.strictEqual(Buffer.from(res.getTokenMetadata()!.getTokenId_asU8()!).toString("hex"), "d6876f0fce603be43f15d34348bb1de1a8d688e1152596543da033a060cff798");
 
         // verify current Mint baton txid / vout
-        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonTxid().length === 32, true);
+        assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonHash().length === 32, true);
         assert.strictEqual(res.getTokenMetadata()!.getType1()!.getMintBatonVout(), 2);
     });
 
@@ -772,7 +698,7 @@ describe("grpc-bchrpc-node", () => {
         const tm = res.getTokenMetadataList()![0];
 
         // check minting baton txid & vout
-        assert.strictEqual(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8().slice().reverse()).toString("hex"),
+        assert.strictEqual(Buffer.from(tm.getType1()!.getMintBatonHash_asU8().slice().reverse()).toString("hex"),
             "33e504ca8d11d4d928f6439729a05074cd50ac8ba8d43570d452eff203d840e4");
         assert.strictEqual(tm.getType1()!.getMintBatonVout(), 2);
 
@@ -800,7 +726,7 @@ describe("grpc-bchrpc-node", () => {
         const res = await grpc.getTokenMetadata([ tokenID ]);
         const tm = res.getTokenMetadataList()![0];
 
-        assert.strictEqual(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8()).toString("hex"), "");
+        assert.strictEqual(Buffer.from(tm.getType1()!.getMintBatonHash_asU8()).toString("hex"), "");
     });
 
     it("getTokenMetadata for token with burned minting baton after Mint", async () => {
@@ -808,7 +734,7 @@ describe("grpc-bchrpc-node", () => {
         const res = await grpc.getTokenMetadata([ tokenID ]);
         const tm = res.getTokenMetadataList()![0];
 
-        assert.strictEqual(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8()).toString("hex"), "");
+        assert.strictEqual(Buffer.from(tm.getType1()!.getMintBatonHash_asU8()).toString("hex"), "");
     });
 
     it("getTokenMetadata for token with burned", async () => {
@@ -816,7 +742,7 @@ describe("grpc-bchrpc-node", () => {
         const res = await grpc.getTokenMetadata([ tokenID ]);
         const tm = res.getTokenMetadataList()![0];
 
-        assert.strictEqual(Buffer.from(tm.getType1()!.getMintBatonTxid_asU8()).toString("hex"), "");
+        assert.strictEqual(Buffer.from(tm.getType1()!.getMintBatonHash_asU8()).toString("hex"), "");
     });
 
     it("getAddressUnspentOutputs", async () => {
@@ -1102,7 +1028,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
-            assert.strictEqual(err.message.includes("vout is not a valid SLP output"), true);
+            assert.strictEqual(err.message.includes("vout is not a valid slp output"), true);
             return;
         }
         throw Error("test did not throw");
@@ -1117,7 +1043,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
-            assert.strictEqual(err.message.includes("vout is not a valid SLP output"), true);
+            assert.strictEqual(err.message.includes("vout is not a valid slp output"), true);
             return;
         }
         throw Error("test did not throw");
@@ -1132,7 +1058,7 @@ describe("grpc-bchrpc-node", () => {
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
-            assert.strictEqual(err.message.includes("vout is not a valid SLP output"), true);
+            assert.strictEqual(err.message.includes("vout is not a valid slp output"), true);
             return;
         }
         throw Error("test did not throw");
