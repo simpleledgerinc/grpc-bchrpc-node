@@ -416,7 +416,7 @@ describe("grpc-bchrpc-node", () => {
         if (res.getIsValid()) {
             throw Error("bad validity judgement");
         }
-        assert.strictEqual(res.getInvalidReason().includes("transaction includes slp token burn: transaction is missing mint baton output"), true);
+        assert.strictEqual(res.getInvalidReason().includes("transaction is missing mint baton output"), true);
     });
     it("prevents BURNED_OUTPUTS_MISSING_BCH_VOUT even with specifying a required burn", async () => {
         const txid = "ab085364157ae90d0f96262c17a522367088b06192494cac05dcbbb4236bafd8";
@@ -434,7 +434,7 @@ describe("grpc-bchrpc-node", () => {
         if (res.getIsValid()) {
             throw Error("bad validity judgement");
         }
-        assert.strictEqual(res.getInvalidReason().includes("transaction includes slp token burn: transaction is missing outputs"), true);
+        assert.strictEqual(res.getInvalidReason().includes("transaction is missing outputs"), true);
     });
 
     if (INCLUDE_KNOWN_BURNS_CHECKS) {
