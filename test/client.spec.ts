@@ -461,22 +461,16 @@ describe("grpc-bchrpc-node", () => {
                     it(txid, async () => {
                         const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
                         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
-                        let doesPrevent = false;
-                        try {
-                            await grpc.checkSlpTransaction({ txnBuf });
-                        } catch (err) {
-                            doesPrevent = true;
-                        }
-                        if (! doesPrevent) {
+                        let res = await grpc.checkSlpTransaction({ txnBuf });
+                        if (res.getIsValid()) {
                             throw Error("bad validity judgement");
                         }
-
                     });
                 }
             }
         });
 
-        describe("does not prevents burns for any transactions, contains invalidReason", async () => {
+        describe("check all invalid contains invalidReason", async () => {
 
             const burnTypes = [
                 "BURNED_INPUTS_BAD_OPRETURN",
@@ -499,20 +493,12 @@ describe("grpc-bchrpc-node", () => {
                     it(txid, async () => {
                         const txnRes = await grpc.getRawTransaction({ hash: txid, reversedHashOrder: true });
                         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
-                        let doesPrevent = false;
-                        try {
-                            const res = await grpc.checkSlpTransaction({ txnBuf, useSpecValidityJudgement: true });
+                        const res = await grpc.checkSlpTransaction({ txnBuf });
                             if (!res.getIsValid()) {
                                 assert.ok(res.getInvalidReason() !== "");
                             } else {
                                 assert.ok(res.getInvalidReason() === "");
                             }
-                        } catch (err) {
-                            doesPrevent = true;
-                        }
-                        if (doesPrevent) {
-                            throw Error("prevented burn");
-                        }
                     });
                 }
             }
