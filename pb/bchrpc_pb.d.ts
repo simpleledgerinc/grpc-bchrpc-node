@@ -1332,16 +1332,16 @@ export class GetParsedSlpScriptResponse extends jspb.Message {
     setV1Send(value?: SlpV1SendMetadata): GetParsedSlpScriptResponse;
 
 
-    hasNft1ChildGenesis(): boolean;
-    clearNft1ChildGenesis(): void;
-    getNft1ChildGenesis(): SlpNft1ChildGenesisMetadata | undefined;
-    setNft1ChildGenesis(value?: SlpNft1ChildGenesisMetadata): GetParsedSlpScriptResponse;
+    hasV1Nft1ChildGenesis(): boolean;
+    clearV1Nft1ChildGenesis(): void;
+    getV1Nft1ChildGenesis(): SlpV1Nft1ChildGenesisMetadata | undefined;
+    setV1Nft1ChildGenesis(value?: SlpV1Nft1ChildGenesisMetadata): GetParsedSlpScriptResponse;
 
 
-    hasNft1ChildSend(): boolean;
-    clearNft1ChildSend(): void;
-    getNft1ChildSend(): SlpNft1ChildSendMetadata | undefined;
-    setNft1ChildSend(value?: SlpNft1ChildSendMetadata): GetParsedSlpScriptResponse;
+    hasV1Nft1ChildSend(): boolean;
+    clearV1Nft1ChildSend(): void;
+    getV1Nft1ChildSend(): SlpV1Nft1ChildSendMetadata | undefined;
+    setV1Nft1ChildSend(value?: SlpV1Nft1ChildSendMetadata): GetParsedSlpScriptResponse;
 
 
     getSlpMetadataCase(): GetParsedSlpScriptResponse.SlpMetadataCase;
@@ -1365,8 +1365,8 @@ export namespace GetParsedSlpScriptResponse {
         v1Genesis?: SlpV1GenesisMetadata.AsObject,
         v1Mint?: SlpV1MintMetadata.AsObject,
         v1Send?: SlpV1SendMetadata.AsObject,
-        nft1ChildGenesis?: SlpNft1ChildGenesisMetadata.AsObject,
-        nft1ChildSend?: SlpNft1ChildSendMetadata.AsObject,
+        v1Nft1ChildGenesis?: SlpV1Nft1ChildGenesisMetadata.AsObject,
+        v1Nft1ChildSend?: SlpV1Nft1ChildSendMetadata.AsObject,
     }
 
     export enum SlpMetadataCase {
@@ -1378,9 +1378,9 @@ export namespace GetParsedSlpScriptResponse {
 
     V1_SEND = 7,
 
-    NFT1_CHILD_GENESIS = 8,
+    V1_NFT1_CHILD_GENESIS = 8,
 
-    NFT1_CHILD_SEND = 9,
+    V1_NFT1_CHILD_SEND = 9,
 
     }
 
@@ -2334,16 +2334,16 @@ export class SlpTransactionInfo extends jspb.Message {
     setV1Send(value?: SlpV1SendMetadata): SlpTransactionInfo;
 
 
-    hasNft1ChildGenesis(): boolean;
-    clearNft1ChildGenesis(): void;
-    getNft1ChildGenesis(): SlpNft1ChildGenesisMetadata | undefined;
-    setNft1ChildGenesis(value?: SlpNft1ChildGenesisMetadata): SlpTransactionInfo;
+    hasV1Nft1ChildGenesis(): boolean;
+    clearV1Nft1ChildGenesis(): void;
+    getV1Nft1ChildGenesis(): SlpV1Nft1ChildGenesisMetadata | undefined;
+    setV1Nft1ChildGenesis(value?: SlpV1Nft1ChildGenesisMetadata): SlpTransactionInfo;
 
 
-    hasNft1ChildSend(): boolean;
-    clearNft1ChildSend(): void;
-    getNft1ChildSend(): SlpNft1ChildSendMetadata | undefined;
-    setNft1ChildSend(value?: SlpNft1ChildSendMetadata): SlpTransactionInfo;
+    hasV1Nft1ChildSend(): boolean;
+    clearV1Nft1ChildSend(): void;
+    getV1Nft1ChildSend(): SlpV1Nft1ChildSendMetadata | undefined;
+    setV1Nft1ChildSend(value?: SlpV1Nft1ChildSendMetadata): SlpTransactionInfo;
 
 
     getTxMetadataCase(): SlpTransactionInfo.TxMetadataCase;
@@ -2368,8 +2368,8 @@ export namespace SlpTransactionInfo {
         v1Genesis?: SlpV1GenesisMetadata.AsObject,
         v1Mint?: SlpV1MintMetadata.AsObject,
         v1Send?: SlpV1SendMetadata.AsObject,
-        nft1ChildGenesis?: SlpNft1ChildGenesisMetadata.AsObject,
-        nft1ChildSend?: SlpNft1ChildSendMetadata.AsObject,
+        v1Nft1ChildGenesis?: SlpV1Nft1ChildGenesisMetadata.AsObject,
+        v1Nft1ChildSend?: SlpV1Nft1ChildSendMetadata.AsObject,
     }
 
     export enum ValidityJudgement {
@@ -2395,9 +2395,9 @@ export namespace SlpTransactionInfo {
 
     V1_SEND = 8,
 
-    NFT1_CHILD_GENESIS = 9,
+    V1_NFT1_CHILD_GENESIS = 9,
 
-    NFT1_CHILD_SEND = 10,
+    V1_NFT1_CHILD_SEND = 10,
 
     }
 
@@ -2504,47 +2504,47 @@ export namespace SlpV1SendMetadata {
     }
 }
 
-export class SlpNft1ChildGenesisMetadata extends jspb.Message { 
+export class SlpV1Nft1ChildGenesisMetadata extends jspb.Message { 
     getName(): Uint8Array | string;
     getName_asU8(): Uint8Array;
     getName_asB64(): string;
-    setName(value: Uint8Array | string): SlpNft1ChildGenesisMetadata;
+    setName(value: Uint8Array | string): SlpV1Nft1ChildGenesisMetadata;
 
     getTicker(): Uint8Array | string;
     getTicker_asU8(): Uint8Array;
     getTicker_asB64(): string;
-    setTicker(value: Uint8Array | string): SlpNft1ChildGenesisMetadata;
+    setTicker(value: Uint8Array | string): SlpV1Nft1ChildGenesisMetadata;
 
     getDocumentUrl(): Uint8Array | string;
     getDocumentUrl_asU8(): Uint8Array;
     getDocumentUrl_asB64(): string;
-    setDocumentUrl(value: Uint8Array | string): SlpNft1ChildGenesisMetadata;
+    setDocumentUrl(value: Uint8Array | string): SlpV1Nft1ChildGenesisMetadata;
 
     getDocumentHash(): Uint8Array | string;
     getDocumentHash_asU8(): Uint8Array;
     getDocumentHash_asB64(): string;
-    setDocumentHash(value: Uint8Array | string): SlpNft1ChildGenesisMetadata;
+    setDocumentHash(value: Uint8Array | string): SlpV1Nft1ChildGenesisMetadata;
 
     getDecimals(): number;
-    setDecimals(value: number): SlpNft1ChildGenesisMetadata;
+    setDecimals(value: number): SlpV1Nft1ChildGenesisMetadata;
 
     getGroupTokenId(): Uint8Array | string;
     getGroupTokenId_asU8(): Uint8Array;
     getGroupTokenId_asB64(): string;
-    setGroupTokenId(value: Uint8Array | string): SlpNft1ChildGenesisMetadata;
+    setGroupTokenId(value: Uint8Array | string): SlpV1Nft1ChildGenesisMetadata;
 
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): SlpNft1ChildGenesisMetadata.AsObject;
-    static toObject(includeInstance: boolean, msg: SlpNft1ChildGenesisMetadata): SlpNft1ChildGenesisMetadata.AsObject;
+    toObject(includeInstance?: boolean): SlpV1Nft1ChildGenesisMetadata.AsObject;
+    static toObject(includeInstance: boolean, msg: SlpV1Nft1ChildGenesisMetadata): SlpV1Nft1ChildGenesisMetadata.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: SlpNft1ChildGenesisMetadata, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): SlpNft1ChildGenesisMetadata;
-    static deserializeBinaryFromReader(message: SlpNft1ChildGenesisMetadata, reader: jspb.BinaryReader): SlpNft1ChildGenesisMetadata;
+    static serializeBinaryToWriter(message: SlpV1Nft1ChildGenesisMetadata, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): SlpV1Nft1ChildGenesisMetadata;
+    static deserializeBinaryFromReader(message: SlpV1Nft1ChildGenesisMetadata, reader: jspb.BinaryReader): SlpV1Nft1ChildGenesisMetadata;
 }
 
-export namespace SlpNft1ChildGenesisMetadata {
+export namespace SlpV1Nft1ChildGenesisMetadata {
     export type AsObject = {
         name: Uint8Array | string,
         ticker: Uint8Array | string,
@@ -2555,24 +2555,24 @@ export namespace SlpNft1ChildGenesisMetadata {
     }
 }
 
-export class SlpNft1ChildSendMetadata extends jspb.Message { 
+export class SlpV1Nft1ChildSendMetadata extends jspb.Message { 
     getGroupTokenId(): Uint8Array | string;
     getGroupTokenId_asU8(): Uint8Array;
     getGroupTokenId_asB64(): string;
-    setGroupTokenId(value: Uint8Array | string): SlpNft1ChildSendMetadata;
+    setGroupTokenId(value: Uint8Array | string): SlpV1Nft1ChildSendMetadata;
 
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): SlpNft1ChildSendMetadata.AsObject;
-    static toObject(includeInstance: boolean, msg: SlpNft1ChildSendMetadata): SlpNft1ChildSendMetadata.AsObject;
+    toObject(includeInstance?: boolean): SlpV1Nft1ChildSendMetadata.AsObject;
+    static toObject(includeInstance: boolean, msg: SlpV1Nft1ChildSendMetadata): SlpV1Nft1ChildSendMetadata.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: SlpNft1ChildSendMetadata, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): SlpNft1ChildSendMetadata;
-    static deserializeBinaryFromReader(message: SlpNft1ChildSendMetadata, reader: jspb.BinaryReader): SlpNft1ChildSendMetadata;
+    static serializeBinaryToWriter(message: SlpV1Nft1ChildSendMetadata, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): SlpV1Nft1ChildSendMetadata;
+    static deserializeBinaryFromReader(message: SlpV1Nft1ChildSendMetadata, reader: jspb.BinaryReader): SlpV1Nft1ChildSendMetadata;
 }
 
-export namespace SlpNft1ChildSendMetadata {
+export namespace SlpV1Nft1ChildSendMetadata {
     export type AsObject = {
         groupTokenId: Uint8Array | string,
     }
@@ -2588,22 +2588,22 @@ export class TokenMetadata extends jspb.Message {
     setTokenType(value: number): TokenMetadata;
 
 
-    hasType1(): boolean;
-    clearType1(): void;
-    getType1(): TokenMetadataTokenType1 | undefined;
-    setType1(value?: TokenMetadataTokenType1): TokenMetadata;
+    hasV1Fungible(): boolean;
+    clearV1Fungible(): void;
+    getV1Fungible(): TokenMetadataV1Fungible | undefined;
+    setV1Fungible(value?: TokenMetadataV1Fungible): TokenMetadata;
 
 
-    hasNft1Group(): boolean;
-    clearNft1Group(): void;
-    getNft1Group(): TokenMetadataNFT1Group | undefined;
-    setNft1Group(value?: TokenMetadataNFT1Group): TokenMetadata;
+    hasV1Nft1Group(): boolean;
+    clearV1Nft1Group(): void;
+    getV1Nft1Group(): TokenMetadataV1NFT1Group | undefined;
+    setV1Nft1Group(value?: TokenMetadataV1NFT1Group): TokenMetadata;
 
 
-    hasNft1Child(): boolean;
-    clearNft1Child(): void;
-    getNft1Child(): TokenMetadataNFT1Child | undefined;
-    setNft1Child(value?: TokenMetadataNFT1Child): TokenMetadata;
+    hasV1Nft1Child(): boolean;
+    clearV1Nft1Child(): void;
+    getV1Nft1Child(): TokenMetadataV1NFT1Child | undefined;
+    setV1Nft1Child(value?: TokenMetadataV1NFT1Child): TokenMetadata;
 
 
     getTypeMetadataCase(): TokenMetadata.TypeMetadataCase;
@@ -2622,68 +2622,68 @@ export namespace TokenMetadata {
     export type AsObject = {
         tokenId: Uint8Array | string,
         tokenType: number,
-        type1?: TokenMetadataTokenType1.AsObject,
-        nft1Group?: TokenMetadataNFT1Group.AsObject,
-        nft1Child?: TokenMetadataNFT1Child.AsObject,
+        v1Fungible?: TokenMetadataV1Fungible.AsObject,
+        v1Nft1Group?: TokenMetadataV1NFT1Group.AsObject,
+        v1Nft1Child?: TokenMetadataV1NFT1Child.AsObject,
     }
 
     export enum TypeMetadataCase {
         TYPE_METADATA_NOT_SET = 0,
     
-    TYPE1 = 3,
+    V1_FUNGIBLE = 3,
 
-    NFT1_GROUP = 4,
+    V1_NFT1_GROUP = 4,
 
-    NFT1_CHILD = 5,
+    V1_NFT1_CHILD = 5,
 
     }
 
 }
 
-export class TokenMetadataTokenType1 extends jspb.Message { 
+export class TokenMetadataV1Fungible extends jspb.Message { 
     getTokenTicker(): Uint8Array | string;
     getTokenTicker_asU8(): Uint8Array;
     getTokenTicker_asB64(): string;
-    setTokenTicker(value: Uint8Array | string): TokenMetadataTokenType1;
+    setTokenTicker(value: Uint8Array | string): TokenMetadataV1Fungible;
 
     getTokenName(): Uint8Array | string;
     getTokenName_asU8(): Uint8Array;
     getTokenName_asB64(): string;
-    setTokenName(value: Uint8Array | string): TokenMetadataTokenType1;
+    setTokenName(value: Uint8Array | string): TokenMetadataV1Fungible;
 
     getTokenDocumentUrl(): Uint8Array | string;
     getTokenDocumentUrl_asU8(): Uint8Array;
     getTokenDocumentUrl_asB64(): string;
-    setTokenDocumentUrl(value: Uint8Array | string): TokenMetadataTokenType1;
+    setTokenDocumentUrl(value: Uint8Array | string): TokenMetadataV1Fungible;
 
     getTokenDocumentHash(): Uint8Array | string;
     getTokenDocumentHash_asU8(): Uint8Array;
     getTokenDocumentHash_asB64(): string;
-    setTokenDocumentHash(value: Uint8Array | string): TokenMetadataTokenType1;
+    setTokenDocumentHash(value: Uint8Array | string): TokenMetadataV1Fungible;
 
     getDecimals(): number;
-    setDecimals(value: number): TokenMetadataTokenType1;
+    setDecimals(value: number): TokenMetadataV1Fungible;
 
     getMintBatonHash(): Uint8Array | string;
     getMintBatonHash_asU8(): Uint8Array;
     getMintBatonHash_asB64(): string;
-    setMintBatonHash(value: Uint8Array | string): TokenMetadataTokenType1;
+    setMintBatonHash(value: Uint8Array | string): TokenMetadataV1Fungible;
 
     getMintBatonVout(): number;
-    setMintBatonVout(value: number): TokenMetadataTokenType1;
+    setMintBatonVout(value: number): TokenMetadataV1Fungible;
 
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): TokenMetadataTokenType1.AsObject;
-    static toObject(includeInstance: boolean, msg: TokenMetadataTokenType1): TokenMetadataTokenType1.AsObject;
+    toObject(includeInstance?: boolean): TokenMetadataV1Fungible.AsObject;
+    static toObject(includeInstance: boolean, msg: TokenMetadataV1Fungible): TokenMetadataV1Fungible.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: TokenMetadataTokenType1, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): TokenMetadataTokenType1;
-    static deserializeBinaryFromReader(message: TokenMetadataTokenType1, reader: jspb.BinaryReader): TokenMetadataTokenType1;
+    static serializeBinaryToWriter(message: TokenMetadataV1Fungible, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): TokenMetadataV1Fungible;
+    static deserializeBinaryFromReader(message: TokenMetadataV1Fungible, reader: jspb.BinaryReader): TokenMetadataV1Fungible;
 }
 
-export namespace TokenMetadataTokenType1 {
+export namespace TokenMetadataV1Fungible {
     export type AsObject = {
         tokenTicker: Uint8Array | string,
         tokenName: Uint8Array | string,
@@ -2695,50 +2695,50 @@ export namespace TokenMetadataTokenType1 {
     }
 }
 
-export class TokenMetadataNFT1Group extends jspb.Message { 
+export class TokenMetadataV1NFT1Group extends jspb.Message { 
     getTokenTicker(): Uint8Array | string;
     getTokenTicker_asU8(): Uint8Array;
     getTokenTicker_asB64(): string;
-    setTokenTicker(value: Uint8Array | string): TokenMetadataNFT1Group;
+    setTokenTicker(value: Uint8Array | string): TokenMetadataV1NFT1Group;
 
     getTokenName(): Uint8Array | string;
     getTokenName_asU8(): Uint8Array;
     getTokenName_asB64(): string;
-    setTokenName(value: Uint8Array | string): TokenMetadataNFT1Group;
+    setTokenName(value: Uint8Array | string): TokenMetadataV1NFT1Group;
 
     getTokenDocumentUrl(): Uint8Array | string;
     getTokenDocumentUrl_asU8(): Uint8Array;
     getTokenDocumentUrl_asB64(): string;
-    setTokenDocumentUrl(value: Uint8Array | string): TokenMetadataNFT1Group;
+    setTokenDocumentUrl(value: Uint8Array | string): TokenMetadataV1NFT1Group;
 
     getTokenDocumentHash(): Uint8Array | string;
     getTokenDocumentHash_asU8(): Uint8Array;
     getTokenDocumentHash_asB64(): string;
-    setTokenDocumentHash(value: Uint8Array | string): TokenMetadataNFT1Group;
+    setTokenDocumentHash(value: Uint8Array | string): TokenMetadataV1NFT1Group;
 
     getDecimals(): number;
-    setDecimals(value: number): TokenMetadataNFT1Group;
+    setDecimals(value: number): TokenMetadataV1NFT1Group;
 
     getMintBatonHash(): Uint8Array | string;
     getMintBatonHash_asU8(): Uint8Array;
     getMintBatonHash_asB64(): string;
-    setMintBatonHash(value: Uint8Array | string): TokenMetadataNFT1Group;
+    setMintBatonHash(value: Uint8Array | string): TokenMetadataV1NFT1Group;
 
     getMintBatonVout(): number;
-    setMintBatonVout(value: number): TokenMetadataNFT1Group;
+    setMintBatonVout(value: number): TokenMetadataV1NFT1Group;
 
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): TokenMetadataNFT1Group.AsObject;
-    static toObject(includeInstance: boolean, msg: TokenMetadataNFT1Group): TokenMetadataNFT1Group.AsObject;
+    toObject(includeInstance?: boolean): TokenMetadataV1NFT1Group.AsObject;
+    static toObject(includeInstance: boolean, msg: TokenMetadataV1NFT1Group): TokenMetadataV1NFT1Group.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: TokenMetadataNFT1Group, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): TokenMetadataNFT1Group;
-    static deserializeBinaryFromReader(message: TokenMetadataNFT1Group, reader: jspb.BinaryReader): TokenMetadataNFT1Group;
+    static serializeBinaryToWriter(message: TokenMetadataV1NFT1Group, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): TokenMetadataV1NFT1Group;
+    static deserializeBinaryFromReader(message: TokenMetadataV1NFT1Group, reader: jspb.BinaryReader): TokenMetadataV1NFT1Group;
 }
 
-export namespace TokenMetadataNFT1Group {
+export namespace TokenMetadataV1NFT1Group {
     export type AsObject = {
         tokenTicker: Uint8Array | string,
         tokenName: Uint8Array | string,
@@ -2750,44 +2750,44 @@ export namespace TokenMetadataNFT1Group {
     }
 }
 
-export class TokenMetadataNFT1Child extends jspb.Message { 
+export class TokenMetadataV1NFT1Child extends jspb.Message { 
     getTokenTicker(): Uint8Array | string;
     getTokenTicker_asU8(): Uint8Array;
     getTokenTicker_asB64(): string;
-    setTokenTicker(value: Uint8Array | string): TokenMetadataNFT1Child;
+    setTokenTicker(value: Uint8Array | string): TokenMetadataV1NFT1Child;
 
     getTokenName(): Uint8Array | string;
     getTokenName_asU8(): Uint8Array;
     getTokenName_asB64(): string;
-    setTokenName(value: Uint8Array | string): TokenMetadataNFT1Child;
+    setTokenName(value: Uint8Array | string): TokenMetadataV1NFT1Child;
 
     getTokenDocumentUrl(): Uint8Array | string;
     getTokenDocumentUrl_asU8(): Uint8Array;
     getTokenDocumentUrl_asB64(): string;
-    setTokenDocumentUrl(value: Uint8Array | string): TokenMetadataNFT1Child;
+    setTokenDocumentUrl(value: Uint8Array | string): TokenMetadataV1NFT1Child;
 
     getTokenDocumentHash(): Uint8Array | string;
     getTokenDocumentHash_asU8(): Uint8Array;
     getTokenDocumentHash_asB64(): string;
-    setTokenDocumentHash(value: Uint8Array | string): TokenMetadataNFT1Child;
+    setTokenDocumentHash(value: Uint8Array | string): TokenMetadataV1NFT1Child;
 
     getGroupId(): Uint8Array | string;
     getGroupId_asU8(): Uint8Array;
     getGroupId_asB64(): string;
-    setGroupId(value: Uint8Array | string): TokenMetadataNFT1Child;
+    setGroupId(value: Uint8Array | string): TokenMetadataV1NFT1Child;
 
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): TokenMetadataNFT1Child.AsObject;
-    static toObject(includeInstance: boolean, msg: TokenMetadataNFT1Child): TokenMetadataNFT1Child.AsObject;
+    toObject(includeInstance?: boolean): TokenMetadataV1NFT1Child.AsObject;
+    static toObject(includeInstance: boolean, msg: TokenMetadataV1NFT1Child): TokenMetadataV1NFT1Child.AsObject;
     static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
     static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-    static serializeBinaryToWriter(message: TokenMetadataNFT1Child, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): TokenMetadataNFT1Child;
-    static deserializeBinaryFromReader(message: TokenMetadataNFT1Child, reader: jspb.BinaryReader): TokenMetadataNFT1Child;
+    static serializeBinaryToWriter(message: TokenMetadataV1NFT1Child, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): TokenMetadataV1NFT1Child;
+    static deserializeBinaryFromReader(message: TokenMetadataV1NFT1Child, reader: jspb.BinaryReader): TokenMetadataV1NFT1Child;
 }
 
-export namespace TokenMetadataNFT1Child {
+export namespace TokenMetadataV1NFT1Child {
     export type AsObject = {
         tokenTicker: Uint8Array | string,
         tokenName: Uint8Array | string,
@@ -2865,9 +2865,9 @@ export enum SlpAction {
     SLP_V1_GENESIS = 4,
     SLP_V1_MINT = 5,
     SLP_V1_SEND = 6,
-    SLP_NFT1_GROUP_GENESIS = 7,
-    SLP_NFT1_GROUP_MINT = 8,
-    SLP_NFT1_GROUP_SEND = 9,
-    SLP_NFT1_UNIQUE_CHILD_GENESIS = 10,
-    SLP_NFT1_UNIQUE_CHILD_SEND = 11,
+    SLP_V1_NFT1_GROUP_GENESIS = 7,
+    SLP_V1_NFT1_GROUP_MINT = 8,
+    SLP_V1_NFT1_GROUP_SEND = 9,
+    SLP_V1_NFT1_UNIQUE_CHILD_GENESIS = 10,
+    SLP_V1_NFT1_UNIQUE_CHILD_SEND = 11,
 }
