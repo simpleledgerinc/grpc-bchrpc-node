@@ -23,9 +23,9 @@ interface IbchrpcService extends grpc.ServiceDefinition<grpc.UntypedServiceImple
     getAddressUnspentOutputs: IbchrpcService_IGetAddressUnspentOutputs;
     getUnspentOutput: IbchrpcService_IGetUnspentOutput;
     getMerkleProof: IbchrpcService_IGetMerkleProof;
-    getTokenMetadata: IbchrpcService_IGetTokenMetadata;
-    getParsedSlpScript: IbchrpcService_IGetParsedSlpScript;
-    getTrustedSlpValidation: IbchrpcService_IGetTrustedSlpValidation;
+    getSlpTokenMetadata: IbchrpcService_IGetSlpTokenMetadata;
+    getSlpParsedScript: IbchrpcService_IGetSlpParsedScript;
+    getSlpTrustedValidation: IbchrpcService_IGetSlpTrustedValidation;
     getSlpGraphSearch: IbchrpcService_IGetSlpGraphSearch;
     checkSlpTransaction: IbchrpcService_ICheckSlpTransaction;
     submitTransaction: IbchrpcService_ISubmitTransaction;
@@ -169,32 +169,32 @@ interface IbchrpcService_IGetMerkleProof extends grpc.MethodDefinition<pb_bchrpc
     responseSerialize: grpc.serialize<pb_bchrpc_pb.GetMerkleProofResponse>;
     responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetMerkleProofResponse>;
 }
-interface IbchrpcService_IGetTokenMetadata extends grpc.MethodDefinition<pb_bchrpc_pb.GetTokenMetadataRequest, pb_bchrpc_pb.GetTokenMetadataResponse> {
-    path: "/pb.bchrpc/GetTokenMetadata";
+interface IbchrpcService_IGetSlpTokenMetadata extends grpc.MethodDefinition<pb_bchrpc_pb.GetSlpTokenMetadataRequest, pb_bchrpc_pb.GetSlpTokenMetadataResponse> {
+    path: "/pb.bchrpc/GetSlpTokenMetadata";
     requestStream: false;
     responseStream: false;
-    requestSerialize: grpc.serialize<pb_bchrpc_pb.GetTokenMetadataRequest>;
-    requestDeserialize: grpc.deserialize<pb_bchrpc_pb.GetTokenMetadataRequest>;
-    responseSerialize: grpc.serialize<pb_bchrpc_pb.GetTokenMetadataResponse>;
-    responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetTokenMetadataResponse>;
+    requestSerialize: grpc.serialize<pb_bchrpc_pb.GetSlpTokenMetadataRequest>;
+    requestDeserialize: grpc.deserialize<pb_bchrpc_pb.GetSlpTokenMetadataRequest>;
+    responseSerialize: grpc.serialize<pb_bchrpc_pb.GetSlpTokenMetadataResponse>;
+    responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetSlpTokenMetadataResponse>;
 }
-interface IbchrpcService_IGetParsedSlpScript extends grpc.MethodDefinition<pb_bchrpc_pb.GetParsedSlpScriptRequest, pb_bchrpc_pb.GetParsedSlpScriptResponse> {
-    path: "/pb.bchrpc/GetParsedSlpScript";
+interface IbchrpcService_IGetSlpParsedScript extends grpc.MethodDefinition<pb_bchrpc_pb.GetSlpParsedScriptRequest, pb_bchrpc_pb.GetSlpParsedScriptResponse> {
+    path: "/pb.bchrpc/GetSlpParsedScript";
     requestStream: false;
     responseStream: false;
-    requestSerialize: grpc.serialize<pb_bchrpc_pb.GetParsedSlpScriptRequest>;
-    requestDeserialize: grpc.deserialize<pb_bchrpc_pb.GetParsedSlpScriptRequest>;
-    responseSerialize: grpc.serialize<pb_bchrpc_pb.GetParsedSlpScriptResponse>;
-    responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetParsedSlpScriptResponse>;
+    requestSerialize: grpc.serialize<pb_bchrpc_pb.GetSlpParsedScriptRequest>;
+    requestDeserialize: grpc.deserialize<pb_bchrpc_pb.GetSlpParsedScriptRequest>;
+    responseSerialize: grpc.serialize<pb_bchrpc_pb.GetSlpParsedScriptResponse>;
+    responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetSlpParsedScriptResponse>;
 }
-interface IbchrpcService_IGetTrustedSlpValidation extends grpc.MethodDefinition<pb_bchrpc_pb.GetTrustedSlpValidationRequest, pb_bchrpc_pb.GetTrustedSlpValidationResponse> {
-    path: "/pb.bchrpc/GetTrustedSlpValidation";
+interface IbchrpcService_IGetSlpTrustedValidation extends grpc.MethodDefinition<pb_bchrpc_pb.GetSlpTrustedValidationRequest, pb_bchrpc_pb.GetSlpTrustedValidationResponse> {
+    path: "/pb.bchrpc/GetSlpTrustedValidation";
     requestStream: false;
     responseStream: false;
-    requestSerialize: grpc.serialize<pb_bchrpc_pb.GetTrustedSlpValidationRequest>;
-    requestDeserialize: grpc.deserialize<pb_bchrpc_pb.GetTrustedSlpValidationRequest>;
-    responseSerialize: grpc.serialize<pb_bchrpc_pb.GetTrustedSlpValidationResponse>;
-    responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetTrustedSlpValidationResponse>;
+    requestSerialize: grpc.serialize<pb_bchrpc_pb.GetSlpTrustedValidationRequest>;
+    requestDeserialize: grpc.deserialize<pb_bchrpc_pb.GetSlpTrustedValidationRequest>;
+    responseSerialize: grpc.serialize<pb_bchrpc_pb.GetSlpTrustedValidationResponse>;
+    responseDeserialize: grpc.deserialize<pb_bchrpc_pb.GetSlpTrustedValidationResponse>;
 }
 interface IbchrpcService_IGetSlpGraphSearch extends grpc.MethodDefinition<pb_bchrpc_pb.GetSlpGraphSearchRequest, pb_bchrpc_pb.GetSlpGraphSearchResponse> {
     path: "/pb.bchrpc/GetSlpGraphSearch";
@@ -269,9 +269,9 @@ export interface IbchrpcServer {
     getAddressUnspentOutputs: grpc.handleUnaryCall<pb_bchrpc_pb.GetAddressUnspentOutputsRequest, pb_bchrpc_pb.GetAddressUnspentOutputsResponse>;
     getUnspentOutput: grpc.handleUnaryCall<pb_bchrpc_pb.GetUnspentOutputRequest, pb_bchrpc_pb.GetUnspentOutputResponse>;
     getMerkleProof: grpc.handleUnaryCall<pb_bchrpc_pb.GetMerkleProofRequest, pb_bchrpc_pb.GetMerkleProofResponse>;
-    getTokenMetadata: grpc.handleUnaryCall<pb_bchrpc_pb.GetTokenMetadataRequest, pb_bchrpc_pb.GetTokenMetadataResponse>;
-    getParsedSlpScript: grpc.handleUnaryCall<pb_bchrpc_pb.GetParsedSlpScriptRequest, pb_bchrpc_pb.GetParsedSlpScriptResponse>;
-    getTrustedSlpValidation: grpc.handleUnaryCall<pb_bchrpc_pb.GetTrustedSlpValidationRequest, pb_bchrpc_pb.GetTrustedSlpValidationResponse>;
+    getSlpTokenMetadata: grpc.handleUnaryCall<pb_bchrpc_pb.GetSlpTokenMetadataRequest, pb_bchrpc_pb.GetSlpTokenMetadataResponse>;
+    getSlpParsedScript: grpc.handleUnaryCall<pb_bchrpc_pb.GetSlpParsedScriptRequest, pb_bchrpc_pb.GetSlpParsedScriptResponse>;
+    getSlpTrustedValidation: grpc.handleUnaryCall<pb_bchrpc_pb.GetSlpTrustedValidationRequest, pb_bchrpc_pb.GetSlpTrustedValidationResponse>;
     getSlpGraphSearch: grpc.handleUnaryCall<pb_bchrpc_pb.GetSlpGraphSearchRequest, pb_bchrpc_pb.GetSlpGraphSearchResponse>;
     checkSlpTransaction: grpc.handleUnaryCall<pb_bchrpc_pb.CheckSlpTransactionRequest, pb_bchrpc_pb.CheckSlpTransactionResponse>;
     submitTransaction: grpc.handleUnaryCall<pb_bchrpc_pb.SubmitTransactionRequest, pb_bchrpc_pb.SubmitTransactionResponse>;
@@ -326,15 +326,15 @@ export interface IbchrpcClient {
     getMerkleProof(request: pb_bchrpc_pb.GetMerkleProofRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetMerkleProofResponse) => void): grpc.ClientUnaryCall;
     getMerkleProof(request: pb_bchrpc_pb.GetMerkleProofRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetMerkleProofResponse) => void): grpc.ClientUnaryCall;
     getMerkleProof(request: pb_bchrpc_pb.GetMerkleProofRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetMerkleProofResponse) => void): grpc.ClientUnaryCall;
-    getTokenMetadata(request: pb_bchrpc_pb.GetTokenMetadataRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTokenMetadataResponse) => void): grpc.ClientUnaryCall;
-    getTokenMetadata(request: pb_bchrpc_pb.GetTokenMetadataRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTokenMetadataResponse) => void): grpc.ClientUnaryCall;
-    getTokenMetadata(request: pb_bchrpc_pb.GetTokenMetadataRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTokenMetadataResponse) => void): grpc.ClientUnaryCall;
-    getParsedSlpScript(request: pb_bchrpc_pb.GetParsedSlpScriptRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetParsedSlpScriptResponse) => void): grpc.ClientUnaryCall;
-    getParsedSlpScript(request: pb_bchrpc_pb.GetParsedSlpScriptRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetParsedSlpScriptResponse) => void): grpc.ClientUnaryCall;
-    getParsedSlpScript(request: pb_bchrpc_pb.GetParsedSlpScriptRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetParsedSlpScriptResponse) => void): grpc.ClientUnaryCall;
-    getTrustedSlpValidation(request: pb_bchrpc_pb.GetTrustedSlpValidationRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTrustedSlpValidationResponse) => void): grpc.ClientUnaryCall;
-    getTrustedSlpValidation(request: pb_bchrpc_pb.GetTrustedSlpValidationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTrustedSlpValidationResponse) => void): grpc.ClientUnaryCall;
-    getTrustedSlpValidation(request: pb_bchrpc_pb.GetTrustedSlpValidationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTrustedSlpValidationResponse) => void): grpc.ClientUnaryCall;
+    getSlpTokenMetadata(request: pb_bchrpc_pb.GetSlpTokenMetadataRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpTokenMetadataResponse) => void): grpc.ClientUnaryCall;
+    getSlpTokenMetadata(request: pb_bchrpc_pb.GetSlpTokenMetadataRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpTokenMetadataResponse) => void): grpc.ClientUnaryCall;
+    getSlpTokenMetadata(request: pb_bchrpc_pb.GetSlpTokenMetadataRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpTokenMetadataResponse) => void): grpc.ClientUnaryCall;
+    getSlpParsedScript(request: pb_bchrpc_pb.GetSlpParsedScriptRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpParsedScriptResponse) => void): grpc.ClientUnaryCall;
+    getSlpParsedScript(request: pb_bchrpc_pb.GetSlpParsedScriptRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpParsedScriptResponse) => void): grpc.ClientUnaryCall;
+    getSlpParsedScript(request: pb_bchrpc_pb.GetSlpParsedScriptRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpParsedScriptResponse) => void): grpc.ClientUnaryCall;
+    getSlpTrustedValidation(request: pb_bchrpc_pb.GetSlpTrustedValidationRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpTrustedValidationResponse) => void): grpc.ClientUnaryCall;
+    getSlpTrustedValidation(request: pb_bchrpc_pb.GetSlpTrustedValidationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpTrustedValidationResponse) => void): grpc.ClientUnaryCall;
+    getSlpTrustedValidation(request: pb_bchrpc_pb.GetSlpTrustedValidationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpTrustedValidationResponse) => void): grpc.ClientUnaryCall;
     getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
     getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
     getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
@@ -400,15 +400,15 @@ export class bchrpcClient extends grpc.Client implements IbchrpcClient {
     public getMerkleProof(request: pb_bchrpc_pb.GetMerkleProofRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetMerkleProofResponse) => void): grpc.ClientUnaryCall;
     public getMerkleProof(request: pb_bchrpc_pb.GetMerkleProofRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetMerkleProofResponse) => void): grpc.ClientUnaryCall;
     public getMerkleProof(request: pb_bchrpc_pb.GetMerkleProofRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetMerkleProofResponse) => void): grpc.ClientUnaryCall;
-    public getTokenMetadata(request: pb_bchrpc_pb.GetTokenMetadataRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTokenMetadataResponse) => void): grpc.ClientUnaryCall;
-    public getTokenMetadata(request: pb_bchrpc_pb.GetTokenMetadataRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTokenMetadataResponse) => void): grpc.ClientUnaryCall;
-    public getTokenMetadata(request: pb_bchrpc_pb.GetTokenMetadataRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTokenMetadataResponse) => void): grpc.ClientUnaryCall;
-    public getParsedSlpScript(request: pb_bchrpc_pb.GetParsedSlpScriptRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetParsedSlpScriptResponse) => void): grpc.ClientUnaryCall;
-    public getParsedSlpScript(request: pb_bchrpc_pb.GetParsedSlpScriptRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetParsedSlpScriptResponse) => void): grpc.ClientUnaryCall;
-    public getParsedSlpScript(request: pb_bchrpc_pb.GetParsedSlpScriptRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetParsedSlpScriptResponse) => void): grpc.ClientUnaryCall;
-    public getTrustedSlpValidation(request: pb_bchrpc_pb.GetTrustedSlpValidationRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTrustedSlpValidationResponse) => void): grpc.ClientUnaryCall;
-    public getTrustedSlpValidation(request: pb_bchrpc_pb.GetTrustedSlpValidationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTrustedSlpValidationResponse) => void): grpc.ClientUnaryCall;
-    public getTrustedSlpValidation(request: pb_bchrpc_pb.GetTrustedSlpValidationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetTrustedSlpValidationResponse) => void): grpc.ClientUnaryCall;
+    public getSlpTokenMetadata(request: pb_bchrpc_pb.GetSlpTokenMetadataRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpTokenMetadataResponse) => void): grpc.ClientUnaryCall;
+    public getSlpTokenMetadata(request: pb_bchrpc_pb.GetSlpTokenMetadataRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpTokenMetadataResponse) => void): grpc.ClientUnaryCall;
+    public getSlpTokenMetadata(request: pb_bchrpc_pb.GetSlpTokenMetadataRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpTokenMetadataResponse) => void): grpc.ClientUnaryCall;
+    public getSlpParsedScript(request: pb_bchrpc_pb.GetSlpParsedScriptRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpParsedScriptResponse) => void): grpc.ClientUnaryCall;
+    public getSlpParsedScript(request: pb_bchrpc_pb.GetSlpParsedScriptRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpParsedScriptResponse) => void): grpc.ClientUnaryCall;
+    public getSlpParsedScript(request: pb_bchrpc_pb.GetSlpParsedScriptRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpParsedScriptResponse) => void): grpc.ClientUnaryCall;
+    public getSlpTrustedValidation(request: pb_bchrpc_pb.GetSlpTrustedValidationRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpTrustedValidationResponse) => void): grpc.ClientUnaryCall;
+    public getSlpTrustedValidation(request: pb_bchrpc_pb.GetSlpTrustedValidationRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpTrustedValidationResponse) => void): grpc.ClientUnaryCall;
+    public getSlpTrustedValidation(request: pb_bchrpc_pb.GetSlpTrustedValidationRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpTrustedValidationResponse) => void): grpc.ClientUnaryCall;
     public getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
     public getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;
     public getSlpGraphSearch(request: pb_bchrpc_pb.GetSlpGraphSearchRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: pb_bchrpc_pb.GetSlpGraphSearchResponse) => void): grpc.ClientUnaryCall;

@@ -50,9 +50,6 @@ goog.exportSymbol('proto.pb.GetMempoolResponse.TransactionData', null, global);
 goog.exportSymbol('proto.pb.GetMempoolResponse.TransactionData.TxidsOrTxsCase', null, global);
 goog.exportSymbol('proto.pb.GetMerkleProofRequest', null, global);
 goog.exportSymbol('proto.pb.GetMerkleProofResponse', null, global);
-goog.exportSymbol('proto.pb.GetParsedSlpScriptRequest', null, global);
-goog.exportSymbol('proto.pb.GetParsedSlpScriptResponse', null, global);
-goog.exportSymbol('proto.pb.GetParsedSlpScriptResponse.SlpMetadataCase', null, global);
 goog.exportSymbol('proto.pb.GetRawAddressTransactionsRequest', null, global);
 goog.exportSymbol('proto.pb.GetRawAddressTransactionsRequest.StartBlockCase', null, global);
 goog.exportSymbol('proto.pb.GetRawAddressTransactionsResponse', null, global);
@@ -63,15 +60,18 @@ goog.exportSymbol('proto.pb.GetRawTransactionRequest', null, global);
 goog.exportSymbol('proto.pb.GetRawTransactionResponse', null, global);
 goog.exportSymbol('proto.pb.GetSlpGraphSearchRequest', null, global);
 goog.exportSymbol('proto.pb.GetSlpGraphSearchResponse', null, global);
-goog.exportSymbol('proto.pb.GetTokenMetadataRequest', null, global);
-goog.exportSymbol('proto.pb.GetTokenMetadataResponse', null, global);
+goog.exportSymbol('proto.pb.GetSlpParsedScriptRequest', null, global);
+goog.exportSymbol('proto.pb.GetSlpParsedScriptResponse', null, global);
+goog.exportSymbol('proto.pb.GetSlpParsedScriptResponse.SlpMetadataCase', null, global);
+goog.exportSymbol('proto.pb.GetSlpTokenMetadataRequest', null, global);
+goog.exportSymbol('proto.pb.GetSlpTokenMetadataResponse', null, global);
+goog.exportSymbol('proto.pb.GetSlpTrustedValidationRequest', null, global);
+goog.exportSymbol('proto.pb.GetSlpTrustedValidationRequest.Query', null, global);
+goog.exportSymbol('proto.pb.GetSlpTrustedValidationResponse', null, global);
+goog.exportSymbol('proto.pb.GetSlpTrustedValidationResponse.ValidityResult', null, global);
+goog.exportSymbol('proto.pb.GetSlpTrustedValidationResponse.ValidityResult.ValidityResultTypeCase', null, global);
 goog.exportSymbol('proto.pb.GetTransactionRequest', null, global);
 goog.exportSymbol('proto.pb.GetTransactionResponse', null, global);
-goog.exportSymbol('proto.pb.GetTrustedSlpValidationRequest', null, global);
-goog.exportSymbol('proto.pb.GetTrustedSlpValidationRequest.Query', null, global);
-goog.exportSymbol('proto.pb.GetTrustedSlpValidationResponse', null, global);
-goog.exportSymbol('proto.pb.GetTrustedSlpValidationResponse.ValidityResult', null, global);
-goog.exportSymbol('proto.pb.GetTrustedSlpValidationResponse.ValidityResult.ValidityResultTypeCase', null, global);
 goog.exportSymbol('proto.pb.GetUnspentOutputRequest', null, global);
 goog.exportSymbol('proto.pb.GetUnspentOutputResponse', null, global);
 goog.exportSymbol('proto.pb.MempoolTransaction', null, global);
@@ -79,6 +79,12 @@ goog.exportSymbol('proto.pb.SlpAction', null, global);
 goog.exportSymbol('proto.pb.SlpRequiredBurn', null, global);
 goog.exportSymbol('proto.pb.SlpRequiredBurn.BurnIntentionCase', null, global);
 goog.exportSymbol('proto.pb.SlpToken', null, global);
+goog.exportSymbol('proto.pb.SlpTokenMetadata', null, global);
+goog.exportSymbol('proto.pb.SlpTokenMetadata.TypeMetadataCase', null, global);
+goog.exportSymbol('proto.pb.SlpTokenMetadata.V1Fungible', null, global);
+goog.exportSymbol('proto.pb.SlpTokenMetadata.V1NFT1Child', null, global);
+goog.exportSymbol('proto.pb.SlpTokenMetadata.V1NFT1Group', null, global);
+goog.exportSymbol('proto.pb.SlpTokenType', null, global);
 goog.exportSymbol('proto.pb.SlpTransactionInfo', null, global);
 goog.exportSymbol('proto.pb.SlpTransactionInfo.BurnFlags', null, global);
 goog.exportSymbol('proto.pb.SlpTransactionInfo.TxMetadataCase', null, global);
@@ -92,11 +98,6 @@ goog.exportSymbol('proto.pb.SubmitTransactionRequest', null, global);
 goog.exportSymbol('proto.pb.SubmitTransactionResponse', null, global);
 goog.exportSymbol('proto.pb.SubscribeBlocksRequest', null, global);
 goog.exportSymbol('proto.pb.SubscribeTransactionsRequest', null, global);
-goog.exportSymbol('proto.pb.TokenMetadata', null, global);
-goog.exportSymbol('proto.pb.TokenMetadata.TypeMetadataCase', null, global);
-goog.exportSymbol('proto.pb.TokenMetadataV1Fungible', null, global);
-goog.exportSymbol('proto.pb.TokenMetadataV1NFT1Child', null, global);
-goog.exportSymbol('proto.pb.TokenMetadataV1NFT1Group', null, global);
 goog.exportSymbol('proto.pb.Transaction', null, global);
 goog.exportSymbol('proto.pb.Transaction.Input', null, global);
 goog.exportSymbol('proto.pb.Transaction.Input.Outpoint', null, global);
@@ -893,16 +894,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pb.GetTokenMetadataRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.pb.GetTokenMetadataRequest.repeatedFields_, null);
+proto.pb.GetSlpTokenMetadataRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.pb.GetSlpTokenMetadataRequest.repeatedFields_, null);
 };
-goog.inherits(proto.pb.GetTokenMetadataRequest, jspb.Message);
+goog.inherits(proto.pb.GetSlpTokenMetadataRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.pb.GetTokenMetadataRequest.displayName = 'proto.pb.GetTokenMetadataRequest';
+  proto.pb.GetSlpTokenMetadataRequest.displayName = 'proto.pb.GetSlpTokenMetadataRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -914,16 +915,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pb.GetTokenMetadataResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.pb.GetTokenMetadataResponse.repeatedFields_, null);
+proto.pb.GetSlpTokenMetadataResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.pb.GetSlpTokenMetadataResponse.repeatedFields_, null);
 };
-goog.inherits(proto.pb.GetTokenMetadataResponse, jspb.Message);
+goog.inherits(proto.pb.GetSlpTokenMetadataResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.pb.GetTokenMetadataResponse.displayName = 'proto.pb.GetTokenMetadataResponse';
+  proto.pb.GetSlpTokenMetadataResponse.displayName = 'proto.pb.GetSlpTokenMetadataResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -935,16 +936,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pb.GetParsedSlpScriptRequest = function(opt_data) {
+proto.pb.GetSlpParsedScriptRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.pb.GetParsedSlpScriptRequest, jspb.Message);
+goog.inherits(proto.pb.GetSlpParsedScriptRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.pb.GetParsedSlpScriptRequest.displayName = 'proto.pb.GetParsedSlpScriptRequest';
+  proto.pb.GetSlpParsedScriptRequest.displayName = 'proto.pb.GetSlpParsedScriptRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -956,16 +957,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pb.GetParsedSlpScriptResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.pb.GetParsedSlpScriptResponse.oneofGroups_);
+proto.pb.GetSlpParsedScriptResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.pb.GetSlpParsedScriptResponse.oneofGroups_);
 };
-goog.inherits(proto.pb.GetParsedSlpScriptResponse, jspb.Message);
+goog.inherits(proto.pb.GetSlpParsedScriptResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.pb.GetParsedSlpScriptResponse.displayName = 'proto.pb.GetParsedSlpScriptResponse';
+  proto.pb.GetSlpParsedScriptResponse.displayName = 'proto.pb.GetSlpParsedScriptResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -977,16 +978,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pb.GetTrustedSlpValidationRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.pb.GetTrustedSlpValidationRequest.repeatedFields_, null);
+proto.pb.GetSlpTrustedValidationRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.pb.GetSlpTrustedValidationRequest.repeatedFields_, null);
 };
-goog.inherits(proto.pb.GetTrustedSlpValidationRequest, jspb.Message);
+goog.inherits(proto.pb.GetSlpTrustedValidationRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.pb.GetTrustedSlpValidationRequest.displayName = 'proto.pb.GetTrustedSlpValidationRequest';
+  proto.pb.GetSlpTrustedValidationRequest.displayName = 'proto.pb.GetSlpTrustedValidationRequest';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -998,16 +999,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pb.GetTrustedSlpValidationRequest.Query = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.pb.GetTrustedSlpValidationRequest.Query.repeatedFields_, null);
+proto.pb.GetSlpTrustedValidationRequest.Query = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.pb.GetSlpTrustedValidationRequest.Query.repeatedFields_, null);
 };
-goog.inherits(proto.pb.GetTrustedSlpValidationRequest.Query, jspb.Message);
+goog.inherits(proto.pb.GetSlpTrustedValidationRequest.Query, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.pb.GetTrustedSlpValidationRequest.Query.displayName = 'proto.pb.GetTrustedSlpValidationRequest.Query';
+  proto.pb.GetSlpTrustedValidationRequest.Query.displayName = 'proto.pb.GetSlpTrustedValidationRequest.Query';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -1019,16 +1020,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pb.GetTrustedSlpValidationResponse = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.pb.GetTrustedSlpValidationResponse.repeatedFields_, null);
+proto.pb.GetSlpTrustedValidationResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.pb.GetSlpTrustedValidationResponse.repeatedFields_, null);
 };
-goog.inherits(proto.pb.GetTrustedSlpValidationResponse, jspb.Message);
+goog.inherits(proto.pb.GetSlpTrustedValidationResponse, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.pb.GetTrustedSlpValidationResponse.displayName = 'proto.pb.GetTrustedSlpValidationResponse';
+  proto.pb.GetSlpTrustedValidationResponse.displayName = 'proto.pb.GetSlpTrustedValidationResponse';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -1040,16 +1041,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.pb.GetTrustedSlpValidationResponse.ValidityResult.oneofGroups_);
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.pb.GetSlpTrustedValidationResponse.ValidityResult.oneofGroups_);
 };
-goog.inherits(proto.pb.GetTrustedSlpValidationResponse.ValidityResult, jspb.Message);
+goog.inherits(proto.pb.GetSlpTrustedValidationResponse.ValidityResult, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.pb.GetTrustedSlpValidationResponse.ValidityResult.displayName = 'proto.pb.GetTrustedSlpValidationResponse.ValidityResult';
+  proto.pb.GetSlpTrustedValidationResponse.ValidityResult.displayName = 'proto.pb.GetSlpTrustedValidationResponse.ValidityResult';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -1502,16 +1503,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pb.TokenMetadata = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.pb.TokenMetadata.oneofGroups_);
+proto.pb.SlpTokenMetadata = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.pb.SlpTokenMetadata.oneofGroups_);
 };
-goog.inherits(proto.pb.TokenMetadata, jspb.Message);
+goog.inherits(proto.pb.SlpTokenMetadata, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.pb.TokenMetadata.displayName = 'proto.pb.TokenMetadata';
+  proto.pb.SlpTokenMetadata.displayName = 'proto.pb.SlpTokenMetadata';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -1523,16 +1524,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pb.TokenMetadataV1Fungible = function(opt_data) {
+proto.pb.SlpTokenMetadata.V1Fungible = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.pb.TokenMetadataV1Fungible, jspb.Message);
+goog.inherits(proto.pb.SlpTokenMetadata.V1Fungible, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.pb.TokenMetadataV1Fungible.displayName = 'proto.pb.TokenMetadataV1Fungible';
+  proto.pb.SlpTokenMetadata.V1Fungible.displayName = 'proto.pb.SlpTokenMetadata.V1Fungible';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -1544,16 +1545,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pb.TokenMetadataV1NFT1Group = function(opt_data) {
+proto.pb.SlpTokenMetadata.V1NFT1Group = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.pb.TokenMetadataV1NFT1Group, jspb.Message);
+goog.inherits(proto.pb.SlpTokenMetadata.V1NFT1Group, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.pb.TokenMetadataV1NFT1Group.displayName = 'proto.pb.TokenMetadataV1NFT1Group';
+  proto.pb.SlpTokenMetadata.V1NFT1Group.displayName = 'proto.pb.SlpTokenMetadata.V1NFT1Group';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -1565,16 +1566,16 @@ if (goog.DEBUG && !COMPILED) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pb.TokenMetadataV1NFT1Child = function(opt_data) {
+proto.pb.SlpTokenMetadata.V1NFT1Child = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.pb.TokenMetadataV1NFT1Child, jspb.Message);
+goog.inherits(proto.pb.SlpTokenMetadata.V1NFT1Child, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.pb.TokenMetadataV1NFT1Child.displayName = 'proto.pb.TokenMetadataV1NFT1Child';
+  proto.pb.SlpTokenMetadata.V1NFT1Child.displayName = 'proto.pb.SlpTokenMetadata.V1NFT1Child';
 }
 /**
  * Generated by JsPbCodeGenerator.
@@ -5137,7 +5138,7 @@ proto.pb.GetTransactionResponse.prototype.toObject = function(opt_includeInstanc
 proto.pb.GetTransactionResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     transaction: (f = msg.getTransaction()) && proto.pb.Transaction.toObject(includeInstance, f),
-    tokenMetadata: (f = msg.getTokenMetadata()) && proto.pb.TokenMetadata.toObject(includeInstance, f)
+    tokenMetadata: (f = msg.getTokenMetadata()) && proto.pb.SlpTokenMetadata.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -5180,8 +5181,8 @@ proto.pb.GetTransactionResponse.deserializeBinaryFromReader = function(msg, read
       msg.setTransaction(value);
       break;
     case 2:
-      var value = new proto.pb.TokenMetadata;
-      reader.readMessage(value,proto.pb.TokenMetadata.deserializeBinaryFromReader);
+      var value = new proto.pb.SlpTokenMetadata;
+      reader.readMessage(value,proto.pb.SlpTokenMetadata.deserializeBinaryFromReader);
       msg.setTokenMetadata(value);
       break;
     default:
@@ -5226,7 +5227,7 @@ proto.pb.GetTransactionResponse.serializeBinaryToWriter = function(message, writ
     writer.writeMessage(
       2,
       f,
-      proto.pb.TokenMetadata.serializeBinaryToWriter
+      proto.pb.SlpTokenMetadata.serializeBinaryToWriter
     );
   }
 };
@@ -5270,17 +5271,17 @@ proto.pb.GetTransactionResponse.prototype.hasTransaction = function() {
 
 
 /**
- * optional TokenMetadata token_metadata = 2;
- * @return {?proto.pb.TokenMetadata}
+ * optional SlpTokenMetadata token_metadata = 2;
+ * @return {?proto.pb.SlpTokenMetadata}
  */
 proto.pb.GetTransactionResponse.prototype.getTokenMetadata = function() {
-  return /** @type{?proto.pb.TokenMetadata} */ (
-    jspb.Message.getWrapperField(this, proto.pb.TokenMetadata, 2));
+  return /** @type{?proto.pb.SlpTokenMetadata} */ (
+    jspb.Message.getWrapperField(this, proto.pb.SlpTokenMetadata, 2));
 };
 
 
 /**
- * @param {?proto.pb.TokenMetadata|undefined} value
+ * @param {?proto.pb.SlpTokenMetadata|undefined} value
  * @return {!proto.pb.GetTransactionResponse} returns this
 */
 proto.pb.GetTransactionResponse.prototype.setTokenMetadata = function(value) {
@@ -6984,7 +6985,7 @@ proto.pb.GetAddressUnspentOutputsResponse.toObject = function(includeInstance, m
     outputsList: jspb.Message.toObjectList(msg.getOutputsList(),
     proto.pb.UnspentOutput.toObject, includeInstance),
     tokenMetadataList: jspb.Message.toObjectList(msg.getTokenMetadataList(),
-    proto.pb.TokenMetadata.toObject, includeInstance)
+    proto.pb.SlpTokenMetadata.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -7027,8 +7028,8 @@ proto.pb.GetAddressUnspentOutputsResponse.deserializeBinaryFromReader = function
       msg.addOutputs(value);
       break;
     case 2:
-      var value = new proto.pb.TokenMetadata;
-      reader.readMessage(value,proto.pb.TokenMetadata.deserializeBinaryFromReader);
+      var value = new proto.pb.SlpTokenMetadata;
+      reader.readMessage(value,proto.pb.SlpTokenMetadata.deserializeBinaryFromReader);
       msg.addTokenMetadata(value);
       break;
     default:
@@ -7073,7 +7074,7 @@ proto.pb.GetAddressUnspentOutputsResponse.serializeBinaryToWriter = function(mes
     writer.writeRepeatedMessage(
       2,
       f,
-      proto.pb.TokenMetadata.serializeBinaryToWriter
+      proto.pb.SlpTokenMetadata.serializeBinaryToWriter
     );
   }
 };
@@ -7118,17 +7119,17 @@ proto.pb.GetAddressUnspentOutputsResponse.prototype.clearOutputsList = function(
 
 
 /**
- * repeated TokenMetadata token_metadata = 2;
- * @return {!Array<!proto.pb.TokenMetadata>}
+ * repeated SlpTokenMetadata token_metadata = 2;
+ * @return {!Array<!proto.pb.SlpTokenMetadata>}
  */
 proto.pb.GetAddressUnspentOutputsResponse.prototype.getTokenMetadataList = function() {
-  return /** @type{!Array<!proto.pb.TokenMetadata>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.pb.TokenMetadata, 2));
+  return /** @type{!Array<!proto.pb.SlpTokenMetadata>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.pb.SlpTokenMetadata, 2));
 };
 
 
 /**
- * @param {!Array<!proto.pb.TokenMetadata>} value
+ * @param {!Array<!proto.pb.SlpTokenMetadata>} value
  * @return {!proto.pb.GetAddressUnspentOutputsResponse} returns this
 */
 proto.pb.GetAddressUnspentOutputsResponse.prototype.setTokenMetadataList = function(value) {
@@ -7137,12 +7138,12 @@ proto.pb.GetAddressUnspentOutputsResponse.prototype.setTokenMetadataList = funct
 
 
 /**
- * @param {!proto.pb.TokenMetadata=} opt_value
+ * @param {!proto.pb.SlpTokenMetadata=} opt_value
  * @param {number=} opt_index
- * @return {!proto.pb.TokenMetadata}
+ * @return {!proto.pb.SlpTokenMetadata}
  */
 proto.pb.GetAddressUnspentOutputsResponse.prototype.addTokenMetadata = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 2, opt_value, proto.pb.TokenMetadata, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 2, opt_value, proto.pb.SlpTokenMetadata, opt_index);
 };
 
 
@@ -7437,7 +7438,7 @@ proto.pb.GetUnspentOutputResponse.toObject = function(includeInstance, msg) {
     isCoinbase: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
     blockHeight: jspb.Message.getFieldWithDefault(msg, 5, 0),
     slpToken: (f = msg.getSlpToken()) && proto.pb.SlpToken.toObject(includeInstance, f),
-    tokenMetadata: (f = msg.getTokenMetadata()) && proto.pb.TokenMetadata.toObject(includeInstance, f)
+    tokenMetadata: (f = msg.getTokenMetadata()) && proto.pb.SlpTokenMetadata.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -7501,8 +7502,8 @@ proto.pb.GetUnspentOutputResponse.deserializeBinaryFromReader = function(msg, re
       msg.setSlpToken(value);
       break;
     case 7:
-      var value = new proto.pb.TokenMetadata;
-      reader.readMessage(value,proto.pb.TokenMetadata.deserializeBinaryFromReader);
+      var value = new proto.pb.SlpTokenMetadata;
+      reader.readMessage(value,proto.pb.SlpTokenMetadata.deserializeBinaryFromReader);
       msg.setTokenMetadata(value);
       break;
     default:
@@ -7583,7 +7584,7 @@ proto.pb.GetUnspentOutputResponse.serializeBinaryToWriter = function(message, wr
     writer.writeMessage(
       7,
       f,
-      proto.pb.TokenMetadata.serializeBinaryToWriter
+      proto.pb.SlpTokenMetadata.serializeBinaryToWriter
     );
   }
 };
@@ -7760,17 +7761,17 @@ proto.pb.GetUnspentOutputResponse.prototype.hasSlpToken = function() {
 
 
 /**
- * optional TokenMetadata token_metadata = 7;
- * @return {?proto.pb.TokenMetadata}
+ * optional SlpTokenMetadata token_metadata = 7;
+ * @return {?proto.pb.SlpTokenMetadata}
  */
 proto.pb.GetUnspentOutputResponse.prototype.getTokenMetadata = function() {
-  return /** @type{?proto.pb.TokenMetadata} */ (
-    jspb.Message.getWrapperField(this, proto.pb.TokenMetadata, 7));
+  return /** @type{?proto.pb.SlpTokenMetadata} */ (
+    jspb.Message.getWrapperField(this, proto.pb.SlpTokenMetadata, 7));
 };
 
 
 /**
- * @param {?proto.pb.TokenMetadata|undefined} value
+ * @param {?proto.pb.SlpTokenMetadata|undefined} value
  * @return {!proto.pb.GetUnspentOutputResponse} returns this
 */
 proto.pb.GetUnspentOutputResponse.prototype.setTokenMetadata = function(value) {
@@ -9525,7 +9526,7 @@ proto.pb.SubscribeBlocksRequest.prototype.setSerializeBlock = function(value) {
  * @private {!Array<number>}
  * @const
  */
-proto.pb.GetTokenMetadataRequest.repeatedFields_ = [1];
+proto.pb.GetSlpTokenMetadataRequest.repeatedFields_ = [1];
 
 
 
@@ -9542,8 +9543,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pb.GetTokenMetadataRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.pb.GetTokenMetadataRequest.toObject(opt_includeInstance, this);
+proto.pb.GetSlpTokenMetadataRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.pb.GetSlpTokenMetadataRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -9552,11 +9553,11 @@ proto.pb.GetTokenMetadataRequest.prototype.toObject = function(opt_includeInstan
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pb.GetTokenMetadataRequest} msg The msg instance to transform.
+ * @param {!proto.pb.GetSlpTokenMetadataRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetTokenMetadataRequest.toObject = function(includeInstance, msg) {
+proto.pb.GetSlpTokenMetadataRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     tokenIdsList: msg.getTokenIdsList_asB64()
   };
@@ -9572,23 +9573,23 @@ proto.pb.GetTokenMetadataRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pb.GetTokenMetadataRequest}
+ * @return {!proto.pb.GetSlpTokenMetadataRequest}
  */
-proto.pb.GetTokenMetadataRequest.deserializeBinary = function(bytes) {
+proto.pb.GetSlpTokenMetadataRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pb.GetTokenMetadataRequest;
-  return proto.pb.GetTokenMetadataRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pb.GetSlpTokenMetadataRequest;
+  return proto.pb.GetSlpTokenMetadataRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pb.GetTokenMetadataRequest} msg The message object to deserialize into.
+ * @param {!proto.pb.GetSlpTokenMetadataRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pb.GetTokenMetadataRequest}
+ * @return {!proto.pb.GetSlpTokenMetadataRequest}
  */
-proto.pb.GetTokenMetadataRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.pb.GetSlpTokenMetadataRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -9612,9 +9613,9 @@ proto.pb.GetTokenMetadataRequest.deserializeBinaryFromReader = function(msg, rea
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pb.GetTokenMetadataRequest.prototype.serializeBinary = function() {
+proto.pb.GetSlpTokenMetadataRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pb.GetTokenMetadataRequest.serializeBinaryToWriter(this, writer);
+  proto.pb.GetSlpTokenMetadataRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -9622,11 +9623,11 @@ proto.pb.GetTokenMetadataRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pb.GetTokenMetadataRequest} message
+ * @param {!proto.pb.GetSlpTokenMetadataRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetTokenMetadataRequest.serializeBinaryToWriter = function(message, writer) {
+proto.pb.GetSlpTokenMetadataRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getTokenIdsList_asU8();
   if (f.length > 0) {
@@ -9642,7 +9643,7 @@ proto.pb.GetTokenMetadataRequest.serializeBinaryToWriter = function(message, wri
  * repeated bytes token_ids = 1;
  * @return {!(Array<!Uint8Array>|Array<string>)}
  */
-proto.pb.GetTokenMetadataRequest.prototype.getTokenIdsList = function() {
+proto.pb.GetSlpTokenMetadataRequest.prototype.getTokenIdsList = function() {
   return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 1));
 };
 
@@ -9652,7 +9653,7 @@ proto.pb.GetTokenMetadataRequest.prototype.getTokenIdsList = function() {
  * This is a type-conversion wrapper around `getTokenIdsList()`
  * @return {!Array<string>}
  */
-proto.pb.GetTokenMetadataRequest.prototype.getTokenIdsList_asB64 = function() {
+proto.pb.GetSlpTokenMetadataRequest.prototype.getTokenIdsList_asB64 = function() {
   return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
       this.getTokenIdsList()));
 };
@@ -9665,7 +9666,7 @@ proto.pb.GetTokenMetadataRequest.prototype.getTokenIdsList_asB64 = function() {
  * This is a type-conversion wrapper around `getTokenIdsList()`
  * @return {!Array<!Uint8Array>}
  */
-proto.pb.GetTokenMetadataRequest.prototype.getTokenIdsList_asU8 = function() {
+proto.pb.GetSlpTokenMetadataRequest.prototype.getTokenIdsList_asU8 = function() {
   return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
       this.getTokenIdsList()));
 };
@@ -9673,9 +9674,9 @@ proto.pb.GetTokenMetadataRequest.prototype.getTokenIdsList_asU8 = function() {
 
 /**
  * @param {!(Array<!Uint8Array>|Array<string>)} value
- * @return {!proto.pb.GetTokenMetadataRequest} returns this
+ * @return {!proto.pb.GetSlpTokenMetadataRequest} returns this
  */
-proto.pb.GetTokenMetadataRequest.prototype.setTokenIdsList = function(value) {
+proto.pb.GetSlpTokenMetadataRequest.prototype.setTokenIdsList = function(value) {
   return jspb.Message.setField(this, 1, value || []);
 };
 
@@ -9683,18 +9684,18 @@ proto.pb.GetTokenMetadataRequest.prototype.setTokenIdsList = function(value) {
 /**
  * @param {!(string|Uint8Array)} value
  * @param {number=} opt_index
- * @return {!proto.pb.GetTokenMetadataRequest} returns this
+ * @return {!proto.pb.GetSlpTokenMetadataRequest} returns this
  */
-proto.pb.GetTokenMetadataRequest.prototype.addTokenIds = function(value, opt_index) {
+proto.pb.GetSlpTokenMetadataRequest.prototype.addTokenIds = function(value, opt_index) {
   return jspb.Message.addToRepeatedField(this, 1, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.pb.GetTokenMetadataRequest} returns this
+ * @return {!proto.pb.GetSlpTokenMetadataRequest} returns this
  */
-proto.pb.GetTokenMetadataRequest.prototype.clearTokenIdsList = function() {
+proto.pb.GetSlpTokenMetadataRequest.prototype.clearTokenIdsList = function() {
   return this.setTokenIdsList([]);
 };
 
@@ -9705,7 +9706,7 @@ proto.pb.GetTokenMetadataRequest.prototype.clearTokenIdsList = function() {
  * @private {!Array<number>}
  * @const
  */
-proto.pb.GetTokenMetadataResponse.repeatedFields_ = [1];
+proto.pb.GetSlpTokenMetadataResponse.repeatedFields_ = [1];
 
 
 
@@ -9722,8 +9723,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pb.GetTokenMetadataResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.pb.GetTokenMetadataResponse.toObject(opt_includeInstance, this);
+proto.pb.GetSlpTokenMetadataResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.pb.GetSlpTokenMetadataResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -9732,14 +9733,14 @@ proto.pb.GetTokenMetadataResponse.prototype.toObject = function(opt_includeInsta
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pb.GetTokenMetadataResponse} msg The msg instance to transform.
+ * @param {!proto.pb.GetSlpTokenMetadataResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetTokenMetadataResponse.toObject = function(includeInstance, msg) {
+proto.pb.GetSlpTokenMetadataResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     tokenMetadataList: jspb.Message.toObjectList(msg.getTokenMetadataList(),
-    proto.pb.TokenMetadata.toObject, includeInstance)
+    proto.pb.SlpTokenMetadata.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -9753,23 +9754,23 @@ proto.pb.GetTokenMetadataResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pb.GetTokenMetadataResponse}
+ * @return {!proto.pb.GetSlpTokenMetadataResponse}
  */
-proto.pb.GetTokenMetadataResponse.deserializeBinary = function(bytes) {
+proto.pb.GetSlpTokenMetadataResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pb.GetTokenMetadataResponse;
-  return proto.pb.GetTokenMetadataResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pb.GetSlpTokenMetadataResponse;
+  return proto.pb.GetSlpTokenMetadataResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pb.GetTokenMetadataResponse} msg The message object to deserialize into.
+ * @param {!proto.pb.GetSlpTokenMetadataResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pb.GetTokenMetadataResponse}
+ * @return {!proto.pb.GetSlpTokenMetadataResponse}
  */
-proto.pb.GetTokenMetadataResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.pb.GetSlpTokenMetadataResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -9777,8 +9778,8 @@ proto.pb.GetTokenMetadataResponse.deserializeBinaryFromReader = function(msg, re
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.pb.TokenMetadata;
-      reader.readMessage(value,proto.pb.TokenMetadata.deserializeBinaryFromReader);
+      var value = new proto.pb.SlpTokenMetadata;
+      reader.readMessage(value,proto.pb.SlpTokenMetadata.deserializeBinaryFromReader);
       msg.addTokenMetadata(value);
       break;
     default:
@@ -9794,9 +9795,9 @@ proto.pb.GetTokenMetadataResponse.deserializeBinaryFromReader = function(msg, re
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pb.GetTokenMetadataResponse.prototype.serializeBinary = function() {
+proto.pb.GetSlpTokenMetadataResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pb.GetTokenMetadataResponse.serializeBinaryToWriter(this, writer);
+  proto.pb.GetSlpTokenMetadataResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -9804,57 +9805,57 @@ proto.pb.GetTokenMetadataResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pb.GetTokenMetadataResponse} message
+ * @param {!proto.pb.GetSlpTokenMetadataResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetTokenMetadataResponse.serializeBinaryToWriter = function(message, writer) {
+proto.pb.GetSlpTokenMetadataResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getTokenMetadataList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
       f,
-      proto.pb.TokenMetadata.serializeBinaryToWriter
+      proto.pb.SlpTokenMetadata.serializeBinaryToWriter
     );
   }
 };
 
 
 /**
- * repeated TokenMetadata token_metadata = 1;
- * @return {!Array<!proto.pb.TokenMetadata>}
+ * repeated SlpTokenMetadata token_metadata = 1;
+ * @return {!Array<!proto.pb.SlpTokenMetadata>}
  */
-proto.pb.GetTokenMetadataResponse.prototype.getTokenMetadataList = function() {
-  return /** @type{!Array<!proto.pb.TokenMetadata>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.pb.TokenMetadata, 1));
+proto.pb.GetSlpTokenMetadataResponse.prototype.getTokenMetadataList = function() {
+  return /** @type{!Array<!proto.pb.SlpTokenMetadata>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.pb.SlpTokenMetadata, 1));
 };
 
 
 /**
- * @param {!Array<!proto.pb.TokenMetadata>} value
- * @return {!proto.pb.GetTokenMetadataResponse} returns this
+ * @param {!Array<!proto.pb.SlpTokenMetadata>} value
+ * @return {!proto.pb.GetSlpTokenMetadataResponse} returns this
 */
-proto.pb.GetTokenMetadataResponse.prototype.setTokenMetadataList = function(value) {
+proto.pb.GetSlpTokenMetadataResponse.prototype.setTokenMetadataList = function(value) {
   return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
 /**
- * @param {!proto.pb.TokenMetadata=} opt_value
+ * @param {!proto.pb.SlpTokenMetadata=} opt_value
  * @param {number=} opt_index
- * @return {!proto.pb.TokenMetadata}
+ * @return {!proto.pb.SlpTokenMetadata}
  */
-proto.pb.GetTokenMetadataResponse.prototype.addTokenMetadata = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.pb.TokenMetadata, opt_index);
+proto.pb.GetSlpTokenMetadataResponse.prototype.addTokenMetadata = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.pb.SlpTokenMetadata, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.pb.GetTokenMetadataResponse} returns this
+ * @return {!proto.pb.GetSlpTokenMetadataResponse} returns this
  */
-proto.pb.GetTokenMetadataResponse.prototype.clearTokenMetadataList = function() {
+proto.pb.GetSlpTokenMetadataResponse.prototype.clearTokenMetadataList = function() {
   return this.setTokenMetadataList([]);
 };
 
@@ -9875,8 +9876,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pb.GetParsedSlpScriptRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.pb.GetParsedSlpScriptRequest.toObject(opt_includeInstance, this);
+proto.pb.GetSlpParsedScriptRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.pb.GetSlpParsedScriptRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -9885,11 +9886,11 @@ proto.pb.GetParsedSlpScriptRequest.prototype.toObject = function(opt_includeInst
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pb.GetParsedSlpScriptRequest} msg The msg instance to transform.
+ * @param {!proto.pb.GetSlpParsedScriptRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetParsedSlpScriptRequest.toObject = function(includeInstance, msg) {
+proto.pb.GetSlpParsedScriptRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     slpOpreturnScript: msg.getSlpOpreturnScript_asB64()
   };
@@ -9905,23 +9906,23 @@ proto.pb.GetParsedSlpScriptRequest.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pb.GetParsedSlpScriptRequest}
+ * @return {!proto.pb.GetSlpParsedScriptRequest}
  */
-proto.pb.GetParsedSlpScriptRequest.deserializeBinary = function(bytes) {
+proto.pb.GetSlpParsedScriptRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pb.GetParsedSlpScriptRequest;
-  return proto.pb.GetParsedSlpScriptRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pb.GetSlpParsedScriptRequest;
+  return proto.pb.GetSlpParsedScriptRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pb.GetParsedSlpScriptRequest} msg The message object to deserialize into.
+ * @param {!proto.pb.GetSlpParsedScriptRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pb.GetParsedSlpScriptRequest}
+ * @return {!proto.pb.GetSlpParsedScriptRequest}
  */
-proto.pb.GetParsedSlpScriptRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.pb.GetSlpParsedScriptRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -9945,9 +9946,9 @@ proto.pb.GetParsedSlpScriptRequest.deserializeBinaryFromReader = function(msg, r
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pb.GetParsedSlpScriptRequest.prototype.serializeBinary = function() {
+proto.pb.GetSlpParsedScriptRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pb.GetParsedSlpScriptRequest.serializeBinaryToWriter(this, writer);
+  proto.pb.GetSlpParsedScriptRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -9955,11 +9956,11 @@ proto.pb.GetParsedSlpScriptRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pb.GetParsedSlpScriptRequest} message
+ * @param {!proto.pb.GetSlpParsedScriptRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetParsedSlpScriptRequest.serializeBinaryToWriter = function(message, writer) {
+proto.pb.GetSlpParsedScriptRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getSlpOpreturnScript_asU8();
   if (f.length > 0) {
@@ -9975,7 +9976,7 @@ proto.pb.GetParsedSlpScriptRequest.serializeBinaryToWriter = function(message, w
  * optional bytes slp_opreturn_script = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.pb.GetParsedSlpScriptRequest.prototype.getSlpOpreturnScript = function() {
+proto.pb.GetSlpParsedScriptRequest.prototype.getSlpOpreturnScript = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -9985,7 +9986,7 @@ proto.pb.GetParsedSlpScriptRequest.prototype.getSlpOpreturnScript = function() {
  * This is a type-conversion wrapper around `getSlpOpreturnScript()`
  * @return {string}
  */
-proto.pb.GetParsedSlpScriptRequest.prototype.getSlpOpreturnScript_asB64 = function() {
+proto.pb.GetSlpParsedScriptRequest.prototype.getSlpOpreturnScript_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getSlpOpreturnScript()));
 };
@@ -9998,7 +9999,7 @@ proto.pb.GetParsedSlpScriptRequest.prototype.getSlpOpreturnScript_asB64 = functi
  * This is a type-conversion wrapper around `getSlpOpreturnScript()`
  * @return {!Uint8Array}
  */
-proto.pb.GetParsedSlpScriptRequest.prototype.getSlpOpreturnScript_asU8 = function() {
+proto.pb.GetSlpParsedScriptRequest.prototype.getSlpOpreturnScript_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getSlpOpreturnScript()));
 };
@@ -10006,9 +10007,9 @@ proto.pb.GetParsedSlpScriptRequest.prototype.getSlpOpreturnScript_asU8 = functio
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.GetParsedSlpScriptRequest} returns this
+ * @return {!proto.pb.GetSlpParsedScriptRequest} returns this
  */
-proto.pb.GetParsedSlpScriptRequest.prototype.setSlpOpreturnScript = function(value) {
+proto.pb.GetSlpParsedScriptRequest.prototype.setSlpOpreturnScript = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -10022,12 +10023,12 @@ proto.pb.GetParsedSlpScriptRequest.prototype.setSlpOpreturnScript = function(val
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.pb.GetParsedSlpScriptResponse.oneofGroups_ = [[5,6,7,8,9]];
+proto.pb.GetSlpParsedScriptResponse.oneofGroups_ = [[5,6,7,8,9]];
 
 /**
  * @enum {number}
  */
-proto.pb.GetParsedSlpScriptResponse.SlpMetadataCase = {
+proto.pb.GetSlpParsedScriptResponse.SlpMetadataCase = {
   SLP_METADATA_NOT_SET: 0,
   V1_GENESIS: 5,
   V1_MINT: 6,
@@ -10037,10 +10038,10 @@ proto.pb.GetParsedSlpScriptResponse.SlpMetadataCase = {
 };
 
 /**
- * @return {proto.pb.GetParsedSlpScriptResponse.SlpMetadataCase}
+ * @return {proto.pb.GetSlpParsedScriptResponse.SlpMetadataCase}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.getSlpMetadataCase = function() {
-  return /** @type {proto.pb.GetParsedSlpScriptResponse.SlpMetadataCase} */(jspb.Message.computeOneofCase(this, proto.pb.GetParsedSlpScriptResponse.oneofGroups_[0]));
+proto.pb.GetSlpParsedScriptResponse.prototype.getSlpMetadataCase = function() {
+  return /** @type {proto.pb.GetSlpParsedScriptResponse.SlpMetadataCase} */(jspb.Message.computeOneofCase(this, proto.pb.GetSlpParsedScriptResponse.oneofGroups_[0]));
 };
 
 
@@ -10058,8 +10059,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.pb.GetParsedSlpScriptResponse.toObject(opt_includeInstance, this);
+proto.pb.GetSlpParsedScriptResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.pb.GetSlpParsedScriptResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -10068,11 +10069,11 @@ proto.pb.GetParsedSlpScriptResponse.prototype.toObject = function(opt_includeIns
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pb.GetParsedSlpScriptResponse} msg The msg instance to transform.
+ * @param {!proto.pb.GetSlpParsedScriptResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetParsedSlpScriptResponse.toObject = function(includeInstance, msg) {
+proto.pb.GetSlpParsedScriptResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     parsingError: jspb.Message.getFieldWithDefault(msg, 1, ""),
     tokenId: msg.getTokenId_asB64(),
@@ -10096,23 +10097,23 @@ proto.pb.GetParsedSlpScriptResponse.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pb.GetParsedSlpScriptResponse}
+ * @return {!proto.pb.GetSlpParsedScriptResponse}
  */
-proto.pb.GetParsedSlpScriptResponse.deserializeBinary = function(bytes) {
+proto.pb.GetSlpParsedScriptResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pb.GetParsedSlpScriptResponse;
-  return proto.pb.GetParsedSlpScriptResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pb.GetSlpParsedScriptResponse;
+  return proto.pb.GetSlpParsedScriptResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pb.GetParsedSlpScriptResponse} msg The message object to deserialize into.
+ * @param {!proto.pb.GetSlpParsedScriptResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pb.GetParsedSlpScriptResponse}
+ * @return {!proto.pb.GetSlpParsedScriptResponse}
  */
-proto.pb.GetParsedSlpScriptResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.pb.GetSlpParsedScriptResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -10132,7 +10133,7 @@ proto.pb.GetParsedSlpScriptResponse.deserializeBinaryFromReader = function(msg, 
       msg.setSlpAction(value);
       break;
     case 4:
-      var value = /** @type {number} */ (reader.readUint32());
+      var value = /** @type {!proto.pb.SlpTokenType} */ (reader.readEnum());
       msg.setTokenType(value);
       break;
     case 5:
@@ -10173,9 +10174,9 @@ proto.pb.GetParsedSlpScriptResponse.deserializeBinaryFromReader = function(msg, 
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.serializeBinary = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pb.GetParsedSlpScriptResponse.serializeBinaryToWriter(this, writer);
+  proto.pb.GetSlpParsedScriptResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -10183,11 +10184,11 @@ proto.pb.GetParsedSlpScriptResponse.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pb.GetParsedSlpScriptResponse} message
+ * @param {!proto.pb.GetSlpParsedScriptResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetParsedSlpScriptResponse.serializeBinaryToWriter = function(message, writer) {
+proto.pb.GetSlpParsedScriptResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getParsingError();
   if (f.length > 0) {
@@ -10211,8 +10212,8 @@ proto.pb.GetParsedSlpScriptResponse.serializeBinaryToWriter = function(message, 
     );
   }
   f = message.getTokenType();
-  if (f !== 0) {
-    writer.writeUint32(
+  if (f !== 0.0) {
+    writer.writeEnum(
       4,
       f
     );
@@ -10264,16 +10265,16 @@ proto.pb.GetParsedSlpScriptResponse.serializeBinaryToWriter = function(message, 
  * optional string parsing_error = 1;
  * @return {string}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.getParsingError = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.getParsingError = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.setParsingError = function(value) {
+proto.pb.GetSlpParsedScriptResponse.prototype.setParsingError = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
@@ -10282,7 +10283,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.setParsingError = function(value) 
  * optional bytes token_id = 2;
  * @return {!(string|Uint8Array)}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.getTokenId = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.getTokenId = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -10292,7 +10293,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.getTokenId = function() {
  * This is a type-conversion wrapper around `getTokenId()`
  * @return {string}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.getTokenId_asB64 = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.getTokenId_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getTokenId()));
 };
@@ -10305,7 +10306,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.getTokenId_asB64 = function() {
  * This is a type-conversion wrapper around `getTokenId()`
  * @return {!Uint8Array}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.getTokenId_asU8 = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.getTokenId_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getTokenId()));
 };
@@ -10313,9 +10314,9 @@ proto.pb.GetParsedSlpScriptResponse.prototype.getTokenId_asU8 = function() {
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.setTokenId = function(value) {
+proto.pb.GetSlpParsedScriptResponse.prototype.setTokenId = function(value) {
   return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
@@ -10324,35 +10325,35 @@ proto.pb.GetParsedSlpScriptResponse.prototype.setTokenId = function(value) {
  * optional SlpAction slp_action = 3;
  * @return {!proto.pb.SlpAction}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.getSlpAction = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.getSlpAction = function() {
   return /** @type {!proto.pb.SlpAction} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
 /**
  * @param {!proto.pb.SlpAction} value
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.setSlpAction = function(value) {
+proto.pb.GetSlpParsedScriptResponse.prototype.setSlpAction = function(value) {
   return jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 
 /**
- * optional uint32 token_type = 4;
- * @return {number}
+ * optional SlpTokenType token_type = 4;
+ * @return {!proto.pb.SlpTokenType}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.getTokenType = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+proto.pb.GetSlpParsedScriptResponse.prototype.getTokenType = function() {
+  return /** @type {!proto.pb.SlpTokenType} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 
 /**
- * @param {number} value
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @param {!proto.pb.SlpTokenType} value
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.setTokenType = function(value) {
-  return jspb.Message.setProto3IntField(this, 4, value);
+proto.pb.GetSlpParsedScriptResponse.prototype.setTokenType = function(value) {
+  return jspb.Message.setProto3EnumField(this, 4, value);
 };
 
 
@@ -10360,7 +10361,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.setTokenType = function(value) {
  * optional SlpV1GenesisMetadata v1_genesis = 5;
  * @return {?proto.pb.SlpV1GenesisMetadata}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.getV1Genesis = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.getV1Genesis = function() {
   return /** @type{?proto.pb.SlpV1GenesisMetadata} */ (
     jspb.Message.getWrapperField(this, proto.pb.SlpV1GenesisMetadata, 5));
 };
@@ -10368,18 +10369,18 @@ proto.pb.GetParsedSlpScriptResponse.prototype.getV1Genesis = function() {
 
 /**
  * @param {?proto.pb.SlpV1GenesisMetadata|undefined} value
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
 */
-proto.pb.GetParsedSlpScriptResponse.prototype.setV1Genesis = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 5, proto.pb.GetParsedSlpScriptResponse.oneofGroups_[0], value);
+proto.pb.GetSlpParsedScriptResponse.prototype.setV1Genesis = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 5, proto.pb.GetSlpParsedScriptResponse.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.clearV1Genesis = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.clearV1Genesis = function() {
   return this.setV1Genesis(undefined);
 };
 
@@ -10388,7 +10389,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.clearV1Genesis = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.hasV1Genesis = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.hasV1Genesis = function() {
   return jspb.Message.getField(this, 5) != null;
 };
 
@@ -10397,7 +10398,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.hasV1Genesis = function() {
  * optional SlpV1MintMetadata v1_mint = 6;
  * @return {?proto.pb.SlpV1MintMetadata}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.getV1Mint = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.getV1Mint = function() {
   return /** @type{?proto.pb.SlpV1MintMetadata} */ (
     jspb.Message.getWrapperField(this, proto.pb.SlpV1MintMetadata, 6));
 };
@@ -10405,18 +10406,18 @@ proto.pb.GetParsedSlpScriptResponse.prototype.getV1Mint = function() {
 
 /**
  * @param {?proto.pb.SlpV1MintMetadata|undefined} value
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
 */
-proto.pb.GetParsedSlpScriptResponse.prototype.setV1Mint = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 6, proto.pb.GetParsedSlpScriptResponse.oneofGroups_[0], value);
+proto.pb.GetSlpParsedScriptResponse.prototype.setV1Mint = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 6, proto.pb.GetSlpParsedScriptResponse.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.clearV1Mint = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.clearV1Mint = function() {
   return this.setV1Mint(undefined);
 };
 
@@ -10425,7 +10426,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.clearV1Mint = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.hasV1Mint = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.hasV1Mint = function() {
   return jspb.Message.getField(this, 6) != null;
 };
 
@@ -10434,7 +10435,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.hasV1Mint = function() {
  * optional SlpV1SendMetadata v1_send = 7;
  * @return {?proto.pb.SlpV1SendMetadata}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.getV1Send = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.getV1Send = function() {
   return /** @type{?proto.pb.SlpV1SendMetadata} */ (
     jspb.Message.getWrapperField(this, proto.pb.SlpV1SendMetadata, 7));
 };
@@ -10442,18 +10443,18 @@ proto.pb.GetParsedSlpScriptResponse.prototype.getV1Send = function() {
 
 /**
  * @param {?proto.pb.SlpV1SendMetadata|undefined} value
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
 */
-proto.pb.GetParsedSlpScriptResponse.prototype.setV1Send = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 7, proto.pb.GetParsedSlpScriptResponse.oneofGroups_[0], value);
+proto.pb.GetSlpParsedScriptResponse.prototype.setV1Send = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 7, proto.pb.GetSlpParsedScriptResponse.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.clearV1Send = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.clearV1Send = function() {
   return this.setV1Send(undefined);
 };
 
@@ -10462,7 +10463,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.clearV1Send = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.hasV1Send = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.hasV1Send = function() {
   return jspb.Message.getField(this, 7) != null;
 };
 
@@ -10471,7 +10472,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.hasV1Send = function() {
  * optional SlpV1Nft1ChildGenesisMetadata v1_nft1_child_genesis = 8;
  * @return {?proto.pb.SlpV1Nft1ChildGenesisMetadata}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.getV1Nft1ChildGenesis = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.getV1Nft1ChildGenesis = function() {
   return /** @type{?proto.pb.SlpV1Nft1ChildGenesisMetadata} */ (
     jspb.Message.getWrapperField(this, proto.pb.SlpV1Nft1ChildGenesisMetadata, 8));
 };
@@ -10479,18 +10480,18 @@ proto.pb.GetParsedSlpScriptResponse.prototype.getV1Nft1ChildGenesis = function()
 
 /**
  * @param {?proto.pb.SlpV1Nft1ChildGenesisMetadata|undefined} value
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
 */
-proto.pb.GetParsedSlpScriptResponse.prototype.setV1Nft1ChildGenesis = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 8, proto.pb.GetParsedSlpScriptResponse.oneofGroups_[0], value);
+proto.pb.GetSlpParsedScriptResponse.prototype.setV1Nft1ChildGenesis = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 8, proto.pb.GetSlpParsedScriptResponse.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.clearV1Nft1ChildGenesis = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.clearV1Nft1ChildGenesis = function() {
   return this.setV1Nft1ChildGenesis(undefined);
 };
 
@@ -10499,7 +10500,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.clearV1Nft1ChildGenesis = function
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.hasV1Nft1ChildGenesis = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.hasV1Nft1ChildGenesis = function() {
   return jspb.Message.getField(this, 8) != null;
 };
 
@@ -10508,7 +10509,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.hasV1Nft1ChildGenesis = function()
  * optional SlpV1Nft1ChildSendMetadata v1_nft1_child_send = 9;
  * @return {?proto.pb.SlpV1Nft1ChildSendMetadata}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.getV1Nft1ChildSend = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.getV1Nft1ChildSend = function() {
   return /** @type{?proto.pb.SlpV1Nft1ChildSendMetadata} */ (
     jspb.Message.getWrapperField(this, proto.pb.SlpV1Nft1ChildSendMetadata, 9));
 };
@@ -10516,18 +10517,18 @@ proto.pb.GetParsedSlpScriptResponse.prototype.getV1Nft1ChildSend = function() {
 
 /**
  * @param {?proto.pb.SlpV1Nft1ChildSendMetadata|undefined} value
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
 */
-proto.pb.GetParsedSlpScriptResponse.prototype.setV1Nft1ChildSend = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 9, proto.pb.GetParsedSlpScriptResponse.oneofGroups_[0], value);
+proto.pb.GetSlpParsedScriptResponse.prototype.setV1Nft1ChildSend = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 9, proto.pb.GetSlpParsedScriptResponse.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
- * @return {!proto.pb.GetParsedSlpScriptResponse} returns this
+ * @return {!proto.pb.GetSlpParsedScriptResponse} returns this
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.clearV1Nft1ChildSend = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.clearV1Nft1ChildSend = function() {
   return this.setV1Nft1ChildSend(undefined);
 };
 
@@ -10536,7 +10537,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.clearV1Nft1ChildSend = function() 
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.pb.GetParsedSlpScriptResponse.prototype.hasV1Nft1ChildSend = function() {
+proto.pb.GetSlpParsedScriptResponse.prototype.hasV1Nft1ChildSend = function() {
   return jspb.Message.getField(this, 9) != null;
 };
 
@@ -10547,7 +10548,7 @@ proto.pb.GetParsedSlpScriptResponse.prototype.hasV1Nft1ChildSend = function() {
  * @private {!Array<number>}
  * @const
  */
-proto.pb.GetTrustedSlpValidationRequest.repeatedFields_ = [1];
+proto.pb.GetSlpTrustedValidationRequest.repeatedFields_ = [1];
 
 
 
@@ -10564,8 +10565,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pb.GetTrustedSlpValidationRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.pb.GetTrustedSlpValidationRequest.toObject(opt_includeInstance, this);
+proto.pb.GetSlpTrustedValidationRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.pb.GetSlpTrustedValidationRequest.toObject(opt_includeInstance, this);
 };
 
 
@@ -10574,14 +10575,14 @@ proto.pb.GetTrustedSlpValidationRequest.prototype.toObject = function(opt_includ
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pb.GetTrustedSlpValidationRequest} msg The msg instance to transform.
+ * @param {!proto.pb.GetSlpTrustedValidationRequest} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetTrustedSlpValidationRequest.toObject = function(includeInstance, msg) {
+proto.pb.GetSlpTrustedValidationRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     queriesList: jspb.Message.toObjectList(msg.getQueriesList(),
-    proto.pb.GetTrustedSlpValidationRequest.Query.toObject, includeInstance),
+    proto.pb.GetSlpTrustedValidationRequest.Query.toObject, includeInstance),
     includeGraphsearchCount: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
   };
 
@@ -10596,23 +10597,23 @@ proto.pb.GetTrustedSlpValidationRequest.toObject = function(includeInstance, msg
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pb.GetTrustedSlpValidationRequest}
+ * @return {!proto.pb.GetSlpTrustedValidationRequest}
  */
-proto.pb.GetTrustedSlpValidationRequest.deserializeBinary = function(bytes) {
+proto.pb.GetSlpTrustedValidationRequest.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pb.GetTrustedSlpValidationRequest;
-  return proto.pb.GetTrustedSlpValidationRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pb.GetSlpTrustedValidationRequest;
+  return proto.pb.GetSlpTrustedValidationRequest.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pb.GetTrustedSlpValidationRequest} msg The message object to deserialize into.
+ * @param {!proto.pb.GetSlpTrustedValidationRequest} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pb.GetTrustedSlpValidationRequest}
+ * @return {!proto.pb.GetSlpTrustedValidationRequest}
  */
-proto.pb.GetTrustedSlpValidationRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.pb.GetSlpTrustedValidationRequest.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -10620,8 +10621,8 @@ proto.pb.GetTrustedSlpValidationRequest.deserializeBinaryFromReader = function(m
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.pb.GetTrustedSlpValidationRequest.Query;
-      reader.readMessage(value,proto.pb.GetTrustedSlpValidationRequest.Query.deserializeBinaryFromReader);
+      var value = new proto.pb.GetSlpTrustedValidationRequest.Query;
+      reader.readMessage(value,proto.pb.GetSlpTrustedValidationRequest.Query.deserializeBinaryFromReader);
       msg.addQueries(value);
       break;
     case 2:
@@ -10641,9 +10642,9 @@ proto.pb.GetTrustedSlpValidationRequest.deserializeBinaryFromReader = function(m
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pb.GetTrustedSlpValidationRequest.prototype.serializeBinary = function() {
+proto.pb.GetSlpTrustedValidationRequest.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pb.GetTrustedSlpValidationRequest.serializeBinaryToWriter(this, writer);
+  proto.pb.GetSlpTrustedValidationRequest.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -10651,18 +10652,18 @@ proto.pb.GetTrustedSlpValidationRequest.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pb.GetTrustedSlpValidationRequest} message
+ * @param {!proto.pb.GetSlpTrustedValidationRequest} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetTrustedSlpValidationRequest.serializeBinaryToWriter = function(message, writer) {
+proto.pb.GetSlpTrustedValidationRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getQueriesList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
       f,
-      proto.pb.GetTrustedSlpValidationRequest.Query.serializeBinaryToWriter
+      proto.pb.GetSlpTrustedValidationRequest.Query.serializeBinaryToWriter
     );
   }
   f = message.getIncludeGraphsearchCount();
@@ -10681,7 +10682,7 @@ proto.pb.GetTrustedSlpValidationRequest.serializeBinaryToWriter = function(messa
  * @private {!Array<number>}
  * @const
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.repeatedFields_ = [3];
+proto.pb.GetSlpTrustedValidationRequest.Query.repeatedFields_ = [3];
 
 
 
@@ -10698,8 +10699,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.toObject = function(opt_includeInstance) {
-  return proto.pb.GetTrustedSlpValidationRequest.Query.toObject(opt_includeInstance, this);
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.toObject = function(opt_includeInstance) {
+  return proto.pb.GetSlpTrustedValidationRequest.Query.toObject(opt_includeInstance, this);
 };
 
 
@@ -10708,11 +10709,11 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.toObject = function(opt_
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pb.GetTrustedSlpValidationRequest.Query} msg The msg instance to transform.
+ * @param {!proto.pb.GetSlpTrustedValidationRequest.Query} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.toObject = function(includeInstance, msg) {
+proto.pb.GetSlpTrustedValidationRequest.Query.toObject = function(includeInstance, msg) {
   var f, obj = {
     prevOutHash: msg.getPrevOutHash_asB64(),
     prevOutVout: jspb.Message.getFieldWithDefault(msg, 2, 0),
@@ -10730,23 +10731,23 @@ proto.pb.GetTrustedSlpValidationRequest.Query.toObject = function(includeInstanc
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pb.GetTrustedSlpValidationRequest.Query}
+ * @return {!proto.pb.GetSlpTrustedValidationRequest.Query}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.deserializeBinary = function(bytes) {
+proto.pb.GetSlpTrustedValidationRequest.Query.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pb.GetTrustedSlpValidationRequest.Query;
-  return proto.pb.GetTrustedSlpValidationRequest.Query.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pb.GetSlpTrustedValidationRequest.Query;
+  return proto.pb.GetSlpTrustedValidationRequest.Query.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pb.GetTrustedSlpValidationRequest.Query} msg The message object to deserialize into.
+ * @param {!proto.pb.GetSlpTrustedValidationRequest.Query} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pb.GetTrustedSlpValidationRequest.Query}
+ * @return {!proto.pb.GetSlpTrustedValidationRequest.Query}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.deserializeBinaryFromReader = function(msg, reader) {
+proto.pb.GetSlpTrustedValidationRequest.Query.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -10778,9 +10779,9 @@ proto.pb.GetTrustedSlpValidationRequest.Query.deserializeBinaryFromReader = func
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.serializeBinary = function() {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pb.GetTrustedSlpValidationRequest.Query.serializeBinaryToWriter(this, writer);
+  proto.pb.GetSlpTrustedValidationRequest.Query.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -10788,11 +10789,11 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.serializeBinary = functi
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pb.GetTrustedSlpValidationRequest.Query} message
+ * @param {!proto.pb.GetSlpTrustedValidationRequest.Query} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.serializeBinaryToWriter = function(message, writer) {
+proto.pb.GetSlpTrustedValidationRequest.Query.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getPrevOutHash_asU8();
   if (f.length > 0) {
@@ -10822,7 +10823,7 @@ proto.pb.GetTrustedSlpValidationRequest.Query.serializeBinaryToWriter = function
  * optional bytes prev_out_hash = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getPrevOutHash = function() {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.getPrevOutHash = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -10832,7 +10833,7 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getPrevOutHash = functio
  * This is a type-conversion wrapper around `getPrevOutHash()`
  * @return {string}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getPrevOutHash_asB64 = function() {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.getPrevOutHash_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getPrevOutHash()));
 };
@@ -10845,7 +10846,7 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getPrevOutHash_asB64 = f
  * This is a type-conversion wrapper around `getPrevOutHash()`
  * @return {!Uint8Array}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getPrevOutHash_asU8 = function() {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.getPrevOutHash_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getPrevOutHash()));
 };
@@ -10853,9 +10854,9 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getPrevOutHash_asU8 = fu
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.GetTrustedSlpValidationRequest.Query} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationRequest.Query} returns this
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.setPrevOutHash = function(value) {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.setPrevOutHash = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -10864,16 +10865,16 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.setPrevOutHash = functio
  * optional uint32 prev_out_vout = 2;
  * @return {number}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getPrevOutVout = function() {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.getPrevOutVout = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.pb.GetTrustedSlpValidationRequest.Query} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationRequest.Query} returns this
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.setPrevOutVout = function(value) {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.setPrevOutVout = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
 };
 
@@ -10882,7 +10883,7 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.setPrevOutVout = functio
  * repeated bytes graphsearch_valid_hashes = 3;
  * @return {!(Array<!Uint8Array>|Array<string>)}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidHashesList = function() {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.getGraphsearchValidHashesList = function() {
   return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 3));
 };
 
@@ -10892,7 +10893,7 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidHashe
  * This is a type-conversion wrapper around `getGraphsearchValidHashesList()`
  * @return {!Array<string>}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidHashesList_asB64 = function() {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.getGraphsearchValidHashesList_asB64 = function() {
   return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
       this.getGraphsearchValidHashesList()));
 };
@@ -10905,7 +10906,7 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidHashe
  * This is a type-conversion wrapper around `getGraphsearchValidHashesList()`
  * @return {!Array<!Uint8Array>}
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidHashesList_asU8 = function() {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.getGraphsearchValidHashesList_asU8 = function() {
   return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
       this.getGraphsearchValidHashesList()));
 };
@@ -10913,9 +10914,9 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.getGraphsearchValidHashe
 
 /**
  * @param {!(Array<!Uint8Array>|Array<string>)} value
- * @return {!proto.pb.GetTrustedSlpValidationRequest.Query} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationRequest.Query} returns this
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.setGraphsearchValidHashesList = function(value) {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.setGraphsearchValidHashesList = function(value) {
   return jspb.Message.setField(this, 3, value || []);
 };
 
@@ -10923,56 +10924,56 @@ proto.pb.GetTrustedSlpValidationRequest.Query.prototype.setGraphsearchValidHashe
 /**
  * @param {!(string|Uint8Array)} value
  * @param {number=} opt_index
- * @return {!proto.pb.GetTrustedSlpValidationRequest.Query} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationRequest.Query} returns this
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.addGraphsearchValidHashes = function(value, opt_index) {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.addGraphsearchValidHashes = function(value, opt_index) {
   return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.pb.GetTrustedSlpValidationRequest.Query} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationRequest.Query} returns this
  */
-proto.pb.GetTrustedSlpValidationRequest.Query.prototype.clearGraphsearchValidHashesList = function() {
+proto.pb.GetSlpTrustedValidationRequest.Query.prototype.clearGraphsearchValidHashesList = function() {
   return this.setGraphsearchValidHashesList([]);
 };
 
 
 /**
  * repeated Query queries = 1;
- * @return {!Array<!proto.pb.GetTrustedSlpValidationRequest.Query>}
+ * @return {!Array<!proto.pb.GetSlpTrustedValidationRequest.Query>}
  */
-proto.pb.GetTrustedSlpValidationRequest.prototype.getQueriesList = function() {
-  return /** @type{!Array<!proto.pb.GetTrustedSlpValidationRequest.Query>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.pb.GetTrustedSlpValidationRequest.Query, 1));
+proto.pb.GetSlpTrustedValidationRequest.prototype.getQueriesList = function() {
+  return /** @type{!Array<!proto.pb.GetSlpTrustedValidationRequest.Query>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.pb.GetSlpTrustedValidationRequest.Query, 1));
 };
 
 
 /**
- * @param {!Array<!proto.pb.GetTrustedSlpValidationRequest.Query>} value
- * @return {!proto.pb.GetTrustedSlpValidationRequest} returns this
+ * @param {!Array<!proto.pb.GetSlpTrustedValidationRequest.Query>} value
+ * @return {!proto.pb.GetSlpTrustedValidationRequest} returns this
 */
-proto.pb.GetTrustedSlpValidationRequest.prototype.setQueriesList = function(value) {
+proto.pb.GetSlpTrustedValidationRequest.prototype.setQueriesList = function(value) {
   return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
 /**
- * @param {!proto.pb.GetTrustedSlpValidationRequest.Query=} opt_value
+ * @param {!proto.pb.GetSlpTrustedValidationRequest.Query=} opt_value
  * @param {number=} opt_index
- * @return {!proto.pb.GetTrustedSlpValidationRequest.Query}
+ * @return {!proto.pb.GetSlpTrustedValidationRequest.Query}
  */
-proto.pb.GetTrustedSlpValidationRequest.prototype.addQueries = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.pb.GetTrustedSlpValidationRequest.Query, opt_index);
+proto.pb.GetSlpTrustedValidationRequest.prototype.addQueries = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.pb.GetSlpTrustedValidationRequest.Query, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.pb.GetTrustedSlpValidationRequest} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationRequest} returns this
  */
-proto.pb.GetTrustedSlpValidationRequest.prototype.clearQueriesList = function() {
+proto.pb.GetSlpTrustedValidationRequest.prototype.clearQueriesList = function() {
   return this.setQueriesList([]);
 };
 
@@ -10981,16 +10982,16 @@ proto.pb.GetTrustedSlpValidationRequest.prototype.clearQueriesList = function() 
  * optional bool include_graphsearch_count = 2;
  * @return {boolean}
  */
-proto.pb.GetTrustedSlpValidationRequest.prototype.getIncludeGraphsearchCount = function() {
+proto.pb.GetSlpTrustedValidationRequest.prototype.getIncludeGraphsearchCount = function() {
   return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 2, false));
 };
 
 
 /**
  * @param {boolean} value
- * @return {!proto.pb.GetTrustedSlpValidationRequest} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationRequest} returns this
  */
-proto.pb.GetTrustedSlpValidationRequest.prototype.setIncludeGraphsearchCount = function(value) {
+proto.pb.GetSlpTrustedValidationRequest.prototype.setIncludeGraphsearchCount = function(value) {
   return jspb.Message.setProto3BooleanField(this, 2, value);
 };
 
@@ -11001,7 +11002,7 @@ proto.pb.GetTrustedSlpValidationRequest.prototype.setIncludeGraphsearchCount = f
  * @private {!Array<number>}
  * @const
  */
-proto.pb.GetTrustedSlpValidationResponse.repeatedFields_ = [1];
+proto.pb.GetSlpTrustedValidationResponse.repeatedFields_ = [1];
 
 
 
@@ -11018,8 +11019,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pb.GetTrustedSlpValidationResponse.prototype.toObject = function(opt_includeInstance) {
-  return proto.pb.GetTrustedSlpValidationResponse.toObject(opt_includeInstance, this);
+proto.pb.GetSlpTrustedValidationResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.pb.GetSlpTrustedValidationResponse.toObject(opt_includeInstance, this);
 };
 
 
@@ -11028,14 +11029,14 @@ proto.pb.GetTrustedSlpValidationResponse.prototype.toObject = function(opt_inclu
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pb.GetTrustedSlpValidationResponse} msg The msg instance to transform.
+ * @param {!proto.pb.GetSlpTrustedValidationResponse} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetTrustedSlpValidationResponse.toObject = function(includeInstance, msg) {
+proto.pb.GetSlpTrustedValidationResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     resultsList: jspb.Message.toObjectList(msg.getResultsList(),
-    proto.pb.GetTrustedSlpValidationResponse.ValidityResult.toObject, includeInstance)
+    proto.pb.GetSlpTrustedValidationResponse.ValidityResult.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -11049,23 +11050,23 @@ proto.pb.GetTrustedSlpValidationResponse.toObject = function(includeInstance, ms
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pb.GetTrustedSlpValidationResponse}
+ * @return {!proto.pb.GetSlpTrustedValidationResponse}
  */
-proto.pb.GetTrustedSlpValidationResponse.deserializeBinary = function(bytes) {
+proto.pb.GetSlpTrustedValidationResponse.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pb.GetTrustedSlpValidationResponse;
-  return proto.pb.GetTrustedSlpValidationResponse.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pb.GetSlpTrustedValidationResponse;
+  return proto.pb.GetSlpTrustedValidationResponse.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pb.GetTrustedSlpValidationResponse} msg The message object to deserialize into.
+ * @param {!proto.pb.GetSlpTrustedValidationResponse} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pb.GetTrustedSlpValidationResponse}
+ * @return {!proto.pb.GetSlpTrustedValidationResponse}
  */
-proto.pb.GetTrustedSlpValidationResponse.deserializeBinaryFromReader = function(msg, reader) {
+proto.pb.GetSlpTrustedValidationResponse.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -11073,8 +11074,8 @@ proto.pb.GetTrustedSlpValidationResponse.deserializeBinaryFromReader = function(
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = new proto.pb.GetTrustedSlpValidationResponse.ValidityResult;
-      reader.readMessage(value,proto.pb.GetTrustedSlpValidationResponse.ValidityResult.deserializeBinaryFromReader);
+      var value = new proto.pb.GetSlpTrustedValidationResponse.ValidityResult;
+      reader.readMessage(value,proto.pb.GetSlpTrustedValidationResponse.ValidityResult.deserializeBinaryFromReader);
       msg.addResults(value);
       break;
     default:
@@ -11090,9 +11091,9 @@ proto.pb.GetTrustedSlpValidationResponse.deserializeBinaryFromReader = function(
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pb.GetTrustedSlpValidationResponse.prototype.serializeBinary = function() {
+proto.pb.GetSlpTrustedValidationResponse.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pb.GetTrustedSlpValidationResponse.serializeBinaryToWriter(this, writer);
+  proto.pb.GetSlpTrustedValidationResponse.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -11100,18 +11101,18 @@ proto.pb.GetTrustedSlpValidationResponse.prototype.serializeBinary = function() 
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pb.GetTrustedSlpValidationResponse} message
+ * @param {!proto.pb.GetSlpTrustedValidationResponse} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetTrustedSlpValidationResponse.serializeBinaryToWriter = function(message, writer) {
+proto.pb.GetSlpTrustedValidationResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getResultsList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
       f,
-      proto.pb.GetTrustedSlpValidationResponse.ValidityResult.serializeBinaryToWriter
+      proto.pb.GetSlpTrustedValidationResponse.ValidityResult.serializeBinaryToWriter
     );
   }
 };
@@ -11126,22 +11127,22 @@ proto.pb.GetTrustedSlpValidationResponse.serializeBinaryToWriter = function(mess
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.oneofGroups_ = [[6,7]];
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.oneofGroups_ = [[6,7]];
 
 /**
  * @enum {number}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.ValidityResultTypeCase = {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.ValidityResultTypeCase = {
   VALIDITY_RESULT_TYPE_NOT_SET: 0,
   V1_TOKEN_AMOUNT: 6,
   V1_MINT_BATON: 7
 };
 
 /**
- * @return {proto.pb.GetTrustedSlpValidationResponse.ValidityResult.ValidityResultTypeCase}
+ * @return {proto.pb.GetSlpTrustedValidationResponse.ValidityResult.ValidityResultTypeCase}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getValidityResultTypeCase = function() {
-  return /** @type {proto.pb.GetTrustedSlpValidationResponse.ValidityResult.ValidityResultTypeCase} */(jspb.Message.computeOneofCase(this, proto.pb.GetTrustedSlpValidationResponse.ValidityResult.oneofGroups_[0]));
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getValidityResultTypeCase = function() {
+  return /** @type {proto.pb.GetSlpTrustedValidationResponse.ValidityResult.ValidityResultTypeCase} */(jspb.Message.computeOneofCase(this, proto.pb.GetSlpTrustedValidationResponse.ValidityResult.oneofGroups_[0]));
 };
 
 
@@ -11159,8 +11160,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.toObject = function(opt_includeInstance) {
-  return proto.pb.GetTrustedSlpValidationResponse.ValidityResult.toObject(opt_includeInstance, this);
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.toObject = function(opt_includeInstance) {
+  return proto.pb.GetSlpTrustedValidationResponse.ValidityResult.toObject(opt_includeInstance, this);
 };
 
 
@@ -11169,11 +11170,11 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.toObject = fun
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} msg The msg instance to transform.
+ * @param {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.toObject = function(includeInstance, msg) {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.toObject = function(includeInstance, msg) {
   var f, obj = {
     prevOutHash: msg.getPrevOutHash_asB64(),
     prevOutVout: jspb.Message.getFieldWithDefault(msg, 2, 0),
@@ -11197,23 +11198,23 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.toObject = function(incl
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult}
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.deserializeBinary = function(bytes) {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pb.GetTrustedSlpValidationResponse.ValidityResult;
-  return proto.pb.GetTrustedSlpValidationResponse.ValidityResult.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pb.GetSlpTrustedValidationResponse.ValidityResult;
+  return proto.pb.GetSlpTrustedValidationResponse.ValidityResult.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} msg The message object to deserialize into.
+ * @param {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult}
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.deserializeBinaryFromReader = function(msg, reader) {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -11237,7 +11238,7 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.deserializeBinaryFromRea
       msg.setSlpAction(value);
       break;
     case 5:
-      var value = /** @type {number} */ (reader.readUint32());
+      var value = /** @type {!proto.pb.SlpTokenType} */ (reader.readEnum());
       msg.setTokenType(value);
       break;
     case 6:
@@ -11269,9 +11270,9 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.deserializeBinaryFromRea
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.serializeBinary = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pb.GetTrustedSlpValidationResponse.ValidityResult.serializeBinaryToWriter(this, writer);
+  proto.pb.GetSlpTrustedValidationResponse.ValidityResult.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -11279,11 +11280,11 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.serializeBinar
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} message
+ * @param {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.serializeBinaryToWriter = function(message, writer) {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getPrevOutHash_asU8();
   if (f.length > 0) {
@@ -11314,8 +11315,8 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.serializeBinaryToWriter 
     );
   }
   f = message.getTokenType();
-  if (f !== 0) {
-    writer.writeUint32(
+  if (f !== 0.0) {
+    writer.writeEnum(
       5,
       f
     );
@@ -11355,7 +11356,7 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.serializeBinaryToWriter 
  * optional bytes prev_out_hash = 1;
  * @return {!(string|Uint8Array)}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getPrevOutHash = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getPrevOutHash = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -11365,7 +11366,7 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getPrevOutHash
  * This is a type-conversion wrapper around `getPrevOutHash()`
  * @return {string}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getPrevOutHash_asB64 = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getPrevOutHash_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getPrevOutHash()));
 };
@@ -11378,7 +11379,7 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getPrevOutHash
  * This is a type-conversion wrapper around `getPrevOutHash()`
  * @return {!Uint8Array}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getPrevOutHash_asU8 = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getPrevOutHash_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getPrevOutHash()));
 };
@@ -11386,9 +11387,9 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getPrevOutHash
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} returns this
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setPrevOutHash = function(value) {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.setPrevOutHash = function(value) {
   return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
@@ -11397,16 +11398,16 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setPrevOutHash
  * optional uint32 prev_out_vout = 2;
  * @return {number}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getPrevOutVout = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getPrevOutVout = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} returns this
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setPrevOutVout = function(value) {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.setPrevOutVout = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
 };
 
@@ -11415,7 +11416,7 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setPrevOutVout
  * optional bytes token_id = 3;
  * @return {!(string|Uint8Array)}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getTokenId = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getTokenId = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
@@ -11425,7 +11426,7 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getTokenId = f
  * This is a type-conversion wrapper around `getTokenId()`
  * @return {string}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getTokenId_asB64 = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getTokenId_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getTokenId()));
 };
@@ -11438,7 +11439,7 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getTokenId_asB
  * This is a type-conversion wrapper around `getTokenId()`
  * @return {!Uint8Array}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getTokenId_asU8 = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getTokenId_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getTokenId()));
 };
@@ -11446,9 +11447,9 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getTokenId_asU
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} returns this
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setTokenId = function(value) {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.setTokenId = function(value) {
   return jspb.Message.setProto3BytesField(this, 3, value);
 };
 
@@ -11457,35 +11458,35 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setTokenId = f
  * optional SlpAction slp_action = 4;
  * @return {!proto.pb.SlpAction}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getSlpAction = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getSlpAction = function() {
   return /** @type {!proto.pb.SlpAction} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 
 /**
  * @param {!proto.pb.SlpAction} value
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} returns this
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setSlpAction = function(value) {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.setSlpAction = function(value) {
   return jspb.Message.setProto3EnumField(this, 4, value);
 };
 
 
 /**
- * optional uint32 token_type = 5;
- * @return {number}
+ * optional SlpTokenType token_type = 5;
+ * @return {!proto.pb.SlpTokenType}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getTokenType = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getTokenType = function() {
+  return /** @type {!proto.pb.SlpTokenType} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
 
 /**
- * @param {number} value
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} returns this
+ * @param {!proto.pb.SlpTokenType} value
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} returns this
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setTokenType = function(value) {
-  return jspb.Message.setProto3IntField(this, 5, value);
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.setTokenType = function(value) {
+  return jspb.Message.setProto3EnumField(this, 5, value);
 };
 
 
@@ -11493,26 +11494,26 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setTokenType =
  * optional uint64 v1_token_amount = 6;
  * @return {string}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getV1TokenAmount = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getV1TokenAmount = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, "0"));
 };
 
 
 /**
  * @param {string} value
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} returns this
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setV1TokenAmount = function(value) {
-  return jspb.Message.setOneofField(this, 6, proto.pb.GetTrustedSlpValidationResponse.ValidityResult.oneofGroups_[0], value);
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.setV1TokenAmount = function(value) {
+  return jspb.Message.setOneofField(this, 6, proto.pb.GetSlpTrustedValidationResponse.ValidityResult.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} returns this
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.clearV1TokenAmount = function() {
-  return jspb.Message.setOneofField(this, 6, proto.pb.GetTrustedSlpValidationResponse.ValidityResult.oneofGroups_[0], undefined);
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.clearV1TokenAmount = function() {
+  return jspb.Message.setOneofField(this, 6, proto.pb.GetSlpTrustedValidationResponse.ValidityResult.oneofGroups_[0], undefined);
 };
 
 
@@ -11520,7 +11521,7 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.clearV1TokenAm
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.hasV1TokenAmount = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.hasV1TokenAmount = function() {
   return jspb.Message.getField(this, 6) != null;
 };
 
@@ -11529,26 +11530,26 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.hasV1TokenAmou
  * optional bool v1_mint_baton = 7;
  * @return {boolean}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getV1MintBaton = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getV1MintBaton = function() {
   return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 7, false));
 };
 
 
 /**
  * @param {boolean} value
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} returns this
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setV1MintBaton = function(value) {
-  return jspb.Message.setOneofField(this, 7, proto.pb.GetTrustedSlpValidationResponse.ValidityResult.oneofGroups_[0], value);
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.setV1MintBaton = function(value) {
+  return jspb.Message.setOneofField(this, 7, proto.pb.GetSlpTrustedValidationResponse.ValidityResult.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} returns this
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.clearV1MintBaton = function() {
-  return jspb.Message.setOneofField(this, 7, proto.pb.GetTrustedSlpValidationResponse.ValidityResult.oneofGroups_[0], undefined);
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.clearV1MintBaton = function() {
+  return jspb.Message.setOneofField(this, 7, proto.pb.GetSlpTrustedValidationResponse.ValidityResult.oneofGroups_[0], undefined);
 };
 
 
@@ -11556,7 +11557,7 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.clearV1MintBat
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.hasV1MintBaton = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.hasV1MintBaton = function() {
   return jspb.Message.getField(this, 7) != null;
 };
 
@@ -11565,7 +11566,7 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.hasV1MintBaton
  * optional bytes slp_txn_opreturn = 8;
  * @return {!(string|Uint8Array)}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getSlpTxnOpreturn = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getSlpTxnOpreturn = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
 };
 
@@ -11575,7 +11576,7 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getSlpTxnOpret
  * This is a type-conversion wrapper around `getSlpTxnOpreturn()`
  * @return {string}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getSlpTxnOpreturn_asB64 = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getSlpTxnOpreturn_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getSlpTxnOpreturn()));
 };
@@ -11588,7 +11589,7 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getSlpTxnOpret
  * This is a type-conversion wrapper around `getSlpTxnOpreturn()`
  * @return {!Uint8Array}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getSlpTxnOpreturn_asU8 = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getSlpTxnOpreturn_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getSlpTxnOpreturn()));
 };
@@ -11596,9 +11597,9 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getSlpTxnOpret
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} returns this
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setSlpTxnOpreturn = function(value) {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.setSlpTxnOpreturn = function(value) {
   return jspb.Message.setProto3BytesField(this, 8, value);
 };
 
@@ -11607,54 +11608,54 @@ proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setSlpTxnOpret
  * optional uint32 graphsearch_txn_count = 9;
  * @return {number}
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.getGraphsearchTxnCount = function() {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.getGraphsearchTxnCount = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult} returns this
  */
-proto.pb.GetTrustedSlpValidationResponse.ValidityResult.prototype.setGraphsearchTxnCount = function(value) {
+proto.pb.GetSlpTrustedValidationResponse.ValidityResult.prototype.setGraphsearchTxnCount = function(value) {
   return jspb.Message.setProto3IntField(this, 9, value);
 };
 
 
 /**
  * repeated ValidityResult results = 1;
- * @return {!Array<!proto.pb.GetTrustedSlpValidationResponse.ValidityResult>}
+ * @return {!Array<!proto.pb.GetSlpTrustedValidationResponse.ValidityResult>}
  */
-proto.pb.GetTrustedSlpValidationResponse.prototype.getResultsList = function() {
-  return /** @type{!Array<!proto.pb.GetTrustedSlpValidationResponse.ValidityResult>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.pb.GetTrustedSlpValidationResponse.ValidityResult, 1));
+proto.pb.GetSlpTrustedValidationResponse.prototype.getResultsList = function() {
+  return /** @type{!Array<!proto.pb.GetSlpTrustedValidationResponse.ValidityResult>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.pb.GetSlpTrustedValidationResponse.ValidityResult, 1));
 };
 
 
 /**
- * @param {!Array<!proto.pb.GetTrustedSlpValidationResponse.ValidityResult>} value
- * @return {!proto.pb.GetTrustedSlpValidationResponse} returns this
+ * @param {!Array<!proto.pb.GetSlpTrustedValidationResponse.ValidityResult>} value
+ * @return {!proto.pb.GetSlpTrustedValidationResponse} returns this
 */
-proto.pb.GetTrustedSlpValidationResponse.prototype.setResultsList = function(value) {
+proto.pb.GetSlpTrustedValidationResponse.prototype.setResultsList = function(value) {
   return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
 /**
- * @param {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult=} opt_value
+ * @param {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult=} opt_value
  * @param {number=} opt_index
- * @return {!proto.pb.GetTrustedSlpValidationResponse.ValidityResult}
+ * @return {!proto.pb.GetSlpTrustedValidationResponse.ValidityResult}
  */
-proto.pb.GetTrustedSlpValidationResponse.prototype.addResults = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.pb.GetTrustedSlpValidationResponse.ValidityResult, opt_index);
+proto.pb.GetSlpTrustedValidationResponse.prototype.addResults = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.pb.GetSlpTrustedValidationResponse.ValidityResult, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
- * @return {!proto.pb.GetTrustedSlpValidationResponse} returns this
+ * @return {!proto.pb.GetSlpTrustedValidationResponse} returns this
  */
-proto.pb.GetTrustedSlpValidationResponse.prototype.clearResultsList = function() {
+proto.pb.GetSlpTrustedValidationResponse.prototype.clearResultsList = function() {
   return this.setResultsList([]);
 };
 
@@ -16480,7 +16481,7 @@ proto.pb.SlpToken.deserializeBinaryFromReader = function(msg, reader) {
       msg.setSlpAction(value);
       break;
     case 7:
-      var value = /** @type {number} */ (reader.readUint32());
+      var value = /** @type {!proto.pb.SlpTokenType} */ (reader.readEnum());
       msg.setTokenType(value);
       break;
     default:
@@ -16555,8 +16556,8 @@ proto.pb.SlpToken.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getTokenType();
-  if (f !== 0) {
-    writer.writeUint32(
+  if (f !== 0.0) {
+    writer.writeEnum(
       7,
       f
     );
@@ -16697,20 +16698,20 @@ proto.pb.SlpToken.prototype.setSlpAction = function(value) {
 
 
 /**
- * optional uint32 token_type = 7;
- * @return {number}
+ * optional SlpTokenType token_type = 7;
+ * @return {!proto.pb.SlpTokenType}
  */
 proto.pb.SlpToken.prototype.getTokenType = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
+  return /** @type {!proto.pb.SlpTokenType} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
 };
 
 
 /**
- * @param {number} value
+ * @param {!proto.pb.SlpTokenType} value
  * @return {!proto.pb.SlpToken} returns this
  */
 proto.pb.SlpToken.prototype.setTokenType = function(value) {
-  return jspb.Message.setProto3IntField(this, 7, value);
+  return jspb.Message.setProto3EnumField(this, 7, value);
 };
 
 
@@ -18606,12 +18607,12 @@ proto.pb.SlpV1Nft1ChildSendMetadata.prototype.setGroupTokenId = function(value) 
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.pb.TokenMetadata.oneofGroups_ = [[3,4,5]];
+proto.pb.SlpTokenMetadata.oneofGroups_ = [[3,4,5]];
 
 /**
  * @enum {number}
  */
-proto.pb.TokenMetadata.TypeMetadataCase = {
+proto.pb.SlpTokenMetadata.TypeMetadataCase = {
   TYPE_METADATA_NOT_SET: 0,
   V1_FUNGIBLE: 3,
   V1_NFT1_GROUP: 4,
@@ -18619,10 +18620,10 @@ proto.pb.TokenMetadata.TypeMetadataCase = {
 };
 
 /**
- * @return {proto.pb.TokenMetadata.TypeMetadataCase}
+ * @return {proto.pb.SlpTokenMetadata.TypeMetadataCase}
  */
-proto.pb.TokenMetadata.prototype.getTypeMetadataCase = function() {
-  return /** @type {proto.pb.TokenMetadata.TypeMetadataCase} */(jspb.Message.computeOneofCase(this, proto.pb.TokenMetadata.oneofGroups_[0]));
+proto.pb.SlpTokenMetadata.prototype.getTypeMetadataCase = function() {
+  return /** @type {proto.pb.SlpTokenMetadata.TypeMetadataCase} */(jspb.Message.computeOneofCase(this, proto.pb.SlpTokenMetadata.oneofGroups_[0]));
 };
 
 
@@ -18640,8 +18641,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pb.TokenMetadata.prototype.toObject = function(opt_includeInstance) {
-  return proto.pb.TokenMetadata.toObject(opt_includeInstance, this);
+proto.pb.SlpTokenMetadata.prototype.toObject = function(opt_includeInstance) {
+  return proto.pb.SlpTokenMetadata.toObject(opt_includeInstance, this);
 };
 
 
@@ -18650,17 +18651,17 @@ proto.pb.TokenMetadata.prototype.toObject = function(opt_includeInstance) {
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pb.TokenMetadata} msg The msg instance to transform.
+ * @param {!proto.pb.SlpTokenMetadata} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.TokenMetadata.toObject = function(includeInstance, msg) {
+proto.pb.SlpTokenMetadata.toObject = function(includeInstance, msg) {
   var f, obj = {
     tokenId: msg.getTokenId_asB64(),
     tokenType: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    v1Fungible: (f = msg.getV1Fungible()) && proto.pb.TokenMetadataV1Fungible.toObject(includeInstance, f),
-    v1Nft1Group: (f = msg.getV1Nft1Group()) && proto.pb.TokenMetadataV1NFT1Group.toObject(includeInstance, f),
-    v1Nft1Child: (f = msg.getV1Nft1Child()) && proto.pb.TokenMetadataV1NFT1Child.toObject(includeInstance, f)
+    v1Fungible: (f = msg.getV1Fungible()) && proto.pb.SlpTokenMetadata.V1Fungible.toObject(includeInstance, f),
+    v1Nft1Group: (f = msg.getV1Nft1Group()) && proto.pb.SlpTokenMetadata.V1NFT1Group.toObject(includeInstance, f),
+    v1Nft1Child: (f = msg.getV1Nft1Child()) && proto.pb.SlpTokenMetadata.V1NFT1Child.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -18674,23 +18675,23 @@ proto.pb.TokenMetadata.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pb.TokenMetadata}
+ * @return {!proto.pb.SlpTokenMetadata}
  */
-proto.pb.TokenMetadata.deserializeBinary = function(bytes) {
+proto.pb.SlpTokenMetadata.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pb.TokenMetadata;
-  return proto.pb.TokenMetadata.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pb.SlpTokenMetadata;
+  return proto.pb.SlpTokenMetadata.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pb.TokenMetadata} msg The message object to deserialize into.
+ * @param {!proto.pb.SlpTokenMetadata} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pb.TokenMetadata}
+ * @return {!proto.pb.SlpTokenMetadata}
  */
-proto.pb.TokenMetadata.deserializeBinaryFromReader = function(msg, reader) {
+proto.pb.SlpTokenMetadata.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -18702,22 +18703,22 @@ proto.pb.TokenMetadata.deserializeBinaryFromReader = function(msg, reader) {
       msg.setTokenId(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readUint32());
+      var value = /** @type {!proto.pb.SlpTokenType} */ (reader.readEnum());
       msg.setTokenType(value);
       break;
     case 3:
-      var value = new proto.pb.TokenMetadataV1Fungible;
-      reader.readMessage(value,proto.pb.TokenMetadataV1Fungible.deserializeBinaryFromReader);
+      var value = new proto.pb.SlpTokenMetadata.V1Fungible;
+      reader.readMessage(value,proto.pb.SlpTokenMetadata.V1Fungible.deserializeBinaryFromReader);
       msg.setV1Fungible(value);
       break;
     case 4:
-      var value = new proto.pb.TokenMetadataV1NFT1Group;
-      reader.readMessage(value,proto.pb.TokenMetadataV1NFT1Group.deserializeBinaryFromReader);
+      var value = new proto.pb.SlpTokenMetadata.V1NFT1Group;
+      reader.readMessage(value,proto.pb.SlpTokenMetadata.V1NFT1Group.deserializeBinaryFromReader);
       msg.setV1Nft1Group(value);
       break;
     case 5:
-      var value = new proto.pb.TokenMetadataV1NFT1Child;
-      reader.readMessage(value,proto.pb.TokenMetadataV1NFT1Child.deserializeBinaryFromReader);
+      var value = new proto.pb.SlpTokenMetadata.V1NFT1Child;
+      reader.readMessage(value,proto.pb.SlpTokenMetadata.V1NFT1Child.deserializeBinaryFromReader);
       msg.setV1Nft1Child(value);
       break;
     default:
@@ -18733,9 +18734,9 @@ proto.pb.TokenMetadata.deserializeBinaryFromReader = function(msg, reader) {
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pb.TokenMetadata.prototype.serializeBinary = function() {
+proto.pb.SlpTokenMetadata.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pb.TokenMetadata.serializeBinaryToWriter(this, writer);
+  proto.pb.SlpTokenMetadata.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -18743,11 +18744,11 @@ proto.pb.TokenMetadata.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pb.TokenMetadata} message
+ * @param {!proto.pb.SlpTokenMetadata} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.TokenMetadata.serializeBinaryToWriter = function(message, writer) {
+proto.pb.SlpTokenMetadata.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getTokenId_asU8();
   if (f.length > 0) {
@@ -18757,8 +18758,8 @@ proto.pb.TokenMetadata.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getTokenType();
-  if (f !== 0) {
-    writer.writeUint32(
+  if (f !== 0.0) {
+    writer.writeEnum(
       2,
       f
     );
@@ -18768,7 +18769,7 @@ proto.pb.TokenMetadata.serializeBinaryToWriter = function(message, writer) {
     writer.writeMessage(
       3,
       f,
-      proto.pb.TokenMetadataV1Fungible.serializeBinaryToWriter
+      proto.pb.SlpTokenMetadata.V1Fungible.serializeBinaryToWriter
     );
   }
   f = message.getV1Nft1Group();
@@ -18776,7 +18777,7 @@ proto.pb.TokenMetadata.serializeBinaryToWriter = function(message, writer) {
     writer.writeMessage(
       4,
       f,
-      proto.pb.TokenMetadataV1NFT1Group.serializeBinaryToWriter
+      proto.pb.SlpTokenMetadata.V1NFT1Group.serializeBinaryToWriter
     );
   }
   f = message.getV1Nft1Child();
@@ -18784,180 +18785,9 @@ proto.pb.TokenMetadata.serializeBinaryToWriter = function(message, writer) {
     writer.writeMessage(
       5,
       f,
-      proto.pb.TokenMetadataV1NFT1Child.serializeBinaryToWriter
+      proto.pb.SlpTokenMetadata.V1NFT1Child.serializeBinaryToWriter
     );
   }
-};
-
-
-/**
- * optional bytes token_id = 1;
- * @return {!(string|Uint8Array)}
- */
-proto.pb.TokenMetadata.prototype.getTokenId = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * optional bytes token_id = 1;
- * This is a type-conversion wrapper around `getTokenId()`
- * @return {string}
- */
-proto.pb.TokenMetadata.prototype.getTokenId_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getTokenId()));
-};
-
-
-/**
- * optional bytes token_id = 1;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getTokenId()`
- * @return {!Uint8Array}
- */
-proto.pb.TokenMetadata.prototype.getTokenId_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getTokenId()));
-};
-
-
-/**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadata} returns this
- */
-proto.pb.TokenMetadata.prototype.setTokenId = function(value) {
-  return jspb.Message.setProto3BytesField(this, 1, value);
-};
-
-
-/**
- * optional uint32 token_type = 2;
- * @return {number}
- */
-proto.pb.TokenMetadata.prototype.getTokenType = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.pb.TokenMetadata} returns this
- */
-proto.pb.TokenMetadata.prototype.setTokenType = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
-};
-
-
-/**
- * optional TokenMetadataV1Fungible v1_fungible = 3;
- * @return {?proto.pb.TokenMetadataV1Fungible}
- */
-proto.pb.TokenMetadata.prototype.getV1Fungible = function() {
-  return /** @type{?proto.pb.TokenMetadataV1Fungible} */ (
-    jspb.Message.getWrapperField(this, proto.pb.TokenMetadataV1Fungible, 3));
-};
-
-
-/**
- * @param {?proto.pb.TokenMetadataV1Fungible|undefined} value
- * @return {!proto.pb.TokenMetadata} returns this
-*/
-proto.pb.TokenMetadata.prototype.setV1Fungible = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 3, proto.pb.TokenMetadata.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.pb.TokenMetadata} returns this
- */
-proto.pb.TokenMetadata.prototype.clearV1Fungible = function() {
-  return this.setV1Fungible(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.pb.TokenMetadata.prototype.hasV1Fungible = function() {
-  return jspb.Message.getField(this, 3) != null;
-};
-
-
-/**
- * optional TokenMetadataV1NFT1Group v1_nft1_group = 4;
- * @return {?proto.pb.TokenMetadataV1NFT1Group}
- */
-proto.pb.TokenMetadata.prototype.getV1Nft1Group = function() {
-  return /** @type{?proto.pb.TokenMetadataV1NFT1Group} */ (
-    jspb.Message.getWrapperField(this, proto.pb.TokenMetadataV1NFT1Group, 4));
-};
-
-
-/**
- * @param {?proto.pb.TokenMetadataV1NFT1Group|undefined} value
- * @return {!proto.pb.TokenMetadata} returns this
-*/
-proto.pb.TokenMetadata.prototype.setV1Nft1Group = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 4, proto.pb.TokenMetadata.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.pb.TokenMetadata} returns this
- */
-proto.pb.TokenMetadata.prototype.clearV1Nft1Group = function() {
-  return this.setV1Nft1Group(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.pb.TokenMetadata.prototype.hasV1Nft1Group = function() {
-  return jspb.Message.getField(this, 4) != null;
-};
-
-
-/**
- * optional TokenMetadataV1NFT1Child v1_nft1_child = 5;
- * @return {?proto.pb.TokenMetadataV1NFT1Child}
- */
-proto.pb.TokenMetadata.prototype.getV1Nft1Child = function() {
-  return /** @type{?proto.pb.TokenMetadataV1NFT1Child} */ (
-    jspb.Message.getWrapperField(this, proto.pb.TokenMetadataV1NFT1Child, 5));
-};
-
-
-/**
- * @param {?proto.pb.TokenMetadataV1NFT1Child|undefined} value
- * @return {!proto.pb.TokenMetadata} returns this
-*/
-proto.pb.TokenMetadata.prototype.setV1Nft1Child = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 5, proto.pb.TokenMetadata.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.pb.TokenMetadata} returns this
- */
-proto.pb.TokenMetadata.prototype.clearV1Nft1Child = function() {
-  return this.setV1Nft1Child(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.pb.TokenMetadata.prototype.hasV1Nft1Child = function() {
-  return jspb.Message.getField(this, 5) != null;
 };
 
 
@@ -18977,8 +18807,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.toObject = function(opt_includeInstance) {
-  return proto.pb.TokenMetadataV1Fungible.toObject(opt_includeInstance, this);
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.toObject = function(opt_includeInstance) {
+  return proto.pb.SlpTokenMetadata.V1Fungible.toObject(opt_includeInstance, this);
 };
 
 
@@ -18987,15 +18817,15 @@ proto.pb.TokenMetadataV1Fungible.prototype.toObject = function(opt_includeInstan
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pb.TokenMetadataV1Fungible} msg The msg instance to transform.
+ * @param {!proto.pb.SlpTokenMetadata.V1Fungible} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.TokenMetadataV1Fungible.toObject = function(includeInstance, msg) {
+proto.pb.SlpTokenMetadata.V1Fungible.toObject = function(includeInstance, msg) {
   var f, obj = {
-    tokenTicker: msg.getTokenTicker_asB64(),
-    tokenName: msg.getTokenName_asB64(),
-    tokenDocumentUrl: msg.getTokenDocumentUrl_asB64(),
+    tokenTicker: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    tokenName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    tokenDocumentUrl: jspb.Message.getFieldWithDefault(msg, 3, ""),
     tokenDocumentHash: msg.getTokenDocumentHash_asB64(),
     decimals: jspb.Message.getFieldWithDefault(msg, 5, 0),
     mintBatonHash: msg.getMintBatonHash_asB64(),
@@ -19013,23 +18843,23 @@ proto.pb.TokenMetadataV1Fungible.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pb.TokenMetadataV1Fungible}
+ * @return {!proto.pb.SlpTokenMetadata.V1Fungible}
  */
-proto.pb.TokenMetadataV1Fungible.deserializeBinary = function(bytes) {
+proto.pb.SlpTokenMetadata.V1Fungible.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pb.TokenMetadataV1Fungible;
-  return proto.pb.TokenMetadataV1Fungible.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pb.SlpTokenMetadata.V1Fungible;
+  return proto.pb.SlpTokenMetadata.V1Fungible.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pb.TokenMetadataV1Fungible} msg The message object to deserialize into.
+ * @param {!proto.pb.SlpTokenMetadata.V1Fungible} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pb.TokenMetadataV1Fungible}
+ * @return {!proto.pb.SlpTokenMetadata.V1Fungible}
  */
-proto.pb.TokenMetadataV1Fungible.deserializeBinaryFromReader = function(msg, reader) {
+proto.pb.SlpTokenMetadata.V1Fungible.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -19037,15 +18867,15 @@ proto.pb.TokenMetadataV1Fungible.deserializeBinaryFromReader = function(msg, rea
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      var value = /** @type {string} */ (reader.readString());
       msg.setTokenTicker(value);
       break;
     case 2:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      var value = /** @type {string} */ (reader.readString());
       msg.setTokenName(value);
       break;
     case 3:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      var value = /** @type {string} */ (reader.readString());
       msg.setTokenDocumentUrl(value);
       break;
     case 4:
@@ -19077,9 +18907,9 @@ proto.pb.TokenMetadataV1Fungible.deserializeBinaryFromReader = function(msg, rea
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.serializeBinary = function() {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pb.TokenMetadataV1Fungible.serializeBinaryToWriter(this, writer);
+  proto.pb.SlpTokenMetadata.V1Fungible.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -19087,29 +18917,29 @@ proto.pb.TokenMetadataV1Fungible.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pb.TokenMetadataV1Fungible} message
+ * @param {!proto.pb.SlpTokenMetadata.V1Fungible} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.TokenMetadataV1Fungible.serializeBinaryToWriter = function(message, writer) {
+proto.pb.SlpTokenMetadata.V1Fungible.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getTokenTicker_asU8();
+  f = message.getTokenTicker();
   if (f.length > 0) {
-    writer.writeBytes(
+    writer.writeString(
       1,
       f
     );
   }
-  f = message.getTokenName_asU8();
+  f = message.getTokenName();
   if (f.length > 0) {
-    writer.writeBytes(
+    writer.writeString(
       2,
       f
     );
   }
-  f = message.getTokenDocumentUrl_asU8();
+  f = message.getTokenDocumentUrl();
   if (f.length > 0) {
-    writer.writeBytes(
+    writer.writeString(
       3,
       f
     );
@@ -19146,128 +18976,56 @@ proto.pb.TokenMetadataV1Fungible.serializeBinaryToWriter = function(message, wri
 
 
 /**
- * optional bytes token_ticker = 1;
- * @return {!(string|Uint8Array)}
- */
-proto.pb.TokenMetadataV1Fungible.prototype.getTokenTicker = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * optional bytes token_ticker = 1;
- * This is a type-conversion wrapper around `getTokenTicker()`
+ * optional string token_ticker = 1;
  * @return {string}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getTokenTicker_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getTokenTicker()));
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.getTokenTicker = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
- * optional bytes token_ticker = 1;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getTokenTicker()`
- * @return {!Uint8Array}
+ * @param {string} value
+ * @return {!proto.pb.SlpTokenMetadata.V1Fungible} returns this
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getTokenTicker_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getTokenTicker()));
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.setTokenTicker = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1Fungible} returns this
- */
-proto.pb.TokenMetadataV1Fungible.prototype.setTokenTicker = function(value) {
-  return jspb.Message.setProto3BytesField(this, 1, value);
-};
-
-
-/**
- * optional bytes token_name = 2;
- * @return {!(string|Uint8Array)}
- */
-proto.pb.TokenMetadataV1Fungible.prototype.getTokenName = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * optional bytes token_name = 2;
- * This is a type-conversion wrapper around `getTokenName()`
+ * optional string token_name = 2;
  * @return {string}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getTokenName_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getTokenName()));
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.getTokenName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
- * optional bytes token_name = 2;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getTokenName()`
- * @return {!Uint8Array}
+ * @param {string} value
+ * @return {!proto.pb.SlpTokenMetadata.V1Fungible} returns this
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getTokenName_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getTokenName()));
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.setTokenName = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1Fungible} returns this
- */
-proto.pb.TokenMetadataV1Fungible.prototype.setTokenName = function(value) {
-  return jspb.Message.setProto3BytesField(this, 2, value);
-};
-
-
-/**
- * optional bytes token_document_url = 3;
- * @return {!(string|Uint8Array)}
- */
-proto.pb.TokenMetadataV1Fungible.prototype.getTokenDocumentUrl = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
-};
-
-
-/**
- * optional bytes token_document_url = 3;
- * This is a type-conversion wrapper around `getTokenDocumentUrl()`
+ * optional string token_document_url = 3;
  * @return {string}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getTokenDocumentUrl_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getTokenDocumentUrl()));
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.getTokenDocumentUrl = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /**
- * optional bytes token_document_url = 3;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getTokenDocumentUrl()`
- * @return {!Uint8Array}
+ * @param {string} value
+ * @return {!proto.pb.SlpTokenMetadata.V1Fungible} returns this
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getTokenDocumentUrl_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getTokenDocumentUrl()));
-};
-
-
-/**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1Fungible} returns this
- */
-proto.pb.TokenMetadataV1Fungible.prototype.setTokenDocumentUrl = function(value) {
-  return jspb.Message.setProto3BytesField(this, 3, value);
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.setTokenDocumentUrl = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -19275,7 +19033,7 @@ proto.pb.TokenMetadataV1Fungible.prototype.setTokenDocumentUrl = function(value)
  * optional bytes token_document_hash = 4;
  * @return {!(string|Uint8Array)}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getTokenDocumentHash = function() {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.getTokenDocumentHash = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
 };
 
@@ -19285,7 +19043,7 @@ proto.pb.TokenMetadataV1Fungible.prototype.getTokenDocumentHash = function() {
  * This is a type-conversion wrapper around `getTokenDocumentHash()`
  * @return {string}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getTokenDocumentHash_asB64 = function() {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.getTokenDocumentHash_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getTokenDocumentHash()));
 };
@@ -19298,7 +19056,7 @@ proto.pb.TokenMetadataV1Fungible.prototype.getTokenDocumentHash_asB64 = function
  * This is a type-conversion wrapper around `getTokenDocumentHash()`
  * @return {!Uint8Array}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getTokenDocumentHash_asU8 = function() {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.getTokenDocumentHash_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getTokenDocumentHash()));
 };
@@ -19306,9 +19064,9 @@ proto.pb.TokenMetadataV1Fungible.prototype.getTokenDocumentHash_asU8 = function(
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1Fungible} returns this
+ * @return {!proto.pb.SlpTokenMetadata.V1Fungible} returns this
  */
-proto.pb.TokenMetadataV1Fungible.prototype.setTokenDocumentHash = function(value) {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.setTokenDocumentHash = function(value) {
   return jspb.Message.setProto3BytesField(this, 4, value);
 };
 
@@ -19317,16 +19075,16 @@ proto.pb.TokenMetadataV1Fungible.prototype.setTokenDocumentHash = function(value
  * optional uint32 decimals = 5;
  * @return {number}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getDecimals = function() {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.getDecimals = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.pb.TokenMetadataV1Fungible} returns this
+ * @return {!proto.pb.SlpTokenMetadata.V1Fungible} returns this
  */
-proto.pb.TokenMetadataV1Fungible.prototype.setDecimals = function(value) {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.setDecimals = function(value) {
   return jspb.Message.setProto3IntField(this, 5, value);
 };
 
@@ -19335,7 +19093,7 @@ proto.pb.TokenMetadataV1Fungible.prototype.setDecimals = function(value) {
  * optional bytes mint_baton_hash = 6;
  * @return {!(string|Uint8Array)}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getMintBatonHash = function() {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.getMintBatonHash = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
 };
 
@@ -19345,7 +19103,7 @@ proto.pb.TokenMetadataV1Fungible.prototype.getMintBatonHash = function() {
  * This is a type-conversion wrapper around `getMintBatonHash()`
  * @return {string}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getMintBatonHash_asB64 = function() {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.getMintBatonHash_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getMintBatonHash()));
 };
@@ -19358,7 +19116,7 @@ proto.pb.TokenMetadataV1Fungible.prototype.getMintBatonHash_asB64 = function() {
  * This is a type-conversion wrapper around `getMintBatonHash()`
  * @return {!Uint8Array}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getMintBatonHash_asU8 = function() {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.getMintBatonHash_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getMintBatonHash()));
 };
@@ -19366,9 +19124,9 @@ proto.pb.TokenMetadataV1Fungible.prototype.getMintBatonHash_asU8 = function() {
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1Fungible} returns this
+ * @return {!proto.pb.SlpTokenMetadata.V1Fungible} returns this
  */
-proto.pb.TokenMetadataV1Fungible.prototype.setMintBatonHash = function(value) {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.setMintBatonHash = function(value) {
   return jspb.Message.setProto3BytesField(this, 6, value);
 };
 
@@ -19377,16 +19135,16 @@ proto.pb.TokenMetadataV1Fungible.prototype.setMintBatonHash = function(value) {
  * optional uint32 mint_baton_vout = 7;
  * @return {number}
  */
-proto.pb.TokenMetadataV1Fungible.prototype.getMintBatonVout = function() {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.getMintBatonVout = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.pb.TokenMetadataV1Fungible} returns this
+ * @return {!proto.pb.SlpTokenMetadata.V1Fungible} returns this
  */
-proto.pb.TokenMetadataV1Fungible.prototype.setMintBatonVout = function(value) {
+proto.pb.SlpTokenMetadata.V1Fungible.prototype.setMintBatonVout = function(value) {
   return jspb.Message.setProto3IntField(this, 7, value);
 };
 
@@ -19407,8 +19165,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.toObject = function(opt_includeInstance) {
-  return proto.pb.TokenMetadataV1NFT1Group.toObject(opt_includeInstance, this);
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.toObject = function(opt_includeInstance) {
+  return proto.pb.SlpTokenMetadata.V1NFT1Group.toObject(opt_includeInstance, this);
 };
 
 
@@ -19417,15 +19175,15 @@ proto.pb.TokenMetadataV1NFT1Group.prototype.toObject = function(opt_includeInsta
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pb.TokenMetadataV1NFT1Group} msg The msg instance to transform.
+ * @param {!proto.pb.SlpTokenMetadata.V1NFT1Group} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.TokenMetadataV1NFT1Group.toObject = function(includeInstance, msg) {
+proto.pb.SlpTokenMetadata.V1NFT1Group.toObject = function(includeInstance, msg) {
   var f, obj = {
-    tokenTicker: msg.getTokenTicker_asB64(),
-    tokenName: msg.getTokenName_asB64(),
-    tokenDocumentUrl: msg.getTokenDocumentUrl_asB64(),
+    tokenTicker: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    tokenName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    tokenDocumentUrl: jspb.Message.getFieldWithDefault(msg, 3, ""),
     tokenDocumentHash: msg.getTokenDocumentHash_asB64(),
     decimals: jspb.Message.getFieldWithDefault(msg, 5, 0),
     mintBatonHash: msg.getMintBatonHash_asB64(),
@@ -19443,23 +19201,23 @@ proto.pb.TokenMetadataV1NFT1Group.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pb.TokenMetadataV1NFT1Group}
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Group}
  */
-proto.pb.TokenMetadataV1NFT1Group.deserializeBinary = function(bytes) {
+proto.pb.SlpTokenMetadata.V1NFT1Group.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pb.TokenMetadataV1NFT1Group;
-  return proto.pb.TokenMetadataV1NFT1Group.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pb.SlpTokenMetadata.V1NFT1Group;
+  return proto.pb.SlpTokenMetadata.V1NFT1Group.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pb.TokenMetadataV1NFT1Group} msg The message object to deserialize into.
+ * @param {!proto.pb.SlpTokenMetadata.V1NFT1Group} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pb.TokenMetadataV1NFT1Group}
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Group}
  */
-proto.pb.TokenMetadataV1NFT1Group.deserializeBinaryFromReader = function(msg, reader) {
+proto.pb.SlpTokenMetadata.V1NFT1Group.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -19467,15 +19225,15 @@ proto.pb.TokenMetadataV1NFT1Group.deserializeBinaryFromReader = function(msg, re
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      var value = /** @type {string} */ (reader.readString());
       msg.setTokenTicker(value);
       break;
     case 2:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      var value = /** @type {string} */ (reader.readString());
       msg.setTokenName(value);
       break;
     case 3:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      var value = /** @type {string} */ (reader.readString());
       msg.setTokenDocumentUrl(value);
       break;
     case 4:
@@ -19507,9 +19265,9 @@ proto.pb.TokenMetadataV1NFT1Group.deserializeBinaryFromReader = function(msg, re
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.serializeBinary = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pb.TokenMetadataV1NFT1Group.serializeBinaryToWriter(this, writer);
+  proto.pb.SlpTokenMetadata.V1NFT1Group.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -19517,29 +19275,29 @@ proto.pb.TokenMetadataV1NFT1Group.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pb.TokenMetadataV1NFT1Group} message
+ * @param {!proto.pb.SlpTokenMetadata.V1NFT1Group} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.TokenMetadataV1NFT1Group.serializeBinaryToWriter = function(message, writer) {
+proto.pb.SlpTokenMetadata.V1NFT1Group.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getTokenTicker_asU8();
+  f = message.getTokenTicker();
   if (f.length > 0) {
-    writer.writeBytes(
+    writer.writeString(
       1,
       f
     );
   }
-  f = message.getTokenName_asU8();
+  f = message.getTokenName();
   if (f.length > 0) {
-    writer.writeBytes(
+    writer.writeString(
       2,
       f
     );
   }
-  f = message.getTokenDocumentUrl_asU8();
+  f = message.getTokenDocumentUrl();
   if (f.length > 0) {
-    writer.writeBytes(
+    writer.writeString(
       3,
       f
     );
@@ -19576,128 +19334,56 @@ proto.pb.TokenMetadataV1NFT1Group.serializeBinaryToWriter = function(message, wr
 
 
 /**
- * optional bytes token_ticker = 1;
- * @return {!(string|Uint8Array)}
- */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenTicker = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * optional bytes token_ticker = 1;
- * This is a type-conversion wrapper around `getTokenTicker()`
+ * optional string token_ticker = 1;
  * @return {string}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenTicker_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getTokenTicker()));
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.getTokenTicker = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
- * optional bytes token_ticker = 1;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getTokenTicker()`
- * @return {!Uint8Array}
+ * @param {string} value
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Group} returns this
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenTicker_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getTokenTicker()));
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.setTokenTicker = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1NFT1Group} returns this
- */
-proto.pb.TokenMetadataV1NFT1Group.prototype.setTokenTicker = function(value) {
-  return jspb.Message.setProto3BytesField(this, 1, value);
-};
-
-
-/**
- * optional bytes token_name = 2;
- * @return {!(string|Uint8Array)}
- */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenName = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * optional bytes token_name = 2;
- * This is a type-conversion wrapper around `getTokenName()`
+ * optional string token_name = 2;
  * @return {string}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenName_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getTokenName()));
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.getTokenName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
- * optional bytes token_name = 2;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getTokenName()`
- * @return {!Uint8Array}
+ * @param {string} value
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Group} returns this
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenName_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getTokenName()));
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.setTokenName = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1NFT1Group} returns this
- */
-proto.pb.TokenMetadataV1NFT1Group.prototype.setTokenName = function(value) {
-  return jspb.Message.setProto3BytesField(this, 2, value);
-};
-
-
-/**
- * optional bytes token_document_url = 3;
- * @return {!(string|Uint8Array)}
- */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenDocumentUrl = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
-};
-
-
-/**
- * optional bytes token_document_url = 3;
- * This is a type-conversion wrapper around `getTokenDocumentUrl()`
+ * optional string token_document_url = 3;
  * @return {string}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenDocumentUrl_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getTokenDocumentUrl()));
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.getTokenDocumentUrl = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /**
- * optional bytes token_document_url = 3;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getTokenDocumentUrl()`
- * @return {!Uint8Array}
+ * @param {string} value
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Group} returns this
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenDocumentUrl_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getTokenDocumentUrl()));
-};
-
-
-/**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1NFT1Group} returns this
- */
-proto.pb.TokenMetadataV1NFT1Group.prototype.setTokenDocumentUrl = function(value) {
-  return jspb.Message.setProto3BytesField(this, 3, value);
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.setTokenDocumentUrl = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -19705,7 +19391,7 @@ proto.pb.TokenMetadataV1NFT1Group.prototype.setTokenDocumentUrl = function(value
  * optional bytes token_document_hash = 4;
  * @return {!(string|Uint8Array)}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenDocumentHash = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.getTokenDocumentHash = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
 };
 
@@ -19715,7 +19401,7 @@ proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenDocumentHash = function() {
  * This is a type-conversion wrapper around `getTokenDocumentHash()`
  * @return {string}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenDocumentHash_asB64 = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.getTokenDocumentHash_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getTokenDocumentHash()));
 };
@@ -19728,7 +19414,7 @@ proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenDocumentHash_asB64 = functio
  * This is a type-conversion wrapper around `getTokenDocumentHash()`
  * @return {!Uint8Array}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenDocumentHash_asU8 = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.getTokenDocumentHash_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getTokenDocumentHash()));
 };
@@ -19736,9 +19422,9 @@ proto.pb.TokenMetadataV1NFT1Group.prototype.getTokenDocumentHash_asU8 = function
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1NFT1Group} returns this
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Group} returns this
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.setTokenDocumentHash = function(value) {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.setTokenDocumentHash = function(value) {
   return jspb.Message.setProto3BytesField(this, 4, value);
 };
 
@@ -19747,16 +19433,16 @@ proto.pb.TokenMetadataV1NFT1Group.prototype.setTokenDocumentHash = function(valu
  * optional uint32 decimals = 5;
  * @return {number}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getDecimals = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.getDecimals = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.pb.TokenMetadataV1NFT1Group} returns this
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Group} returns this
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.setDecimals = function(value) {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.setDecimals = function(value) {
   return jspb.Message.setProto3IntField(this, 5, value);
 };
 
@@ -19765,7 +19451,7 @@ proto.pb.TokenMetadataV1NFT1Group.prototype.setDecimals = function(value) {
  * optional bytes mint_baton_hash = 6;
  * @return {!(string|Uint8Array)}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getMintBatonHash = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.getMintBatonHash = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
 };
 
@@ -19775,7 +19461,7 @@ proto.pb.TokenMetadataV1NFT1Group.prototype.getMintBatonHash = function() {
  * This is a type-conversion wrapper around `getMintBatonHash()`
  * @return {string}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getMintBatonHash_asB64 = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.getMintBatonHash_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getMintBatonHash()));
 };
@@ -19788,7 +19474,7 @@ proto.pb.TokenMetadataV1NFT1Group.prototype.getMintBatonHash_asB64 = function() 
  * This is a type-conversion wrapper around `getMintBatonHash()`
  * @return {!Uint8Array}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getMintBatonHash_asU8 = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.getMintBatonHash_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getMintBatonHash()));
 };
@@ -19796,9 +19482,9 @@ proto.pb.TokenMetadataV1NFT1Group.prototype.getMintBatonHash_asU8 = function() {
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1NFT1Group} returns this
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Group} returns this
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.setMintBatonHash = function(value) {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.setMintBatonHash = function(value) {
   return jspb.Message.setProto3BytesField(this, 6, value);
 };
 
@@ -19807,16 +19493,16 @@ proto.pb.TokenMetadataV1NFT1Group.prototype.setMintBatonHash = function(value) {
  * optional uint32 mint_baton_vout = 7;
  * @return {number}
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.getMintBatonVout = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.getMintBatonVout = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.pb.TokenMetadataV1NFT1Group} returns this
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Group} returns this
  */
-proto.pb.TokenMetadataV1NFT1Group.prototype.setMintBatonVout = function(value) {
+proto.pb.SlpTokenMetadata.V1NFT1Group.prototype.setMintBatonVout = function(value) {
   return jspb.Message.setProto3IntField(this, 7, value);
 };
 
@@ -19837,8 +19523,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.toObject = function(opt_includeInstance) {
-  return proto.pb.TokenMetadataV1NFT1Child.toObject(opt_includeInstance, this);
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.toObject = function(opt_includeInstance) {
+  return proto.pb.SlpTokenMetadata.V1NFT1Child.toObject(opt_includeInstance, this);
 };
 
 
@@ -19847,15 +19533,15 @@ proto.pb.TokenMetadataV1NFT1Child.prototype.toObject = function(opt_includeInsta
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pb.TokenMetadataV1NFT1Child} msg The msg instance to transform.
+ * @param {!proto.pb.SlpTokenMetadata.V1NFT1Child} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.TokenMetadataV1NFT1Child.toObject = function(includeInstance, msg) {
+proto.pb.SlpTokenMetadata.V1NFT1Child.toObject = function(includeInstance, msg) {
   var f, obj = {
-    tokenTicker: msg.getTokenTicker_asB64(),
-    tokenName: msg.getTokenName_asB64(),
-    tokenDocumentUrl: msg.getTokenDocumentUrl_asB64(),
+    tokenTicker: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    tokenName: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    tokenDocumentUrl: jspb.Message.getFieldWithDefault(msg, 3, ""),
     tokenDocumentHash: msg.getTokenDocumentHash_asB64(),
     groupId: msg.getGroupId_asB64()
   };
@@ -19871,23 +19557,23 @@ proto.pb.TokenMetadataV1NFT1Child.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pb.TokenMetadataV1NFT1Child}
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Child}
  */
-proto.pb.TokenMetadataV1NFT1Child.deserializeBinary = function(bytes) {
+proto.pb.SlpTokenMetadata.V1NFT1Child.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pb.TokenMetadataV1NFT1Child;
-  return proto.pb.TokenMetadataV1NFT1Child.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pb.SlpTokenMetadata.V1NFT1Child;
+  return proto.pb.SlpTokenMetadata.V1NFT1Child.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pb.TokenMetadataV1NFT1Child} msg The message object to deserialize into.
+ * @param {!proto.pb.SlpTokenMetadata.V1NFT1Child} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pb.TokenMetadataV1NFT1Child}
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Child}
  */
-proto.pb.TokenMetadataV1NFT1Child.deserializeBinaryFromReader = function(msg, reader) {
+proto.pb.SlpTokenMetadata.V1NFT1Child.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -19895,15 +19581,15 @@ proto.pb.TokenMetadataV1NFT1Child.deserializeBinaryFromReader = function(msg, re
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      var value = /** @type {string} */ (reader.readString());
       msg.setTokenTicker(value);
       break;
     case 2:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      var value = /** @type {string} */ (reader.readString());
       msg.setTokenName(value);
       break;
     case 3:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      var value = /** @type {string} */ (reader.readString());
       msg.setTokenDocumentUrl(value);
       break;
     case 4:
@@ -19927,9 +19613,9 @@ proto.pb.TokenMetadataV1NFT1Child.deserializeBinaryFromReader = function(msg, re
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.serializeBinary = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pb.TokenMetadataV1NFT1Child.serializeBinaryToWriter(this, writer);
+  proto.pb.SlpTokenMetadata.V1NFT1Child.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -19937,29 +19623,29 @@ proto.pb.TokenMetadataV1NFT1Child.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pb.TokenMetadataV1NFT1Child} message
+ * @param {!proto.pb.SlpTokenMetadata.V1NFT1Child} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pb.TokenMetadataV1NFT1Child.serializeBinaryToWriter = function(message, writer) {
+proto.pb.SlpTokenMetadata.V1NFT1Child.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getTokenTicker_asU8();
+  f = message.getTokenTicker();
   if (f.length > 0) {
-    writer.writeBytes(
+    writer.writeString(
       1,
       f
     );
   }
-  f = message.getTokenName_asU8();
+  f = message.getTokenName();
   if (f.length > 0) {
-    writer.writeBytes(
+    writer.writeString(
       2,
       f
     );
   }
-  f = message.getTokenDocumentUrl_asU8();
+  f = message.getTokenDocumentUrl();
   if (f.length > 0) {
-    writer.writeBytes(
+    writer.writeString(
       3,
       f
     );
@@ -19982,128 +19668,56 @@ proto.pb.TokenMetadataV1NFT1Child.serializeBinaryToWriter = function(message, wr
 
 
 /**
- * optional bytes token_ticker = 1;
- * @return {!(string|Uint8Array)}
- */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenTicker = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * optional bytes token_ticker = 1;
- * This is a type-conversion wrapper around `getTokenTicker()`
+ * optional string token_ticker = 1;
  * @return {string}
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenTicker_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getTokenTicker()));
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.getTokenTicker = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
- * optional bytes token_ticker = 1;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getTokenTicker()`
- * @return {!Uint8Array}
+ * @param {string} value
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Child} returns this
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenTicker_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getTokenTicker()));
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.setTokenTicker = function(value) {
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1NFT1Child} returns this
- */
-proto.pb.TokenMetadataV1NFT1Child.prototype.setTokenTicker = function(value) {
-  return jspb.Message.setProto3BytesField(this, 1, value);
-};
-
-
-/**
- * optional bytes token_name = 2;
- * @return {!(string|Uint8Array)}
- */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenName = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * optional bytes token_name = 2;
- * This is a type-conversion wrapper around `getTokenName()`
+ * optional string token_name = 2;
  * @return {string}
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenName_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getTokenName()));
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.getTokenName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
- * optional bytes token_name = 2;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getTokenName()`
- * @return {!Uint8Array}
+ * @param {string} value
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Child} returns this
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenName_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getTokenName()));
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.setTokenName = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1NFT1Child} returns this
- */
-proto.pb.TokenMetadataV1NFT1Child.prototype.setTokenName = function(value) {
-  return jspb.Message.setProto3BytesField(this, 2, value);
-};
-
-
-/**
- * optional bytes token_document_url = 3;
- * @return {!(string|Uint8Array)}
- */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenDocumentUrl = function() {
-  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
-};
-
-
-/**
- * optional bytes token_document_url = 3;
- * This is a type-conversion wrapper around `getTokenDocumentUrl()`
+ * optional string token_document_url = 3;
  * @return {string}
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenDocumentUrl_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getTokenDocumentUrl()));
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.getTokenDocumentUrl = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /**
- * optional bytes token_document_url = 3;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getTokenDocumentUrl()`
- * @return {!Uint8Array}
+ * @param {string} value
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Child} returns this
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenDocumentUrl_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getTokenDocumentUrl()));
-};
-
-
-/**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1NFT1Child} returns this
- */
-proto.pb.TokenMetadataV1NFT1Child.prototype.setTokenDocumentUrl = function(value) {
-  return jspb.Message.setProto3BytesField(this, 3, value);
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.setTokenDocumentUrl = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -20111,7 +19725,7 @@ proto.pb.TokenMetadataV1NFT1Child.prototype.setTokenDocumentUrl = function(value
  * optional bytes token_document_hash = 4;
  * @return {!(string|Uint8Array)}
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenDocumentHash = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.getTokenDocumentHash = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
 };
 
@@ -20121,7 +19735,7 @@ proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenDocumentHash = function() {
  * This is a type-conversion wrapper around `getTokenDocumentHash()`
  * @return {string}
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenDocumentHash_asB64 = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.getTokenDocumentHash_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getTokenDocumentHash()));
 };
@@ -20134,7 +19748,7 @@ proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenDocumentHash_asB64 = functio
  * This is a type-conversion wrapper around `getTokenDocumentHash()`
  * @return {!Uint8Array}
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenDocumentHash_asU8 = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.getTokenDocumentHash_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getTokenDocumentHash()));
 };
@@ -20142,9 +19756,9 @@ proto.pb.TokenMetadataV1NFT1Child.prototype.getTokenDocumentHash_asU8 = function
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1NFT1Child} returns this
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Child} returns this
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.setTokenDocumentHash = function(value) {
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.setTokenDocumentHash = function(value) {
   return jspb.Message.setProto3BytesField(this, 4, value);
 };
 
@@ -20153,7 +19767,7 @@ proto.pb.TokenMetadataV1NFT1Child.prototype.setTokenDocumentHash = function(valu
  * optional bytes group_id = 5;
  * @return {!(string|Uint8Array)}
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getGroupId = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.getGroupId = function() {
   return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
 };
 
@@ -20163,7 +19777,7 @@ proto.pb.TokenMetadataV1NFT1Child.prototype.getGroupId = function() {
  * This is a type-conversion wrapper around `getGroupId()`
  * @return {string}
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getGroupId_asB64 = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.getGroupId_asB64 = function() {
   return /** @type {string} */ (jspb.Message.bytesAsB64(
       this.getGroupId()));
 };
@@ -20176,7 +19790,7 @@ proto.pb.TokenMetadataV1NFT1Child.prototype.getGroupId_asB64 = function() {
  * This is a type-conversion wrapper around `getGroupId()`
  * @return {!Uint8Array}
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.getGroupId_asU8 = function() {
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.getGroupId_asU8 = function() {
   return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
       this.getGroupId()));
 };
@@ -20184,10 +19798,181 @@ proto.pb.TokenMetadataV1NFT1Child.prototype.getGroupId_asU8 = function() {
 
 /**
  * @param {!(string|Uint8Array)} value
- * @return {!proto.pb.TokenMetadataV1NFT1Child} returns this
+ * @return {!proto.pb.SlpTokenMetadata.V1NFT1Child} returns this
  */
-proto.pb.TokenMetadataV1NFT1Child.prototype.setGroupId = function(value) {
+proto.pb.SlpTokenMetadata.V1NFT1Child.prototype.setGroupId = function(value) {
   return jspb.Message.setProto3BytesField(this, 5, value);
+};
+
+
+/**
+ * optional bytes token_id = 1;
+ * @return {!(string|Uint8Array)}
+ */
+proto.pb.SlpTokenMetadata.prototype.getTokenId = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * optional bytes token_id = 1;
+ * This is a type-conversion wrapper around `getTokenId()`
+ * @return {string}
+ */
+proto.pb.SlpTokenMetadata.prototype.getTokenId_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getTokenId()));
+};
+
+
+/**
+ * optional bytes token_id = 1;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getTokenId()`
+ * @return {!Uint8Array}
+ */
+proto.pb.SlpTokenMetadata.prototype.getTokenId_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getTokenId()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.pb.SlpTokenMetadata} returns this
+ */
+proto.pb.SlpTokenMetadata.prototype.setTokenId = function(value) {
+  return jspb.Message.setProto3BytesField(this, 1, value);
+};
+
+
+/**
+ * optional SlpTokenType token_type = 2;
+ * @return {!proto.pb.SlpTokenType}
+ */
+proto.pb.SlpTokenMetadata.prototype.getTokenType = function() {
+  return /** @type {!proto.pb.SlpTokenType} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {!proto.pb.SlpTokenType} value
+ * @return {!proto.pb.SlpTokenMetadata} returns this
+ */
+proto.pb.SlpTokenMetadata.prototype.setTokenType = function(value) {
+  return jspb.Message.setProto3EnumField(this, 2, value);
+};
+
+
+/**
+ * optional V1Fungible v1_fungible = 3;
+ * @return {?proto.pb.SlpTokenMetadata.V1Fungible}
+ */
+proto.pb.SlpTokenMetadata.prototype.getV1Fungible = function() {
+  return /** @type{?proto.pb.SlpTokenMetadata.V1Fungible} */ (
+    jspb.Message.getWrapperField(this, proto.pb.SlpTokenMetadata.V1Fungible, 3));
+};
+
+
+/**
+ * @param {?proto.pb.SlpTokenMetadata.V1Fungible|undefined} value
+ * @return {!proto.pb.SlpTokenMetadata} returns this
+*/
+proto.pb.SlpTokenMetadata.prototype.setV1Fungible = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 3, proto.pb.SlpTokenMetadata.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.pb.SlpTokenMetadata} returns this
+ */
+proto.pb.SlpTokenMetadata.prototype.clearV1Fungible = function() {
+  return this.setV1Fungible(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.pb.SlpTokenMetadata.prototype.hasV1Fungible = function() {
+  return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * optional V1NFT1Group v1_nft1_group = 4;
+ * @return {?proto.pb.SlpTokenMetadata.V1NFT1Group}
+ */
+proto.pb.SlpTokenMetadata.prototype.getV1Nft1Group = function() {
+  return /** @type{?proto.pb.SlpTokenMetadata.V1NFT1Group} */ (
+    jspb.Message.getWrapperField(this, proto.pb.SlpTokenMetadata.V1NFT1Group, 4));
+};
+
+
+/**
+ * @param {?proto.pb.SlpTokenMetadata.V1NFT1Group|undefined} value
+ * @return {!proto.pb.SlpTokenMetadata} returns this
+*/
+proto.pb.SlpTokenMetadata.prototype.setV1Nft1Group = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 4, proto.pb.SlpTokenMetadata.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.pb.SlpTokenMetadata} returns this
+ */
+proto.pb.SlpTokenMetadata.prototype.clearV1Nft1Group = function() {
+  return this.setV1Nft1Group(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.pb.SlpTokenMetadata.prototype.hasV1Nft1Group = function() {
+  return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional V1NFT1Child v1_nft1_child = 5;
+ * @return {?proto.pb.SlpTokenMetadata.V1NFT1Child}
+ */
+proto.pb.SlpTokenMetadata.prototype.getV1Nft1Child = function() {
+  return /** @type{?proto.pb.SlpTokenMetadata.V1NFT1Child} */ (
+    jspb.Message.getWrapperField(this, proto.pb.SlpTokenMetadata.V1NFT1Child, 5));
+};
+
+
+/**
+ * @param {?proto.pb.SlpTokenMetadata.V1NFT1Child|undefined} value
+ * @return {!proto.pb.SlpTokenMetadata} returns this
+*/
+proto.pb.SlpTokenMetadata.prototype.setV1Nft1Child = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 5, proto.pb.SlpTokenMetadata.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.pb.SlpTokenMetadata} returns this
+ */
+proto.pb.SlpTokenMetadata.prototype.clearV1Nft1Child = function() {
+  return this.setV1Nft1Child(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.pb.SlpTokenMetadata.prototype.hasV1Nft1Child = function() {
+  return jspb.Message.getField(this, 5) != null;
 };
 
 
@@ -20300,7 +20085,7 @@ proto.pb.SlpRequiredBurn.deserializeBinaryFromReader = function(msg, reader) {
       msg.setTokenId(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readUint32());
+      var value = /** @type {!proto.pb.SlpTokenType} */ (reader.readEnum());
       msg.setTokenType(value);
       break;
     case 4:
@@ -20356,8 +20141,8 @@ proto.pb.SlpRequiredBurn.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getTokenType();
-  if (f !== 0) {
-    writer.writeUint32(
+  if (f !== 0.0) {
+    writer.writeEnum(
       3,
       f
     );
@@ -20459,20 +20244,20 @@ proto.pb.SlpRequiredBurn.prototype.setTokenId = function(value) {
 
 
 /**
- * optional uint32 token_type = 3;
- * @return {number}
+ * optional SlpTokenType token_type = 3;
+ * @return {!proto.pb.SlpTokenType}
  */
 proto.pb.SlpRequiredBurn.prototype.getTokenType = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {!proto.pb.SlpTokenType} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
 /**
- * @param {number} value
+ * @param {!proto.pb.SlpTokenType} value
  * @return {!proto.pb.SlpRequiredBurn} returns this
  */
 proto.pb.SlpRequiredBurn.prototype.setTokenType = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 
@@ -20547,6 +20332,16 @@ proto.pb.SlpRequiredBurn.prototype.hasMintBatonVout = function() {
   return jspb.Message.getField(this, 5) != null;
 };
 
+
+/**
+ * @enum {number}
+ */
+proto.pb.SlpTokenType = {
+  VERSION_NOT_SET: 0,
+  V1_FUNGIBLE: 1,
+  V1_NFT1_CHILD: 65,
+  V1_NFT1_GROUP: 129
+};
 
 /**
  * @enum {number}

@@ -257,28 +257,6 @@ function deserialize_pb_GetMerkleProofResponse(buffer_arg) {
   return pb_bchrpc_pb.GetMerkleProofResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_pb_GetParsedSlpScriptRequest(arg) {
-  if (!(arg instanceof pb_bchrpc_pb.GetParsedSlpScriptRequest)) {
-    throw new Error('Expected argument of type pb.GetParsedSlpScriptRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_pb_GetParsedSlpScriptRequest(buffer_arg) {
-  return pb_bchrpc_pb.GetParsedSlpScriptRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_pb_GetParsedSlpScriptResponse(arg) {
-  if (!(arg instanceof pb_bchrpc_pb.GetParsedSlpScriptResponse)) {
-    throw new Error('Expected argument of type pb.GetParsedSlpScriptResponse');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_pb_GetParsedSlpScriptResponse(buffer_arg) {
-  return pb_bchrpc_pb.GetParsedSlpScriptResponse.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
 function serialize_pb_GetRawAddressTransactionsRequest(arg) {
   if (!(arg instanceof pb_bchrpc_pb.GetRawAddressTransactionsRequest)) {
     throw new Error('Expected argument of type pb.GetRawAddressTransactionsRequest');
@@ -367,26 +345,70 @@ function deserialize_pb_GetSlpGraphSearchResponse(buffer_arg) {
   return pb_bchrpc_pb.GetSlpGraphSearchResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_pb_GetTokenMetadataRequest(arg) {
-  if (!(arg instanceof pb_bchrpc_pb.GetTokenMetadataRequest)) {
-    throw new Error('Expected argument of type pb.GetTokenMetadataRequest');
+function serialize_pb_GetSlpParsedScriptRequest(arg) {
+  if (!(arg instanceof pb_bchrpc_pb.GetSlpParsedScriptRequest)) {
+    throw new Error('Expected argument of type pb.GetSlpParsedScriptRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_pb_GetTokenMetadataRequest(buffer_arg) {
-  return pb_bchrpc_pb.GetTokenMetadataRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_pb_GetSlpParsedScriptRequest(buffer_arg) {
+  return pb_bchrpc_pb.GetSlpParsedScriptRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_pb_GetTokenMetadataResponse(arg) {
-  if (!(arg instanceof pb_bchrpc_pb.GetTokenMetadataResponse)) {
-    throw new Error('Expected argument of type pb.GetTokenMetadataResponse');
+function serialize_pb_GetSlpParsedScriptResponse(arg) {
+  if (!(arg instanceof pb_bchrpc_pb.GetSlpParsedScriptResponse)) {
+    throw new Error('Expected argument of type pb.GetSlpParsedScriptResponse');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_pb_GetTokenMetadataResponse(buffer_arg) {
-  return pb_bchrpc_pb.GetTokenMetadataResponse.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_pb_GetSlpParsedScriptResponse(buffer_arg) {
+  return pb_bchrpc_pb.GetSlpParsedScriptResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_pb_GetSlpTokenMetadataRequest(arg) {
+  if (!(arg instanceof pb_bchrpc_pb.GetSlpTokenMetadataRequest)) {
+    throw new Error('Expected argument of type pb.GetSlpTokenMetadataRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_pb_GetSlpTokenMetadataRequest(buffer_arg) {
+  return pb_bchrpc_pb.GetSlpTokenMetadataRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_pb_GetSlpTokenMetadataResponse(arg) {
+  if (!(arg instanceof pb_bchrpc_pb.GetSlpTokenMetadataResponse)) {
+    throw new Error('Expected argument of type pb.GetSlpTokenMetadataResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_pb_GetSlpTokenMetadataResponse(buffer_arg) {
+  return pb_bchrpc_pb.GetSlpTokenMetadataResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_pb_GetSlpTrustedValidationRequest(arg) {
+  if (!(arg instanceof pb_bchrpc_pb.GetSlpTrustedValidationRequest)) {
+    throw new Error('Expected argument of type pb.GetSlpTrustedValidationRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_pb_GetSlpTrustedValidationRequest(buffer_arg) {
+  return pb_bchrpc_pb.GetSlpTrustedValidationRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_pb_GetSlpTrustedValidationResponse(arg) {
+  if (!(arg instanceof pb_bchrpc_pb.GetSlpTrustedValidationResponse)) {
+    throw new Error('Expected argument of type pb.GetSlpTrustedValidationResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_pb_GetSlpTrustedValidationResponse(buffer_arg) {
+  return pb_bchrpc_pb.GetSlpTrustedValidationResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_pb_GetTransactionRequest(arg) {
@@ -409,28 +431,6 @@ function serialize_pb_GetTransactionResponse(arg) {
 
 function deserialize_pb_GetTransactionResponse(buffer_arg) {
   return pb_bchrpc_pb.GetTransactionResponse.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_pb_GetTrustedSlpValidationRequest(arg) {
-  if (!(arg instanceof pb_bchrpc_pb.GetTrustedSlpValidationRequest)) {
-    throw new Error('Expected argument of type pb.GetTrustedSlpValidationRequest');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_pb_GetTrustedSlpValidationRequest(buffer_arg) {
-  return pb_bchrpc_pb.GetTrustedSlpValidationRequest.deserializeBinary(new Uint8Array(buffer_arg));
-}
-
-function serialize_pb_GetTrustedSlpValidationResponse(arg) {
-  if (!(arg instanceof pb_bchrpc_pb.GetTrustedSlpValidationResponse)) {
-    throw new Error('Expected argument of type pb.GetTrustedSlpValidationResponse');
-  }
-  return Buffer.from(arg.serializeBinary());
-}
-
-function deserialize_pb_GetTrustedSlpValidationResponse(buffer_arg) {
-  return pb_bchrpc_pb.GetTrustedSlpValidationResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_pb_GetUnspentOutputRequest(arg) {
@@ -726,46 +726,46 @@ getMerkleProof: {
     responseSerialize: serialize_pb_GetMerkleProofResponse,
     responseDeserialize: deserialize_pb_GetMerkleProofResponse,
   },
-  // GetTokenMetadata return slp token metadata for one or more tokens.
+  // GetSlpTokenMetadata return slp token metadata for one or more tokens.
 //
 // **Requires SlpIndex**
-getTokenMetadata: {
-    path: '/pb.bchrpc/GetTokenMetadata',
+getSlpTokenMetadata: {
+    path: '/pb.bchrpc/GetSlpTokenMetadata',
     requestStream: false,
     responseStream: false,
-    requestType: pb_bchrpc_pb.GetTokenMetadataRequest,
-    responseType: pb_bchrpc_pb.GetTokenMetadataResponse,
-    requestSerialize: serialize_pb_GetTokenMetadataRequest,
-    requestDeserialize: deserialize_pb_GetTokenMetadataRequest,
-    responseSerialize: serialize_pb_GetTokenMetadataResponse,
-    responseDeserialize: deserialize_pb_GetTokenMetadataResponse,
+    requestType: pb_bchrpc_pb.GetSlpTokenMetadataRequest,
+    responseType: pb_bchrpc_pb.GetSlpTokenMetadataResponse,
+    requestSerialize: serialize_pb_GetSlpTokenMetadataRequest,
+    requestDeserialize: deserialize_pb_GetSlpTokenMetadataRequest,
+    responseSerialize: serialize_pb_GetSlpTokenMetadataResponse,
+    responseDeserialize: deserialize_pb_GetSlpTokenMetadataResponse,
   },
-  // GetParsedSlpScript returns marshalled object from parsing an slp pubKeyScript 
+  // GetSlpParsedScript returns marshalled object from parsing an slp pubKeyScript 
 // using goslp package.  This endpoint does not require SlpIndex.
-getParsedSlpScript: {
-    path: '/pb.bchrpc/GetParsedSlpScript',
+getSlpParsedScript: {
+    path: '/pb.bchrpc/GetSlpParsedScript',
     requestStream: false,
     responseStream: false,
-    requestType: pb_bchrpc_pb.GetParsedSlpScriptRequest,
-    responseType: pb_bchrpc_pb.GetParsedSlpScriptResponse,
-    requestSerialize: serialize_pb_GetParsedSlpScriptRequest,
-    requestDeserialize: deserialize_pb_GetParsedSlpScriptRequest,
-    responseSerialize: serialize_pb_GetParsedSlpScriptResponse,
-    responseDeserialize: deserialize_pb_GetParsedSlpScriptResponse,
+    requestType: pb_bchrpc_pb.GetSlpParsedScriptRequest,
+    responseType: pb_bchrpc_pb.GetSlpParsedScriptResponse,
+    requestSerialize: serialize_pb_GetSlpParsedScriptRequest,
+    requestDeserialize: deserialize_pb_GetSlpParsedScriptRequest,
+    responseSerialize: serialize_pb_GetSlpParsedScriptResponse,
+    responseDeserialize: deserialize_pb_GetSlpParsedScriptResponse,
   },
-  // GetTrustedValidation returns slp validity related information for one or more transactions.
+  // GetSlpTrustedValidation returns slp validity related information for one or more transactions.
 //
 // **Requires SlpIndex**
-getTrustedSlpValidation: {
-    path: '/pb.bchrpc/GetTrustedSlpValidation',
+getSlpTrustedValidation: {
+    path: '/pb.bchrpc/GetSlpTrustedValidation',
     requestStream: false,
     responseStream: false,
-    requestType: pb_bchrpc_pb.GetTrustedSlpValidationRequest,
-    responseType: pb_bchrpc_pb.GetTrustedSlpValidationResponse,
-    requestSerialize: serialize_pb_GetTrustedSlpValidationRequest,
-    requestDeserialize: deserialize_pb_GetTrustedSlpValidationRequest,
-    responseSerialize: serialize_pb_GetTrustedSlpValidationResponse,
-    responseDeserialize: deserialize_pb_GetTrustedSlpValidationResponse,
+    requestType: pb_bchrpc_pb.GetSlpTrustedValidationRequest,
+    responseType: pb_bchrpc_pb.GetSlpTrustedValidationResponse,
+    requestSerialize: serialize_pb_GetSlpTrustedValidationRequest,
+    requestDeserialize: deserialize_pb_GetSlpTrustedValidationRequest,
+    responseSerialize: serialize_pb_GetSlpTrustedValidationResponse,
+    responseDeserialize: deserialize_pb_GetSlpTrustedValidationResponse,
   },
   // GraphSearch returns all the transactions needed for a client to validate an SLP graph
 //
@@ -814,7 +814,7 @@ submitTransaction: {
 // then SubscribeTransactionStream is more appropriate.
 //
 // **Requires TxIndex to receive input metadata**
-// **Requires SlpIndex to receive slp input/output metadata, or TokenMetadata**
+// **Requires SlpIndex to receive slp input/output metadata, or SlpTokenMetadata**
 subscribeTransactions: {
     path: '/pb.bchrpc/SubscribeTransactions',
     requestStream: false,

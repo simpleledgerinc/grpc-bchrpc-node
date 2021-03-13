@@ -2,14 +2,15 @@ import assert from "assert";
 import Big from "big.js";
 import fs from "fs";
 import { SlpRequiredBurn as ISlpRequiredBurn, SlpV1GenesisMetadata, SlpV1MintMetadata } from "grpc-bchrpc";
-import { GetParsedSlpScriptResponse,
+import { GetSlpParsedScriptResponse,
             GetSlpGraphSearchResponse,
-            GetTrustedSlpValidationResponse,
+            GetSlpTrustedValidationResponse,
             GetUnspentOutputResponse,
             SlpRequiredBurn,
             SlpTransactionInfo,
-            TokenMetadata,
-            Transaction } from "../pb/bchrpc_pb";
+            SlpTokenMetadata,
+            Transaction, 
+            SlpAction} from "../pb/bchrpc_pb";
 import { GrpcClient } from "../src/client";
 
 const scriptUnitTestData: SlpMsgTest[] = require("slp-unit-test-data/script_tests.json");
@@ -190,12 +191,12 @@ describe("grpc-bchrpc-node", () => {
                     let batonTxid: string;
                     let batonVout: number;
                     switch (t.getTypeMetadataCase()) {
-                    case TokenMetadata.TypeMetadataCase.V1_FUNGIBLE:
+                    case SlpTokenMetadata.TypeMetadataCase.V1_FUNGIBLE:
                         console.log(`Mint (Type 1): ${txid}`);
                         batonTxid = Buffer.from(tmRes.getTokenMetadataList()[0].getV1Fungible()!.getMintBatonHash_asU8().reverse()).toString("hex");
                         batonVout = tmRes.getTokenMetadataList()[0].getV1Fungible()!.getMintBatonVout();
                         break;
-                    case TokenMetadata.TypeMetadataCase.V1_NFT1_GROUP:
+                    case SlpTokenMetadata.TypeMetadataCase.V1_NFT1_GROUP:
                         console.log(`Mint (NFT1 Group): ${txid}`);
                         batonTxid = Buffer.from(tmRes.getTokenMetadataList()[0].getV1Nft1Group()!.getMintBatonHash_asU8().reverse()).toString("hex");
                         batonVout = tmRes.getTokenMetadataList()[0].getV1Nft1Group()!.getMintBatonVout();
@@ -463,7 +464,26 @@ describe("grpc-bchrpc-node", () => {
                         const txnBuf = Buffer.from(txnRes.getTransaction_asU8());
                         let res = await grpc.checkSlpTransaction({ txnBuf });
                         if (res.getIsValid()) {
-                            throw Error("bad validity judgement");
+
+                            // NFT Child Genesis: don't throw if we're only burning a total value of 1 token and the 
+                            // burn flag is "BURNED_INPUTS_OTHER_TOKEN"
+                            //
+                            // NOTE: this is just an edge case that the slp-comps program's burn logging logic didn't
+                            // account for, where NFT child genesis also burns a 0 value token in a non-0 index then
+                            // it logs it as a burn from other token.
+                            if (burnType === "BURNED_INPUTS_OTHER_TOKEN") {
+                                let txRes = await grpc.getTransaction({ hash: txid, reversedHashOrder: true, includeTokenMetadata: false });
+                                let slpInfo = txRes.getTransaction()!.getSlpTransactionInfo()!;
+                                if (slpInfo.getSlpAction() === SlpAction.SLP_V1_NFT1_UNIQUE_CHILD_GENESIS &&
+                                    txRes.getTransaction()!.getInputsList()!
+                                                .filter(i => i.hasSlpToken())
+                                                .map(i => i.getSlpToken()!)
+                                                .reduce((p,c,i) => p + parseInt(c.getAmount(), 10), 0) === 1) {
+                                    return;
+                                }
+                            }
+
+                            throw Error(`bad validity judgement for ${txid} in ${burnType}`);
                         }
                     });
                 }
@@ -890,7 +910,7 @@ describe("grpc-bchrpc-node", () => {
                 const script = Buffer.from(test.script, "hex");
                 const eCode = test.code;
                 if (eCode) {
-                    let resp: GetParsedSlpScriptResponse;
+                    let resp: GetSlpParsedScriptResponse;
                     try {
                         resp = await grpc.getParsedSlpScript(script);
                     } catch (error) {
@@ -929,7 +949,7 @@ describe("grpc-bchrpc-node", () => {
             { hash: "f1bf99cfdd5d056de503350c9f6cabc3cd052d3dcaab7764708dc78145682bc4", vout: 2, validAmt: "MINT_BATON", tokenIDHex: "f1bf99cfdd5d056de503350c9f6cabc3cd052d3dcaab7764708dc78145682bc4" },          // slp genesis transaction, but targeting the mint baton output
         ];
 
-        let resp: GetTrustedSlpValidationResponse;
+        let resp: GetSlpTrustedValidationResponse;
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
@@ -950,11 +970,11 @@ describe("grpc-bchrpc-node", () => {
             assert.strictEqual(exp.tokenIDHex, Buffer.from(res.getTokenId_asU8()).toString("hex"));
             const resultType = res.getValidityResultTypeCase();
             switch (resultType) {
-                case GetTrustedSlpValidationResponse.ValidityResult.ValidityResultTypeCase.V1_MINT_BATON:
+                case GetSlpTrustedValidationResponse.ValidityResult.ValidityResultTypeCase.V1_MINT_BATON:
                     assert.strictEqual(res.getV1TokenAmount(), "0");
                     assert.strictEqual(res.getV1MintBaton(), exp.validAmt === "MINT_BATON");
                     break;
-                case GetTrustedSlpValidationResponse.ValidityResult.ValidityResultTypeCase.V1_TOKEN_AMOUNT:
+                case GetSlpTrustedValidationResponse.ValidityResult.ValidityResultTypeCase.V1_TOKEN_AMOUNT:
                     assert.strictEqual(res.getV1TokenAmount(), exp.validAmt.toString());
                     break;
                 default:
@@ -967,7 +987,7 @@ describe("grpc-bchrpc-node", () => {
         const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "00", vout: 1, validAmt: 0, tokenIDHex: "" },
         ];
-        let resp: GetTrustedSlpValidationResponse;
+        let resp: GetSlpTrustedValidationResponse;
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
@@ -981,7 +1001,7 @@ describe("grpc-bchrpc-node", () => {
         const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "e5459585b8f5df1e115b47f3ac72cff256cdb75e3bb69735a906d58c3ceb1631", vout: 1, validAmt: 0, tokenIDHex: "" },
         ];
-        let resp: GetTrustedSlpValidationResponse;
+        let resp: GetSlpTrustedValidationResponse;
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
@@ -995,7 +1015,7 @@ describe("grpc-bchrpc-node", () => {
         const expected: Array<{hash: string; vout: number; validAmt: number|string; tokenIDHex: string}> = [
             { hash: "32c265ecc608e83f41082e4514c08ce5b748edd80e68817aa3a385994c931354", vout: 20, validAmt: 0, tokenIDHex: "" },
         ];
-        let resp: GetTrustedSlpValidationResponse;
+        let resp: GetSlpTrustedValidationResponse;
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
@@ -1010,7 +1030,7 @@ describe("grpc-bchrpc-node", () => {
             { hash: "9582c0fdb41f82c74f3ef25a87963e510c3e981dde6f069e5d6a8cd4a643ce2b", vout: 3, validAmt: 0, tokenIDHex: "" },
         ];
 
-        let resp: GetTrustedSlpValidationResponse;
+        let resp: GetSlpTrustedValidationResponse;
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
@@ -1025,7 +1045,7 @@ describe("grpc-bchrpc-node", () => {
             { hash: "a69ef2d5bfe964dd0d17722b31419a0366d3613f2575a24f068e806ab3a4a131", vout: 3, validAmt: 0, tokenIDHex: "" },
         ];
 
-        let resp: GetTrustedSlpValidationResponse;
+        let resp: GetSlpTrustedValidationResponse;
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {
@@ -1040,7 +1060,7 @@ describe("grpc-bchrpc-node", () => {
             { hash: "f1bf99cfdd5d056de503350c9f6cabc3cd052d3dcaab7764708dc78145682bc4", vout: 3, validAmt: 0, tokenIDHex: "" },
         ];
 
-        let resp: GetTrustedSlpValidationResponse;
+        let resp: GetSlpTrustedValidationResponse;
         try {
             resp = await grpc.getTrustedSlpValidation({ txos: expected, reversedHashOrder: true });
         } catch (err) {

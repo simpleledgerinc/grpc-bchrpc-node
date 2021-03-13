@@ -432,16 +432,16 @@ export class GrpcClient {
         });
     }
 
-    public getTokenMetadata(tokenIds: string[]|Buffer[]): Promise<bchrpc.GetTokenMetadataResponse> {
+    public getTokenMetadata(tokenIds: string[]|Buffer[]): Promise<bchrpc.GetSlpTokenMetadataResponse> {
         return new Promise((resolve, reject) => {
-            const req = new bchrpc.GetTokenMetadataRequest();
+            const req = new bchrpc.GetSlpTokenMetadataRequest();
             if (typeof tokenIds[0] === "string") {
                 (tokenIds as string[]).forEach((id) => req.addTokenIds(Buffer.from(id, "hex")));
             } else {
                 (tokenIds as Buffer[]).forEach((id) => req.addTokenIds(id));
             }
 
-            this.client.getTokenMetadata(req, (err, data) => {
+            this.client.getSlpTokenMetadata(req, (err, data) => {
                 if (err !== null) { reject(err); } else { resolve(data!); }
             });
         });
@@ -455,13 +455,13 @@ export class GrpcClient {
         txos: Array<{ hash: string; vout: number; gsKnownValidHashes?: string[]}>,
         reversedHashOrder?: boolean,
         includeGraphSearchCount?: boolean,
-    }): Promise<bchrpc.GetTrustedSlpValidationResponse> {
+    }): Promise<bchrpc.GetSlpTrustedValidationResponse> {
         return new Promise((resolve, reject) => {
-            const req = new bchrpc.GetTrustedSlpValidationRequest();
+            const req = new bchrpc.GetSlpTrustedValidationRequest();
 
             // add txos
             for (const txo of txos) {
-                const query = new bchrpc.GetTrustedSlpValidationRequest.Query();
+                const query = new bchrpc.GetSlpTrustedValidationRequest.Query();
                 let hash = Buffer.from(txo.hash, "hex");
                 if (reversedHashOrder) {
                     hash = hash.slice().reverse();
@@ -485,21 +485,21 @@ export class GrpcClient {
                 req.setIncludeGraphsearchCount(true);
             }
 
-            this.client.getTrustedSlpValidation(req, (err, data) => {
+            this.client.getSlpTrustedValidation(req, (err, data) => {
                 if (err !== null) { reject(err); } else { resolve(data!); }
             });
         });
     }
 
-    public getParsedSlpScript(script: string|Buffer): Promise<bchrpc.GetParsedSlpScriptResponse> {
+    public getParsedSlpScript(script: string|Buffer): Promise<bchrpc.GetSlpParsedScriptResponse> {
         return new Promise((resolve, reject) => {
-            const req = new bchrpc.GetParsedSlpScriptRequest();
+            const req = new bchrpc.GetSlpParsedScriptRequest();
             if (typeof script === "string") {
                 req.setSlpOpreturnScript(Buffer.from(script, "hex"));
             } else {
                 req.setSlpOpreturnScript(script);
             }
-            this.client.getParsedSlpScript(req, (err, data) => {
+            this.client.getSlpParsedScript(req, (err, data) => {
                 if (err !== null) { reject(err); } else { resolve(data!); }
             });
         });
