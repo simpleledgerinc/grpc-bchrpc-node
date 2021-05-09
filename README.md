@@ -1,6 +1,6 @@
 ## A BCHD gRPC client for node.js
 
-This package provides a gRPC client for connecting to BCHD.  SLP support is provided when the full node has SLP index enabled, which is currently under development [here](https://github.com/simpleledgerinc/bchd).
+This package provides a gRPC client for connecting to a BCHD full node.
 
 ### Install
 
@@ -36,13 +36,6 @@ See also the `test` directory for more examples of how to use.
 Some integration tests have been added. Extensive test coverage is not planned currently planned since this library is just a wrapper for BCHD's gRPC interface.
 
 `$ npm test`
-
-### Known Public Instances
-
-* https://bchd.greyh.at:8335
-* https://bchd.imaginary.cash:8335
-* https://bchd-testnet.greyh.at:18335
-* https://bchd.fountainhead.cash:443
 
 ### Connecting to local BCHD
 

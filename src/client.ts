@@ -17,9 +17,7 @@ export class GrpcClient {
             const rootCert = fs.readFileSync(rootCertPath);
             credentials = grpc.credentials.createSsl(rootCert);
         }
-        if (!url && !testnet) {
-            url = "bchd.ny1.simpleledger.io";
-        } else if (! url) {
+        if (! url) {
             url = "bchd-testnet.greyh.at:18335";
         }
         if (!options) {
